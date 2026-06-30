@@ -55,9 +55,6 @@ h1,h2,h3,.display{ font-family:'Playfair Display',serif; }
 ::-webkit-scrollbar{ width:8px; }
 ::-webkit-scrollbar-thumb{ background:var(--line); border-radius:8px; }
 
-/* ====================================================== */
-/* ===================  LOADING SCREEN  ================== */
-/* ====================================================== */
 #loadScreen{
   position:fixed; inset:0; z-index:900; background:var(--bg-deep);
   display:flex; align-items:center; justify-content:center; flex-direction:column;
@@ -84,7 +81,6 @@ h1,h2,h3,.display{ font-family:'Playfair Display',serif; }
 .load-bar-track{ width:190px; height:2px; background:var(--line); border-radius:2px; overflow:hidden; }
 .load-bar-fill{ height:100%; width:0%; background:linear-gradient(90deg, var(--gold-deep), var(--gold-bright)); border-radius:2px; transition:width 0.25s ease; }
 
-/* ---------- Ambient / fx canvas (nhẹ, không che nội dung) ---------- */
 .ambient-glow{
   position:fixed; top:-10%; right:-10%; width:42vw; height:42vw; border-radius:50%;
   background:radial-gradient(circle, rgba(212,175,106,0.08), transparent 70%);
@@ -94,7 +90,6 @@ h1,h2,h3,.display{ font-family:'Playfair Display',serif; }
 
 #fxCanvas{ position:fixed; inset:0; pointer-events:none; z-index:2; opacity:0.45; }
 
-/* ---------- Navbar ---------- */
 .navbar{
   display:flex; justify-content:space-between; align-items:center;
   padding:1.1rem 4%; background:rgba(11,12,16,0.78); backdrop-filter:blur(14px);
@@ -134,7 +129,6 @@ h1,h2,h3,.display{ font-family:'Playfair Display',serif; }
 .balance{ font-weight:700; color:#1a1305; font-size:0.82rem; font-family:'Playfair Display',serif;
   background:linear-gradient(135deg, var(--gold-bright), var(--gold-deep)); padding:0.5rem 0.95rem; border-radius:var(--radius-nav); box-shadow:var(--shadow-sm); letter-spacing:0.01em; }
 
-/* ---------- Hero ---------- */
 .hero{ text-align:center; padding:4.4rem 1.5rem 1.6rem; position:relative; z-index:1; }
 .hero .eyebrow{
   text-transform:uppercase; letter-spacing:0.26em; font-size:0.66rem; color:var(--gold);
@@ -153,7 +147,6 @@ h1,h2,h3,.display{ font-family:'Playfair Display',serif; }
 .filter-chip:hover{ border-color:var(--gold); color:var(--gold-bright); transform:translateY(-1px); }
 .filter-chip.active{ background:linear-gradient(135deg, var(--gold-bright), var(--gold-deep)); border-color:var(--gold-deep); color:#1a1305; box-shadow:var(--shadow-sm); }
 
-/* ---------- Product grid ---------- */
 .products-grid{
   display:grid; grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); gap:1.7rem;
   padding:1.8rem 5% 4rem; max-width:1320px; margin:0 auto; position:relative; z-index:1;
@@ -202,7 +195,6 @@ footer{
   letter-spacing:0.03em;
 }
 
-/* ---------- Sidebars ---------- */
 .admin-sidebar,.cart-sidebar{
   position:fixed; top:0; right:-420px; width:390px; max-width:92vw; height:100vh;
   background:var(--bg-deep); box-shadow:-16px 0 40px rgba(0,0,0,0.5); z-index:200;
@@ -301,7 +293,6 @@ footer{
 .btn-secondary:hover{ background:var(--panel-2); }
 .captcha-question{ font-family:'Playfair Display',serif; font-size:1.85rem; font-weight:700; color:var(--gold-bright); margin:1rem 0; }
 
-/* ---------- Auth screens ---------- */
 .auth-modal{ max-width:385px; text-align:left; }
 .auth-brand{ text-align:center; margin-bottom:0.4rem; }
 .auth-brand .mark-circle{
@@ -329,7 +320,6 @@ footer{
 
 .cart-total{ font-family:'Playfair Display',serif; font-weight:800; font-size:1.15rem; padding-top:0.6rem; border-top:1px solid var(--line); color:var(--gold-bright); }
 
-/* ---------- Order success ---------- */
 .order-success-modal{ max-width:440px; text-align:left; }
 .order-success-icon{
   width:60px; height:60px; border-radius:50%; background:var(--success); color:#06251a;
@@ -365,7 +355,6 @@ footer{
 </head>
 <body>
 
-<!-- ===== Loading screen ===== -->
 <div id="loadScreen">
   <div class="load-mark">NM</div>
   <div class="load-title">nminhshop</div>
@@ -602,12 +591,11 @@ footer{
 
 <div class="toast" id="toast"></div>
 
-<!-- ===== Firebase (đồng bộ dữ liệu real-time giữa các thiết bị) ===== -->
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-app.js";
   import {
     getFirestore, collection, doc, setDoc, updateDoc, deleteDoc, getDoc, getDocs, addDoc,
-    onSnapshot, query, orderBy, serverTimestamp, runTransaction, where, writeBatch
+    onSnapshot, query, orderBy, serverTimestamp, runTransaction, where
   } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-firestore.js";
 
   const firebaseConfig = {
@@ -625,7 +613,7 @@ footer{
 
   window.__fb = {
     db, collection, doc, setDoc, updateDoc, deleteDoc, getDoc, getDocs, addDoc,
-    onSnapshot, query, orderBy, serverTimestamp, runTransaction, where, writeBatch
+    onSnapshot, query, orderBy, serverTimestamp, runTransaction, where
   };
   window.dispatchEvent(new Event('fb-ready'));
 </script>
@@ -634,7 +622,6 @@ footer{
 (() => {
   'use strict';
 
-  // ==================== Hằng số ====================
   const DEFAULT_PHONE = '0976788751';
   const DEFAULT_ORDER_NOTE = 'Cảm ơn bạn đã mua hàng tại nminhshop! Vui lòng liên hệ số điện thoại bên trên để xác nhận và nhận hàng trong vòng 24-48h.';
   const defaultCategories = ['Nổi bật', 'Đồ điện tử', 'Phụ kiện', 'Khác'];
@@ -709,7 +696,6 @@ footer{
 
   async function withFb(){ if (!fb) await fbReady; return fb; }
 
-  // ==================== FB helpers ====================
   async function fbSetProduct(product){
     const f = await withFb();
     await f.setDoc(f.doc(f.db, 'products', String(product.id)), product);
@@ -730,9 +716,11 @@ footer{
     const f = await withFb();
     await f.setDoc(f.doc(f.db, 'users', String(user.id)), user, { merge:true });
   }
-  async function fbAddUser(user){
+  async function fbAddUser(userData){
     const f = await withFb();
-    const docRef = await f.addDoc(f.collection(f.db, 'users'), user);
+    const docRef = await f.addDoc(f.collection(f.db, 'users'), userData);
+    // Ghi lại id vào document
+    await f.updateDoc(docRef, { id: docRef.id });
     return docRef.id;
   }
   async function fbSetSettings(partial){
@@ -763,7 +751,6 @@ footer{
     try{ await fbSaveCart(userId, cart); }catch(e){ console.error('Lỗi đồng bộ giỏ hàng:', e); }
   }
 
-  // ==================== Khởi tạo dữ liệu mặc định ====================
   async function seedIfEmpty(){
     const f = await withFb();
     try{
@@ -776,7 +763,7 @@ footer{
       }
       const adminSnap = await f.getDoc(f.doc(f.db, 'users', '1'));
       if (!adminSnap.exists()) {
-        const hashed = await hashPassword('1'); // mật khẩu mặc định "1"
+        const hashed = await hashPassword('1'); // mật khẩu "1"
         await f.setDoc(f.doc(f.db, 'users', '1'), { id:1, username:'nminh', password:hashed, isAdmin:true, balance:0 });
       }
       for (const cat of defaultCategories) {
@@ -792,7 +779,6 @@ footer{
     }
   }
 
-  // ==================== Lắng nghe real-time ====================
   function startListeners(){
     fb.onSnapshot(fb.collection(fb.db, 'products'), snap => {
       STATE.products = snap.docs.map(d => d.data());
@@ -839,27 +825,14 @@ footer{
   }
 
   let loadingHidden = false;
-  let loadingTimeout;
   function maybeHideLoading(){
     if (loadingHidden) return;
     const r = STATE.ready;
     if (r.products && r.categories && r.users && r.deposits && r.settings) {
       loadingHidden = true;
-      clearTimeout(loadingTimeout);
       hideLoadScreen();
       requireHumanVerification(initAppAfterData);
     }
-  }
-
-  // ==================== Màn hình loading + timeout ====================
-  function initLoadingTimeout(){
-    loadingTimeout = setTimeout(() => {
-      if (!loadingHidden) {
-        loadingHidden = true;
-        hideLoadScreen();
-        requireHumanVerification(initAppAfterData);
-      }
-    }, 8000); // 8 giây nếu chưa sẵn sàng
   }
 
   function initAppAfterData(){
@@ -888,7 +861,6 @@ footer{
     return `<span class="stock-tag in">Còn ${stock}</span>`;
   }
 
-  // ==================== Product grid ====================
   function renderProducts(){
     if (!getCurrentUser()) return;
     const products = STATE.products.filter(p => activeCategory === 'all' || p.category === activeCategory);
@@ -1055,6 +1027,10 @@ footer{
 
   $('#btnLogin').addEventListener('click', async () => {
     const errEl = $('#loginError');
+    if (!STATE.ready.users) {
+      errEl.textContent = 'Đang tải dữ liệu, vui lòng chờ...';
+      return;
+    }
     const username = sanitizeText($('#loginUsername').value, 24);
     const password = $('#loginPassword').value;
     if (!username || !password) { errEl.textContent = 'Vui lòng nhập đầy đủ thông tin.'; return; }
@@ -1077,6 +1053,10 @@ footer{
 
   $('#btnRegister').addEventListener('click', async () => {
     const errEl = $('#registerError');
+    if (!STATE.ready.users) {
+      errEl.textContent = 'Đang tải dữ liệu, vui lòng chờ...';
+      return;
+    }
     const username = sanitizeText($('#regUsername').value, 24);
     const password = $('#regPassword').value;
     const password2 = $('#regPassword2').value;
@@ -1111,7 +1091,7 @@ footer{
     showToast('Đã đăng xuất.', 'info');
   });
 
-  // ==================== Cart / Thanh toán (có transaction xoá sản phẩm khi hết hàng) ====================
+  // ==================== Cart / Thanh toán ====================
   $('#btnCart').addEventListener('click', async (e) => {
     e.preventDefault();
     if (botBlocked) return;
@@ -1187,7 +1167,6 @@ footer{
           if (stock < item.quantity) throw new Error(`Sản phẩm "${item.name}" không đủ hàng.`);
         }
 
-        // Cập nhật số dư
         transaction.update(userRef, { balance: currentBalance - total });
 
         const purchases = [];
@@ -1203,9 +1182,8 @@ footer{
           }
         }
 
-        // Lưu lịch sử mua hàng
         for (const p of purchases) {
-          const purchaseRef = f.doc(f.collection(f.db, 'purchases')); // auto-id
+          const purchaseRef = f.doc(f.collection(f.db, 'purchases'));
           transaction.set(purchaseRef, {
             productId: p.id,
             productName: p.name,
@@ -1838,7 +1816,6 @@ footer{
     await withFb();
     startListeners();
     await seedIfEmpty();
-    initLoadingTimeout();
   }
   boot();
 })();
