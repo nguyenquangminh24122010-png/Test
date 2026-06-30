@@ -3,23 +3,48 @@
 <html lang="vi">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>HackZone - Công cụ Hack Cao Cấp</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <meta http-equiv="X-Content-Type-Options" content="nosniff">
+  <title>HackZone - Công Cụ Hack Cao Cấp</title>
+  <!-- Google Font cho tiếng Việt mượt mà -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <style>
-    /* Общие стили с изменяемыми CSS-переменными */
+    /* ==================== CSS Variables ==================== */
     :root {
-      --bg-dark: #0a0a0a;
-      --bg-card: #1a1a2e;
-      --accent: #00ff88;
-      --accent2: #ff2a6d;
-      --text: #e0e0e0;
-      --border-radius-nav: 12px;
-      --border-radius-card: 16px;
-      --border-radius-btn: 8px;
-      --border-radius-img: 20px;
-      --border-radius-modal: 24px;
+      /* Màu sắc xanh dương nhạt chủ đạo */
+      --bg-body: #f0f6ff;
+      --bg-nav: rgba(255, 255, 255, 0.85);
+      --bg-card: #ffffff;
+      --bg-footer: #ffffff;
+      --text-primary: #1a2b4c;
+      --text-secondary: #4a6078;
+      --accent: #2b6ef0;
+      --accent-hover: #1a4fc9;
+      --accent-light: #e8f0fe;
+      --danger: #e74c3c;
+      --warning: #f39c12;
+      --success: #27ae60;
+
+      /* Border radius (có thể tùy chỉnh qua admin) */
+      --radius-nav: 14px;
+      --radius-card: 18px;
+      --radius-btn: 10px;
+      --radius-img: 20px 20px 0 0;
+      --radius-modal: 24px;
+
+      /* Shadows */
+      --shadow-sm: 0 2px 8px rgba(43, 110, 240, 0.08);
+      --shadow-md: 0 8px 24px rgba(43, 110, 240, 0.12);
+      --shadow-lg: 0 12px 32px rgba(43, 110, 240, 0.18);
+
+      /* Transition */
+      --transition-fast: 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+      --transition-smooth: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     }
 
+    /* ==================== Reset & Base ==================== */
     * {
       margin: 0;
       padding: 0;
@@ -27,179 +52,341 @@
     }
 
     body {
-      font-family: 'Segoe UI', 'Arial', sans-serif;
-      background-color: var(--bg-dark);
-      color: var(--text);
+      font-family: 'Montserrat', 'Segoe UI', sans-serif;
+      background: linear-gradient(135deg, #e8f0fe 0%, #f0f6ff 40%, #f4f9ff 100%);
+      color: var(--text-primary);
       line-height: 1.6;
-      transition: all 0.3s ease;
+      min-height: 100vh;
+      transition: background var(--transition-smooth);
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
     }
 
-    /* Шапка с навигацией */
+    /* ==================== Navbar ==================== */
     .navbar {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding: 1rem 5%;
-      background: rgba(26, 26, 46, 0.8);
-      backdrop-filter: blur(10px);
-      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-      border-radius: var(--border-radius-nav);
-      margin: 10px 20px;
+      padding: 1rem 6%;
+      background: var(--bg-nav);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid rgba(43, 110, 240, 0.15);
+      border-radius: var(--radius-nav);
+      margin: 15px 25px;
       position: sticky;
-      top: 10px;
+      top: 15px;
       z-index: 100;
+      box-shadow: var(--shadow-sm);
+      transition: all var(--transition-smooth);
     }
 
     .logo {
-      font-size: 1.8rem;
+      font-size: 1.9rem;
       font-weight: 700;
       color: var(--accent);
       cursor: pointer;
       user-select: none;
+      letter-spacing: -0.5px;
+      background: linear-gradient(135deg, #2b6ef0, #1a4fc9);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      transition: transform var(--transition-fast);
+    }
+
+    .logo:hover {
+      transform: scale(1.03);
     }
 
     .nav-links {
       display: flex;
-      gap: 2rem;
+      gap: 2.2rem;
       list-style: none;
     }
 
     .nav-links a {
-      color: var(--text);
+      color: var(--text-primary);
       text-decoration: none;
       font-weight: 500;
-      transition: color 0.3s;
+      font-size: 0.95rem;
+      transition: color var(--transition-fast);
+      position: relative;
+    }
+
+    .nav-links a::after {
+      content: '';
+      position: absolute;
+      bottom: -4px;
+      left: 0;
+      width: 0;
+      height: 2px;
+      background: var(--accent);
+      transition: width var(--transition-fast);
     }
 
     .nav-links a:hover {
       color: var(--accent);
     }
 
-    /* Карточки товаров */
+    .nav-links a:hover::after {
+      width: 100%;
+    }
+
+    /* ==================== Product Grid ==================== */
+    .section-title {
+      text-align: center;
+      font-size: 2rem;
+      font-weight: 600;
+      margin: 2rem 0 1.5rem;
+      color: #1a2b4c;
+    }
+
     .products-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
       gap: 2rem;
-      padding: 2rem 5%;
+      padding: 1rem 5% 3rem;
     }
 
     .product-card {
       background: var(--bg-card);
-      border-radius: var(--border-radius-card);
+      border-radius: var(--radius-card);
       overflow: hidden;
-      box-shadow: 0 10px 30px rgba(0, 255, 136, 0.1);
-      transition: transform 0.3s, box-shadow 0.3s;
-      border: 1px solid rgba(0, 255, 136, 0.2);
+      box-shadow: var(--shadow-md);
+      transition: transform var(--transition-smooth), box-shadow var(--transition-smooth);
+      border: 1px solid rgba(43, 110, 240, 0.1);
+      animation: fadeInUp 0.6s ease backwards;
     }
 
     .product-card:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 15px 40px rgba(0, 255, 136, 0.3);
+      transform: translateY(-8px);
+      box-shadow: var(--shadow-lg);
+    }
+
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
     }
 
     .product-img {
-      height: 200px;
-      background: linear-gradient(45deg, #16213e, #0f3460);
+      height: 190px;
+      background: linear-gradient(135deg, #d4e4ff, #e8f0fe);
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 3rem;
-      border-radius: var(--border-radius-img) var(--border-radius-img) 0 0;
-      /* Для img позже */
+      font-size: 3.5rem;
+      border-radius: var(--radius-img);
+      transition: border-radius var(--transition-smooth);
     }
 
     .product-info {
-      padding: 1.5rem;
+      padding: 1.5rem 1.8rem;
     }
 
     .product-title {
-      font-size: 1.4rem;
-      margin-bottom: 0.5rem;
-      color: var(--accent);
+      font-size: 1.3rem;
+      font-weight: 600;
+      margin-bottom: 0.4rem;
+      color: #1a2b4c;
     }
 
     .product-desc {
       font-size: 0.9rem;
-      color: #a0a0b0;
+      color: var(--text-secondary);
       margin-bottom: 1rem;
+      line-height: 1.5;
     }
 
     .price {
-      font-size: 1.5rem;
+      font-size: 1.6rem;
       font-weight: 700;
-      color: var(--accent2);
+      color: var(--accent);
+      margin-bottom: 1.2rem;
     }
 
     .buy-btn {
       display: inline-block;
       background: var(--accent);
-      color: #0a0a0a;
+      color: white;
       border: none;
-      padding: 0.7rem 1.5rem;
-      border-radius: var(--border-radius-btn);
+      padding: 0.75rem 2rem;
+      border-radius: var(--radius-btn);
       font-weight: 600;
+      font-size: 0.9rem;
       cursor: pointer;
-      transition: background 0.3s;
+      transition: all var(--transition-fast);
       text-transform: uppercase;
-      letter-spacing: 1px;
+      letter-spacing: 0.5px;
+      box-shadow: 0 4px 12px rgba(43, 110, 240, 0.3);
+      outline: none;
     }
 
     .buy-btn:hover {
-      background: #00cc6a;
+      background: var(--accent-hover);
+      box-shadow: 0 6px 18px rgba(43, 110, 240, 0.4);
+      transform: translateY(-2px);
     }
 
-    /* Админ-панель (скрыта) */
-    .admin-panel {
-      position: fixed;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      background: #16213e;
-      border: 2px solid var(--accent);
-      border-radius: var(--border-radius-modal);
-      padding: 2rem;
-      width: 400px;
-      max-width: 90vw;
-      z-index: 200;
-      display: none;
-      box-shadow: 0 0 50px rgba(0, 255, 136, 0.5);
-      backdrop-filter: blur(5px);
+    .buy-btn:active {
+      transform: translateY(0);
     }
 
-    .admin-panel.active {
-      display: block;
+    .buy-btn:disabled {
+      background: #a0b8e0;
+      box-shadow: none;
+      cursor: not-allowed;
+      transform: none;
     }
 
-    .admin-panel h3 {
-      color: var(--accent);
-      margin-bottom: 1.5rem;
+    /* ==================== Footer ==================== */
+    footer {
       text-align: center;
+      padding: 1.8rem;
+      background: var(--bg-footer);
+      border-radius: var(--radius-nav);
+      margin: 15px 25px;
+      color: var(--text-secondary);
+      font-size: 0.9rem;
+      border: 1px solid rgba(43, 110, 240, 0.1);
+    }
+
+    /* ==================== Admin Sidebar (đẹp hơn) ==================== */
+    .admin-sidebar {
+      position: fixed;
+      top: 0;
+      right: -420px;
+      width: 380px;
+      max-width: 90vw;
+      height: 100%;
+      background: white;
+      box-shadow: -5px 0 30px rgba(0, 0, 0, 0.15);
+      z-index: 200;
+      transition: right var(--transition-smooth);
+      padding: 2rem 1.8rem;
+      overflow-y: auto;
+      border-left: 1px solid rgba(43, 110, 240, 0.2);
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+
+    .admin-sidebar.active {
+      right: 0;
+    }
+
+    .admin-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid #e0e8f0;
+      padding-bottom: 1rem;
+    }
+
+    .admin-header h2 {
+      font-size: 1.6rem;
+      font-weight: 600;
+      color: var(--accent);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .close-admin {
+      background: none;
+      border: none;
+      font-size: 2rem;
+      cursor: pointer;
+      color: #888;
+      transition: color var(--transition-fast);
+    }
+
+    .close-admin:hover {
+      color: var(--danger);
     }
 
     .slider-group {
-      margin-bottom: 1.2rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;
     }
 
     .slider-group label {
-      display: block;
-      margin-bottom: 0.3rem;
-      color: #ccc;
+      font-weight: 500;
+      display: flex;
+      justify-content: space-between;
+      color: #2c3e50;
     }
 
     .slider-group input[type="range"] {
       width: 100%;
       accent-color: var(--accent);
+      height: 6px;
+      border-radius: 3px;
+      background: #e0e8f0;
+      transition: background var(--transition-fast);
     }
 
-    .close-admin {
-      position: absolute;
-      top: 10px;
-      right: 15px;
-      background: none;
+    .color-picker-group {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .color-picker-group label {
+      font-weight: 500;
+    }
+
+    .color-picker-group input[type="color"] {
       border: none;
-      color: var(--accent);
-      font-size: 1.5rem;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
       cursor: pointer;
+      padding: 2px;
+      background: transparent;
+      border: 2px solid #ccc;
+    }
+
+    .admin-actions {
+      display: flex;
+      gap: 1rem;
+      margin-top: 1.5rem;
+    }
+
+    .btn-admin {
+      flex: 1;
+      padding: 0.7rem;
+      border: none;
+      border-radius: 10px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all var(--transition-fast);
+    }
+
+    .btn-save {
+      background: var(--accent);
+      color: white;
+    }
+
+    .btn-save:hover {
+      background: var(--accent-hover);
+    }
+
+    .btn-reset {
+      background: #f0f2f5;
+      color: #333;
+    }
+
+    .btn-reset:hover {
+      background: #e0e4e8;
     }
 
     .overlay {
@@ -208,27 +395,123 @@
       left: 0;
       width: 100%;
       height: 100%;
-      background: rgba(0,0,0,0.7);
+      background: rgba(0, 0, 0, 0.4);
       z-index: 150;
-      display: none;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity var(--transition-smooth), visibility var(--transition-smooth);
     }
 
     .overlay.active {
-      display: block;
+      opacity: 1;
+      visibility: visible;
     }
 
-    /* Подвал */
-    footer {
-      text-align: center;
+    /* ==================== Modal mua hàng (chống DDoS) ==================== */
+    .modal {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%) scale(0.9);
+      background: white;
+      border-radius: var(--radius-modal);
       padding: 2rem;
-      background: #1a1a2e;
-      border-radius: var(--border-radius-nav);
-      margin: 20px;
+      z-index: 300;
+      width: 90%;
+      max-width: 420px;
+      box-shadow: 0 25px 60px rgba(0, 0, 0, 0.25);
+      opacity: 0;
+      visibility: hidden;
+      transition: all var(--transition-smooth);
+      border: 1px solid rgba(43, 110, 240, 0.2);
+    }
+
+    .modal.active {
+      opacity: 1;
+      visibility: visible;
+      transform: translate(-50%, -50%) scale(1);
+    }
+
+    .modal h3 {
+      margin-bottom: 1.2rem;
+      color: var(--accent);
+      font-weight: 600;
+    }
+
+    .captcha-box {
+      background: #f8fafd;
+      padding: 1rem;
+      border-radius: 12px;
+      text-align: center;
+      font-weight: 600;
+      margin: 1rem 0;
+      font-size: 1.2rem;
+    }
+
+    .modal input {
+      width: 100%;
+      padding: 0.7rem;
+      border: 1px solid #d0dae8;
+      border-radius: 8px;
+      margin: 0.8rem 0;
+      font-size: 1rem;
+    }
+
+    .modal-actions {
+      display: flex;
+      gap: 1rem;
+      justify-content: flex-end;
+      margin-top: 1.2rem;
+    }
+
+    .modal-actions button {
+      padding: 0.6rem 1.4rem;
+      border-radius: 8px;
+      border: none;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background var(--transition-fast);
+    }
+
+    .btn-confirm {
+      background: var(--accent);
+      color: white;
+    }
+
+    .btn-confirm:hover {
+      background: var(--accent-hover);
+    }
+
+    .btn-cancel {
+      background: #eef2f7;
+      color: #333;
+    }
+
+    .toast {
+      position: fixed;
+      bottom: 30px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: var(--danger);
+      color: white;
+      padding: 1rem 2rem;
+      border-radius: 50px;
+      z-index: 400;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+      font-weight: 500;
+      opacity: 0;
+      visibility: hidden;
+      transition: all 0.3s;
+    }
+
+    .toast.show {
+      opacity: 1;
+      visibility: visible;
     }
   </style>
 </head>
 <body>
-  <!-- Шапка -->
+  <!-- ==================== NAVBAR ==================== -->
   <nav class="navbar">
     <div class="logo" id="logoTrigger">⚡ HackZone</div>
     <ul class="nav-links">
@@ -239,38 +522,35 @@
     </ul>
   </nav>
 
-  <!-- Сетка товаров -->
+  <!-- ==================== SẢN PHẨM ==================== -->
   <main>
-    <h2 style="text-align: center; padding: 1rem; color: var(--accent2);">SẢN PHẨM BÁN CHẠY</h2>
+    <h2 class="section-title">🔥 SẢN PHẨM BÁN CHẠY</h2>
     <div class="products-grid">
-      <!-- Товар 1 -->
       <div class="product-card">
         <div class="product-img">🛡️</div>
         <div class="product-info">
           <h3 class="product-title">Gói Cheat Game FPS</h3>
           <p class="product-desc">Aimbot, Wallhack, ESP cho các game bắn súng. Bảo hành 1 tháng.</p>
           <div class="price">500.000₫</div>
-          <button class="buy-btn">Mua Ngay</button>
+          <button class="buy-btn" data-product="Cheat Game FPS">Mua Ngay</button>
         </div>
       </div>
-      <!-- Товар 2 -->
       <div class="product-card">
         <div class="product-img">🔐</div>
         <div class="product-info">
           <h3 class="product-title">Phần Mềm Crack Office</h3>
           <p class="product-desc">Kích hoạt vĩnh viễn Office 365, Word, Excel... Bản quyền vĩnh viễn.</p>
           <div class="price">300.000₫</div>
-          <button class="buy-btn">Mua Ngay</button>
+          <button class="buy-btn" data-product="Crack Office">Mua Ngay</button>
         </div>
       </div>
-      <!-- Товар 3 -->
       <div class="product-card">
         <div class="product-img">💻</div>
         <div class="product-info">
           <h3 class="product-title">Tool Hack Facebook</h3>
           <p class="product-desc">Auto like, share, quét UID, check clone. Không bị checkpoint.</p>
           <div class="price">1.200.000₫</div>
-          <button class="buy-btn">Mua Ngay</button>
+          <button class="buy-btn" data-product="Hack Facebook">Mua Ngay</button>
         </div>
       </div>
     </div>
@@ -280,152 +560,343 @@
     <p>© 2025 HackZone. Tất cả công cụ chỉ dùng cho mục đích nghiên cứu bảo mật.</p>
   </footer>
 
-  <!-- Оверлей для админки -->
+  <!-- ==================== ADMIN SIDEBAR ==================== -->
   <div class="overlay" id="overlay"></div>
+  <div class="admin-sidebar" id="adminSidebar">
+    <div class="admin-header">
+      <h2><span>⚙️</span> Admin Panel</h2>
+      <button class="close-admin" id="closeAdmin">&times;</button>
+    </div>
+    <p style="color: #666; font-size: 0.85rem; margin-top: -0.8rem;">Tùy chỉnh giao diện thời gian thực</p>
 
-  <!-- Админ-панель -->
-  <div class="admin-panel" id="adminPanel">
-    <button class="close-admin" id="closeAdmin">&times;</button>
-    <h3>⚙️ TÙY CHỈNH GIAO DIỆN</h3>
     <div class="slider-group">
-      <label>Bo góc Navbar: <span id="valNav">12</span>px</label>
-      <input type="range" id="radiusNav" min="0" max="50" value="12" step="1">
+      <label>Bo góc Navbar <span id="valNav">14</span>px</label>
+      <input type="range" id="radiusNav" min="0" max="40" value="14" step="1">
     </div>
     <div class="slider-group">
-      <label>Bo góc Thẻ sản phẩm: <span id="valCard">16</span>px</label>
-      <input type="range" id="radiusCard" min="0" max="50" value="16" step="1">
+      <label>Bo góc Thẻ sản phẩm <span id="valCard">18</span>px</label>
+      <input type="range" id="radiusCard" min="0" max="40" value="18" step="1">
     </div>
     <div class="slider-group">
-      <label>Bo góc Nút: <span id="valBtn">8</span>px</label>
-      <input type="range" id="radiusBtn" min="0" max="50" value="8" step="1">
+      <label>Bo góc Nút <span id="valBtn">10</span>px</label>
+      <input type="range" id="radiusBtn" min="0" max="30" value="10" step="1">
     </div>
     <div class="slider-group">
-      <label>Bo góc Hình ảnh (trên cùng thẻ): <span id="valImg">20</span>px</label>
-      <input type="range" id="radiusImg" min="0" max="50" value="20" step="1">
+      <label>Bo góc Hình ảnh (trên thẻ) <span id="valImgTop">20</span>px</label>
+      <input type="range" id="radiusImgTop" min="0" max="40" value="20" step="1">
     </div>
     <div class="slider-group">
-      <label>Bo góc Admin Panel: <span id="valModal">24</span>px</label>
+      <label>Bo góc Modal <span id="valModal">24</span>px</label>
       <input type="range" id="radiusModal" min="0" max="50" value="24" step="1">
     </div>
-    <p style="text-align: center; margin-top: 1rem; color: #aaa;">Thay đổi tự động áp dụng, lưu trong trình duyệt.</p>
+
+    <div class="color-picker-group">
+      <label>Màu accent:</label>
+      <input type="color" id="accentColor" value="#2b6ef0">
+    </div>
+
+    <div class="admin-actions">
+      <button class="btn-admin btn-save" id="saveSettings">Lưu</button>
+      <button class="btn-admin btn-reset" id="resetSettings">Reset</button>
+    </div>
+    <p style="font-size:0.7rem; color: #999; text-align: center;">Nhấn Ctrl+Shift+A hoặc 3 lần logo để mở.</p>
   </div>
 
+  <!-- ==================== MODAL MUA HÀNG + CAPTCHA ==================== -->
+  <div class="modal" id="buyModal">
+    <h3>🛒 Xác nhận mua hàng</h3>
+    <p id="productNameInModal" style="font-weight:500;"></p>
+    <p style="font-size:0.9rem; color:#555;">Để chống bot, vui lòng giải phép tính sau:</p>
+    <div class="captcha-box" id="captchaQuestion"></div>
+    <input type="number" id="captchaAnswer" placeholder="Nhập kết quả" inputmode="numeric">
+    <div class="modal-actions">
+      <button class="btn-cancel" id="cancelBuy">Hủy</button>
+      <button class="btn-confirm" id="confirmBuy">Xác nhận</button>
+    </div>
+  </div>
+
+  <!-- Toast thông báo -->
+  <div class="toast" id="toast"></div>
+
   <script>
-    // ========== УПРАВЛЕНИЕ АДМИНКОЙ ==========
-    const adminPanel = document.getElementById('adminPanel');
-    const overlay = document.getElementById('overlay');
-    const logo = document.getElementById('logoTrigger');
-    const closeAdmin = document.getElementById('closeAdmin');
+    (function() {
+      // ========== DOM Elements ==========
+      const adminSidebar = document.getElementById('adminSidebar');
+      const overlay = document.getElementById('overlay');
+      const logo = document.getElementById('logoTrigger');
+      const closeAdminBtn = document.getElementById('closeAdmin');
+      const buyModal = document.getElementById('buyModal');
+      const productNameInModal = document.getElementById('productNameInModal');
+      const captchaQuestion = document.getElementById('captchaQuestion');
+      const captchaAnswer = document.getElementById('captchaAnswer');
+      const confirmBuyBtn = document.getElementById('confirmBuy');
+      const cancelBuyBtn = document.getElementById('cancelBuy');
+      const toast = document.getElementById('toast');
 
-    // Обработчики открытия/закрытия
-    function openAdmin() {
-      adminPanel.classList.add('active');
-      overlay.classList.add('active');
-    }
+      // ========== Biến chống DDoS ==========
+      const clickTimestamps = [];
+      const MAX_CLICKS_PER_MINUTE = 5;   // giới hạn 5 lần click mua mỗi phút
+      const COOLDOWN_SECONDS = 3;        // thời gian chờ giữa 2 lần mua
+      let currentCaptchaResult = null;
+      let lastBuyTime = 0;
+      let isProcessing = false;
 
-    function closeAdminPanel() {
-      adminPanel.classList.remove('active');
-      overlay.classList.remove('active');
-    }
-
-    // Тройной клик по логотипу
-    let clickCount = 0;
-    let clickTimer;
-    logo.addEventListener('click', () => {
-      clickCount++;
-      if (clickCount === 1) {
-        clickTimer = setTimeout(() => { clickCount = 0; }, 500);
-      } else if (clickCount === 3) {
-        clearTimeout(clickTimer);
-        clickCount = 0;
-        openAdmin();
+      // ========== Admin Sidebar ==========
+      function openAdmin() {
+        adminSidebar.classList.add('active');
+        overlay.classList.add('active');
       }
-    });
 
-    // Горячие клавиши Ctrl+Shift+A
-    document.addEventListener('keydown', (e) => {
-      if (e.ctrlKey && e.shiftKey && e.key === 'A') {
-        e.preventDefault();
-        openAdmin();
+      function closeAdmin() {
+        adminSidebar.classList.remove('active');
+        overlay.classList.remove('active');
       }
-    });
 
-    closeAdmin.addEventListener('click', closeAdminPanel);
-    overlay.addEventListener('click', closeAdminPanel);
-
-    // ========== НАСТРОЙКА BORDER-RADIUS ==========
-    const root = document.documentElement;
-
-    // Получаем элементы управления
-    const sliders = {
-      nav: document.getElementById('radiusNav'),
-      card: document.getElementById('radiusCard'),
-      btn: document.getElementById('radiusBtn'),
-      img: document.getElementById('radiusImg'),
-      modal: document.getElementById('radiusModal')
-    };
-
-    const displayValues = {
-      nav: document.getElementById('valNav'),
-      card: document.getElementById('valCard'),
-      btn: document.getElementById('valBtn'),
-      img: document.getElementById('valImg'),
-      modal: document.getElementById('valModal')
-    };
-
-    // Загрузка сохранённых значений из localStorage
-    function loadSettings() {
-      const settings = JSON.parse(localStorage.getItem('hackzone-radius')) || {};
-      if (settings.nav) sliders.nav.value = settings.nav;
-      if (settings.card) sliders.card.value = settings.card;
-      if (settings.btn) sliders.btn.value = settings.btn;
-      if (settings.img) sliders.img.value = settings.img;
-      if (settings.modal) sliders.modal.value = settings.modal;
-      applyAll();
-      updateDisplays();
-    }
-
-    // Применение значений к CSS-переменным
-    function applyAll() {
-      root.style.setProperty('--border-radius-nav', sliders.nav.value + 'px');
-      root.style.setProperty('--border-radius-card', sliders.card.value + 'px');
-      root.style.setProperty('--border-radius-btn', sliders.btn.value + 'px');
-      root.style.setProperty('--border-radius-img', sliders.img.value + 'px');
-      root.style.setProperty('--border-radius-modal', sliders.modal.value + 'px');
-    }
-
-    // Обновление отображаемых чисел
-    function updateDisplays() {
-      displayValues.nav.textContent = sliders.nav.value;
-      displayValues.card.textContent = sliders.card.value;
-      displayValues.btn.textContent = sliders.btn.value;
-      displayValues.img.textContent = sliders.img.value;
-      displayValues.modal.textContent = sliders.modal.value;
-    }
-
-    // Сохранение в localStorage
-    function saveSettings() {
-      const settings = {
-        nav: sliders.nav.value,
-        card: sliders.card.value,
-        btn: sliders.btn.value,
-        img: sliders.img.value,
-        modal: sliders.modal.value
-      };
-      localStorage.setItem('hackzone-radius', JSON.stringify(settings));
-    }
-
-    // Привязка событий для всех ползунков
-    for (let key in sliders) {
-      sliders[key].addEventListener('input', () => {
-        applyAll();
-        updateDisplays();
-        saveSettings();
+      // Mở admin: 3 click logo
+      let logoClicks = 0;
+      let logoTimer;
+      logo.addEventListener('click', (e) => {
+        logoClicks++;
+        if (logoClicks === 1) {
+          logoTimer = setTimeout(() => { logoClicks = 0; }, 600);
+        } else if (logoClicks === 3) {
+          clearTimeout(logoTimer);
+          logoClicks = 0;
+          openAdmin();
+        }
       });
-    }
 
-    // Инициализация при загрузке страницы
-    window.addEventListener('DOMContentLoaded', loadSettings);
+      // Phím tắt Ctrl+Shift+A
+      document.addEventListener('keydown', (e) => {
+        if (e.ctrlKey && e.shiftKey && e.key === 'A') {
+          e.preventDefault();
+          openAdmin();
+        }
+        // Esc để đóng
+        if (e.key === 'Escape') {
+          if (adminSidebar.classList.contains('active')) closeAdmin();
+          if (buyModal.classList.contains('active')) closeBuyModal();
+        }
+      });
+
+      closeAdminBtn.addEventListener('click', closeAdmin);
+      overlay.addEventListener('click', () => {
+        closeAdmin();
+        closeBuyModal();
+      });
+
+      // ========== Cài đặt Border Radius & Màu sắc ==========
+      const root = document.documentElement;
+      const sliders = {
+        nav: document.getElementById('radiusNav'),
+        card: document.getElementById('radiusCard'),
+        btn: document.getElementById('radiusBtn'),
+        imgTop: document.getElementById('radiusImgTop'),
+        modal: document.getElementById('radiusModal')
+      };
+      const displayVals = {
+        nav: document.getElementById('valNav'),
+        card: document.getElementById('valCard'),
+        btn: document.getElementById('valBtn'),
+        imgTop: document.getElementById('valImgTop'),
+        modal: document.getElementById('valModal')
+      };
+      const accentColorInput = document.getElementById('accentColor');
+
+      function applySettings() {
+        root.style.setProperty('--radius-nav', sliders.nav.value + 'px');
+        root.style.setProperty('--radius-card', sliders.card.value + 'px');
+        root.style.setProperty('--radius-btn', sliders.btn.value + 'px');
+        root.style.setProperty('--radius-img', sliders.imgTop.value + 'px ' + sliders.imgTop.value + 'px 0 0');
+        root.style.setProperty('--radius-modal', sliders.modal.value + 'px');
+        root.style.setProperty('--accent', accentColorInput.value);
+        // Cập nhật hiển thị
+        for (let key in displayVals) {
+          displayVals[key].textContent = sliders[key].value;
+        }
+      }
+
+      function saveSettingsToStorage() {
+        const settings = {
+          nav: sliders.nav.value,
+          card: sliders.card.value,
+          btn: sliders.btn.value,
+          imgTop: sliders.imgTop.value,
+          modal: sliders.modal.value,
+          accent: accentColorInput.value
+        };
+        localStorage.setItem('hackzone-settings', JSON.stringify(settings));
+      }
+
+      function loadSettingsFromStorage() {
+        const saved = JSON.parse(localStorage.getItem('hackzone-settings'));
+        if (saved) {
+          if (saved.nav) sliders.nav.value = saved.nav;
+          if (saved.card) sliders.card.value = saved.card;
+          if (saved.btn) sliders.btn.value = saved.btn;
+          if (saved.imgTop) sliders.imgTop.value = saved.imgTop;
+          if (saved.modal) sliders.modal.value = saved.modal;
+          if (saved.accent) accentColorInput.value = saved.accent;
+        }
+        applySettings();
+      }
+
+      // Event listeners cho slider và color
+      for (let key in sliders) {
+        sliders[key].addEventListener('input', applySettings);
+      }
+      accentColorInput.addEventListener('input', applySettings);
+
+      document.getElementById('saveSettings').addEventListener('click', () => {
+        saveSettingsToStorage();
+        showToast('✅ Đã lưu cài đặt thành công!', 'success');
+      });
+
+      document.getElementById('resetSettings').addEventListener('click', () => {
+        localStorage.removeItem('hackzone-settings');
+        // Reset về mặc định
+        sliders.nav.value = 14;
+        sliders.card.value = 18;
+        sliders.btn.value = 10;
+        sliders.imgTop.value = 20;
+        sliders.modal.value = 24;
+        accentColorInput.value = '#2b6ef0';
+        applySettings();
+        showToast('🔄 Đã khôi phục mặc định!', 'success');
+      });
+
+      // ========== HỆ THỐNG CHỐNG DDoS / BOT ==========
+      function isClickSpam() {
+        const now = Date.now();
+        // Loại bỏ các timestamp cũ hơn 1 phút
+        while (clickTimestamps.length && now - clickTimestamps[0] > 60000) {
+          clickTimestamps.shift();
+        }
+        if (clickTimestamps.length >= MAX_CLICKS_PER_MINUTE) {
+          return true; // vượt ngưỡng
+        }
+        // Kiểm tra thời gian giữa các click
+        if (clickTimestamps.length > 0 && (now - clickTimestamps[clickTimestamps.length-1]) < COOLDOWN_SECONDS * 1000) {
+          return true;
+        }
+        clickTimestamps.push(now);
+        return false;
+      }
+
+      function generateCaptcha() {
+        const a = Math.floor(Math.random() * 20) + 1;
+        const b = Math.floor(Math.random() * 10) + 1;
+        const ops = ['+', '-'];
+        const op = ops[Math.floor(Math.random() * ops.length)];
+        let result;
+        if (op === '+') result = a + b;
+        else result = a - b;
+        captchaQuestion.textContent = `${a} ${op} ${b} = ?`;
+        currentCaptchaResult = result;
+      }
+
+      function openBuyModal(productName) {
+        // Kiểm tra spam click
+        if (isClickSpam()) {
+          showToast('⚠️ Bạn thao tác quá nhanh! Vui lòng thử lại sau.', 'warning');
+          // Tạm vô hiệu hóa tất cả nút mua
+          document.querySelectorAll('.buy-btn').forEach(btn => btn.disabled = true);
+          setTimeout(() => {
+            document.querySelectorAll('.buy-btn').forEach(btn => btn.disabled = false);
+          }, 5000);
+          return;
+        }
+
+        productNameInModal.textContent = 'Sản phẩm: ' + productName;
+        generateCaptcha();
+        captchaAnswer.value = '';
+        buyModal.classList.add('active');
+        captchaAnswer.focus();
+      }
+
+      function closeBuyModal() {
+        buyModal.classList.remove('active');
+        isProcessing = false;
+      }
+
+      // Xử lý khi click nút Mua Ngay
+      document.querySelectorAll('.buy-btn').forEach(btn => {
+        btn.addEventListener('click', function(e) {
+          if (isProcessing) return;
+          const product = this.getAttribute('data-product');
+          openBuyModal(product);
+        });
+      });
+
+      cancelBuyBtn.addEventListener('click', closeBuyModal);
+
+      confirmBuyBtn.addEventListener('click', () => {
+        const userAnswer = parseInt(captchaAnswer.value.trim(), 10);
+        if (isNaN(userAnswer)) {
+          showToast('❌ Vui lòng nhập số!', 'error');
+          return;
+        }
+        if (userAnswer !== currentCaptchaResult) {
+          showToast('❌ Sai kết quả! Vui lòng thử lại.', 'error');
+          generateCaptcha(); // tạo câu hỏi mới
+          captchaAnswer.value = '';
+          return;
+        }
+        // Thành công
+        isProcessing = true;
+        closeBuyModal();
+        showToast('✅ Xác nhận thành công! Chúng tôi sẽ liên hệ bạn.', 'success');
+        // Mô phỏng gửi đơn hàng
+        setTimeout(() => {
+          isProcessing = false;
+        }, 2000);
+      });
+
+      // ========== Toast ==========
+      function showToast(message, type = 'info') {
+        toast.textContent = message;
+        toast.style.background = type === 'error' ? '#e74c3c' : (type === 'warning' ? '#f39c12' : '#27ae60');
+        toast.classList.add('show');
+        clearTimeout(window.toastTimer);
+        window.toastTimer = setTimeout(() => {
+          toast.classList.remove('show');
+        }, 3000);
+      }
+
+      // ========== Chống chuột phải & F12 (cơ bản) ==========
+      document.addEventListener('contextmenu', (e) => {
+        e.preventDefault();
+        showToast('🚫 Chuột phải bị vô hiệu hóa.', 'warning');
+      });
+
+      document.onkeydown = function(e) {
+        if (e.keyCode === 123 || (e.ctrlKey && e.shiftKey && e.keyCode === 73)) {
+          e.preventDefault();
+          showToast('🚫 Developer Tools bị chặn.', 'warning');
+          return false;
+        }
+        // Cho phép Ctrl+Shift+A admin
+      };
+
+      // ========== Khởi tạo ==========
+      loadSettingsFromStorage();
+
+      // Thêm class animation cho card khi scroll (Intersection Observer)
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.style.opacity = 1;
+            entry.target.style.transform = 'translateY(0)';
+          }
+        });
+      }, { threshold: 0.1 });
+
+      document.querySelectorAll('.product-card').forEach(card => {
+        observer.observe(card);
+      });
+
+      console.log('HackZone đã sẵn sàng. Admin: Ctrl+Shift+A hoặc 3 click logo.');
+    })();
   </script>
 </body>
 </html>
