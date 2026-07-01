@@ -90,7 +90,6 @@ h1,h2,h3,.display{ font-family:'Playfair Display',serif; }
 
 #fxCanvas{ position:fixed; inset:0; pointer-events:none; z-index:2; opacity:0.45; }
 
-/* ===== NAVBAR — reworked for even alignment on all breakpoints ===== */
 .navbar{
   display:flex; justify-content:space-between; align-items:center;
   padding:1.1rem 4%; background:rgba(11,12,16,0.78); backdrop-filter:blur(14px);
@@ -247,7 +246,6 @@ footer{
 .admin-section h4{ font-family:'Playfair Display',serif; margin-bottom:0.7rem; color:var(--gold-bright); }
 .admin-section h5{ font-family:'Playfair Display',serif; font-size:0.95rem; margin:0.9rem 0 0.4rem; color:var(--ink-soft); }
 
-/* ===== Admin product row — now a real grid so fields line up evenly instead of ragged-wrapping flex ===== */
 .product-item-admin{
   display:grid;
   grid-template-columns:46px 1fr 1fr;
@@ -380,7 +378,6 @@ footer{
 .history-item:hover{ border-color:var(--gold); }
 .history-detail{ display:none; margin-top:0.6rem; padding-top:0.6rem; border-top:1px solid var(--line); }
 
-/* devtools deterrent banner (real element, shown only if devtools heuristic trips) */
 #devtoolsWarning{
   position:fixed; inset:0; z-index:999; background:var(--bg-deep); color:var(--ink);
   display:none; align-items:center; justify-content:center; text-align:center; padding:2rem;
