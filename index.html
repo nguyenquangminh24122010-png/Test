@@ -204,29 +204,6 @@ h1,h2,h3,.display{ font-family:'Playfair Display',serif; }
   box-shadow:var(--shadow-md);
 }
 
-/* ---------- Lưới chọn số (1-100) khi mua sản phẩm bán theo mã ---------- */
-.keypad-grid{
-  display:grid; grid-template-columns:repeat(8, 1fr); gap:0.45rem; max-height:52vh; overflow-y:auto; margin:1rem 0; padding-right:2px;
-}
-.keypad-num{
-  padding:0.6rem 0; border-radius:8px; border:1px solid var(--line); background:var(--panel); color:var(--ink-soft);
-  font-weight:700; font-size:0.82rem; cursor:not-allowed; opacity:0.35; transition:all var(--t-fast);
-}
-.keypad-num.available{ cursor:pointer; opacity:1; color:var(--ink); background:var(--panel-2); border-color:rgba(212,175,106,0.35); }
-.keypad-num.available:hover{ border-color:var(--gold); color:var(--gold-bright); transform:translateY(-2px); box-shadow:var(--shadow-sm); }
-.keypad-num.taken{ opacity:0.35; background:var(--line-soft); text-decoration:line-through; }
-@media (max-width:480px){ .keypad-grid{ grid-template-columns:repeat(6,1fr); } }
-
-.admin-key-row{
-  display:flex; align-items:center; gap:0.5rem; padding:0.5rem; background:var(--panel);
-  border:1px solid var(--line); border-radius:8px; margin-bottom:0.4rem;
-}
-.admin-key-row .knum{ width:36px; font-weight:800; }
-.admin-key-row .kcode{ flex:1; font-family:monospace; font-size:0.82rem; word-break:break-all; }
-.admin-key-row .kstatus{ font-size:0.62rem; padding:0.2rem 0.5rem; border-radius:99px; white-space:nowrap; font-weight:700; }
-.kstatus.available{ background:rgba(61,220,151,0.16); color:var(--success); }
-.kstatus.used{ background:rgba(255,93,108,0.16); color:var(--danger); }
-
 .empty-state{ text-align:center; padding:3rem 1.5rem; color:var(--ink-soft); grid-column:1/-1; font-size:1.05rem; }
 
 footer{
@@ -278,6 +255,7 @@ footer{
 .field-stock{ width:70px; }
 .field-desc{ flex:1; min-width:120px; }
 .field-note{ width:100%; }
+.field-keys{ width:100%; font-family:monospace; }
 .img-preview{ width:46px; height:46px; border-radius:6px; object-fit:cover; border:1px solid var(--line); flex:none; background:var(--bg); }
 .file-input-wrap{ display:flex; align-items:center; gap:0.5rem; flex-wrap:wrap; }
 .file-input-wrap input[type=file]{ font-size:0.72rem; color:var(--ink-soft); max-width:140px; }
@@ -386,6 +364,10 @@ footer{
 }
 .copy-phone-btn:hover{ filter:brightness(1.08); }
 
+.history-item{ background:var(--panel); border:1px solid var(--line); padding:0.8rem; border-radius:10px; margin-bottom:0.6rem; cursor:pointer; transition:border-color var(--t-fast); }
+.history-item:hover{ border-color:var(--gold); }
+.history-detail{ display:none; margin-top:0.6rem; padding-top:0.6rem; border-top:1px solid var(--line); }
+
 @media (max-width:600px){
   .navbar{ padding:0.8rem 4%; }
   .nav-links{ display:none; }
@@ -423,6 +405,7 @@ footer{
     <button class="btn-icon" id="btnCart" aria-label="Giỏ hàng">🛒<span class="badge" id="cartBadge">0</span></button>
     <button class="btn-icon" id="btnHistory" aria-label="Lịch sử mua hàng">📋</button>
     <button class="btn-icon" id="btnDeposit" aria-label="Nạp tiền">💰</button>
+    <button class="btn-icon" id="btnAccount" aria-label="Tài khoản">👤</button>
     <button class="btn-icon" id="btnAdmin" aria-label="Quản trị">⚙️</button>
     <button class="btn-icon" id="btnLogout">Thoát</button>
   </div>
@@ -530,6 +513,7 @@ footer{
   <h3>Đặt hàng thành công</h3>
   <p style="text-align:center; color:var(--ink-soft); font-size:0.88rem;">Cảm ơn bạn đã mua hàng tại nminhshop.</p>
   <div class="order-note-box" id="orderNoteBox"></div>
+  <button class="copy-phone-btn" id="copyOrderNote" style="margin-bottom:0.6rem;">Sao chép nội dung/key</button>
   <div class="order-contact-row">
     <div>
       <div class="label">Liên hệ nhận hàng</div>
@@ -549,8 +533,28 @@ footer{
 <!-- Lịch sử mua hàng -->
 <div class="modal" id="historyModal" style="max-width:500px; text-align:left;">
   <h3>Lịch sử mua hàng</h3>
+  <p class="help-text">Bấm vào một đơn hàng để xem key / nội dung đã nhận.</p>
   <div id="historyContent" style="max-height:50vh; overflow-y:auto; margin:1rem 0;"></div>
   <button class="btn-secondary" id="closeHistory" style="width:100%;">Đóng</button>
+</div>
+
+<!-- Tài khoản: đổi tên đăng nhập / mật khẩu (cho cả user thường và admin) -->
+<div class="modal" id="accountModal" style="text-align:left;">
+  <h3>Tài khoản của tôi</h3>
+  <p class="auth-sub" style="text-align:left;">Đổi tên đăng nhập hoặc mật khẩu cho dễ nhớ.</p>
+  <label class="auth-field-label">Tên đăng nhập mới</label>
+  <input type="text" id="accNewUsername" placeholder="Để trống nếu không đổi">
+  <label class="auth-field-label">Mật khẩu hiện tại</label>
+  <input type="password" id="accCurrentPassword" placeholder="Bắt buộc để xác nhận">
+  <label class="auth-field-label">Mật khẩu mới</label>
+  <input type="password" id="accNewPassword" placeholder="Để trống nếu không đổi">
+  <label class="auth-field-label">Nhập lại mật khẩu mới</label>
+  <input type="password" id="accNewPassword2" placeholder="Nhập lại mật khẩu mới">
+  <div class="auth-error" id="accountError"></div>
+  <div class="modal-buttons">
+    <button class="btn-secondary" id="cancelAccount">Hủy</button>
+    <button class="btn-primary" id="saveAccount">Lưu thay đổi</button>
+  </div>
 </div>
 
 <!-- Admin sidebar -->
@@ -570,14 +574,15 @@ footer{
       <input placeholder="Tên sản phẩm" id="newName" maxlength="80">
       <input placeholder="Thương hiệu / phân loại phụ" id="newAuthor" maxlength="60">
       <input placeholder="Giá (₫)" id="newPrice" type="number" min="0" max="999999999">
-      <input placeholder="Tồn kho (1-100)" id="newStock" type="number" min="1" max="100" value="1">
+      <input placeholder="Tồn kho (1-100, bỏ qua nếu dùng danh sách key)" id="newStock" type="number" min="1" max="100" value="1">
       <select id="newCategory"></select>
       <input placeholder="Mô tả ngắn" id="newDesc" maxlength="160">
       <div class="file-input-wrap">
         <span style="font-size:0.78rem; color:var(--ink-soft);">Ảnh sản phẩm:</span>
         <input type="file" id="newImageFile" accept="image/*">
       </div>
-      <textarea placeholder="Nội dung riêng hiện sau khi mua sản phẩm này (để trống = dùng nội dung chung)" id="newNote" maxlength="500" rows="2"></textarea>
+      <textarea placeholder="Danh sách key (mỗi dòng 1 key, để trống nếu không dùng key — khi có key thì tồn kho = số key)" id="newKeys" rows="2"></textarea>
+      <textarea placeholder="Nội dung riêng hiện sau khi mua sản phẩm này (dùng khi không có key, để trống = dùng nội dung chung)" id="newNote" maxlength="500" rows="2"></textarea>
       <button class="btn-sm btn-success" id="addProduct">+ Thêm sản phẩm</button>
     </div>
   </div>
@@ -607,7 +612,7 @@ footer{
     <button class="btn-sm btn-primary" id="saveBankAccount" style="margin-bottom:1.2rem;">Lưu</button>
 
     <h4>Nội dung chung sau khi mua hàng</h4>
-    <p class="help-text">Hiện cho mọi đơn hàng nếu sản phẩm không có nội dung riêng.</p>
+    <p class="help-text">Hiện cho mọi đơn hàng nếu sản phẩm không có nội dung riêng và không dùng key.</p>
     <textarea id="defaultOrderNoteInput" rows="4" maxlength="500" style="width:100%; padding:0.7rem 0.9rem; border:1px solid var(--line); border-radius:8px; font-family:'Inter',sans-serif; font-size:0.88rem; resize:vertical; background:var(--panel); color:var(--ink);" placeholder="Vd: Cảm ơn bạn đã mua hàng! Vui lòng liên hệ số điện thoại bên trên trong vòng 24h để được giao hàng."></textarea>
     <button class="btn-sm btn-primary" id="saveDefaultOrderNote" style="margin:0.6rem 0 1.2rem;">Lưu nội dung chung</button>
 
@@ -678,8 +683,8 @@ footer{
   const DEFAULT_ORDER_NOTE = 'Cảm ơn bạn đã mua hàng tại nminhshop! Vui lòng liên hệ số điện thoại bên trên để xác nhận và nhận hàng trong vòng 24-48h.';
   const defaultCategories = ['Nổi bật', 'Đồ điện tử', 'Phụ kiện', 'Khác'];
   const defaultProducts = [
-    { id:1, name:'Sản phẩm mẫu 1', author:'nminhshop', desc:'Mô tả ngắn cho sản phẩm mẫu. Hãy chỉnh sửa trong trang Quản trị.', price:120000, stock:25, emoji:'📦', image:'', category:'Nổi bật', note:'' },
-    { id:2, name:'Sản phẩm mẫu 2', author:'nminhshop', desc:'Một sản phẩm khác để bạn tham khảo cách hiển thị.', price:95000, stock:10, emoji:'🎁', image:'', category:'Phụ kiện', note:'' }
+    { id:1, name:'Sản phẩm mẫu 1', author:'nminhshop', desc:'Mô tả ngắn cho sản phẩm mẫu. Hãy chỉnh sửa trong trang Quản trị.', price:120000, stock:25, emoji:'📦', image:'', category:'Nổi bật', note:'', keys:[] },
+    { id:2, name:'Sản phẩm mẫu 2', author:'nminhshop', desc:'Một sản phẩm khác để bạn tham khảo cách hiển thị.', price:95000, stock:10, emoji:'🎁', image:'', category:'Phụ kiện', note:'', keys:[] }
   ];
   const DEFAULT_ADMIN_USERNAME = 'nminh';
   const DEFAULT_ADMIN_PASSWORD = '1';
@@ -812,16 +817,23 @@ footer{
     try{ await fbSaveCart(userId, cart); }catch(e){ console.error('Lỗi đồng bộ giỏ hàng:', e); }
   }
 
-  // ==================== Khởi tạo dữ liệu mặc định (chạy song song, không chặn màn tải) ====================
+  // ==================== Khởi tạo dữ liệu mặc định (chỉ chạy đúng 1 lần cho cả đời dự án) ====================
+  // QUAN TRỌNG: trước đây hàm này kiểm tra "sản phẩm mẫu id=1/2 có tồn tại chưa" mỗi lần tải
+  // trang, và tự tạo lại nếu thiếu. Hệ quả: hễ sản phẩm đó bán hết (bị xoá khỏi products),
+  // chỉ cần tải lại trang vài lần là nó "tự hồi lại hàng". Giờ chỉ seed đúng 1 lần dựa vào
+  // cờ "seeded" lưu trong config/settings — sau lần đó, dù sản phẩm bị xoá/hết hàng sẽ
+  // KHÔNG bao giờ tự động được tạo lại nữa.
   async function seedIfEmpty(){
     const f = await withFb();
     if (!f) return;
     try{
-      const settingsSnap = await f.getDoc(f.doc(f.db, 'config', 'settings'));
+      const settingsRef = f.doc(f.db, 'config', 'settings');
+      const settingsSnap = await f.getDoc(settingsRef);
+      const settingsData = settingsSnap.exists() ? settingsSnap.data() : null;
       if (!settingsSnap.exists()) {
-        await f.setDoc(f.doc(f.db, 'config', 'settings'), {
+        await f.setDoc(settingsRef, {
           bankAccount: DEFAULT_PHONE, contactPhone: DEFAULT_PHONE,
-          defaultOrderNote: DEFAULT_ORDER_NOTE, fx:{snow:false,blossom:false}
+          defaultOrderNote: DEFAULT_ORDER_NOTE, fx:{snow:false,blossom:false}, seeded:false
         });
       }
       const adminSnap = await f.getDoc(f.doc(f.db, 'users', '1'));
@@ -829,15 +841,20 @@ footer{
         const hashed = await hashPassword(DEFAULT_ADMIN_PASSWORD);
         await f.setDoc(f.doc(f.db, 'users', '1'), { id:1, username:DEFAULT_ADMIN_USERNAME, password:hashed, isAdmin:true, balance:0 });
       }
-      // Tạo song song thay vì tuần tự để giảm thời gian chờ khởi tạo lần đầu.
-      await Promise.all(defaultCategories.map(async (cat) => {
-        const catSnap = await f.getDoc(f.doc(f.db, 'categories', cat));
-        if (!catSnap.exists()) await f.setDoc(f.doc(f.db, 'categories', cat), { name: cat });
-      }));
-      await Promise.all(defaultProducts.map(async (p) => {
-        const pSnap = await f.getDoc(f.doc(f.db, 'products', String(p.id)));
-        if (!pSnap.exists()) await f.setDoc(f.doc(f.db, 'products', String(p.id)), p);
-      }));
+      const alreadySeeded = !!(settingsData && settingsData.seeded === true);
+      if (!alreadySeeded) {
+        await Promise.all(defaultCategories.map(async (cat) => {
+          const catSnap = await f.getDoc(f.doc(f.db, 'categories', cat));
+          if (!catSnap.exists()) await f.setDoc(f.doc(f.db, 'categories', cat), { name: cat });
+        }));
+        await Promise.all(defaultProducts.map(async (p) => {
+          const pSnap = await f.getDoc(f.doc(f.db, 'products', String(p.id)));
+          if (!pSnap.exists()) await f.setDoc(f.doc(f.db, 'products', String(p.id)), p);
+        }));
+        // Đánh dấu đã seed xong — từ giờ sẽ không bao giờ tự tạo lại sản phẩm/danh mục mẫu nữa,
+        // dù chúng có bị xoá hay bán hết trong tương lai.
+        await f.setDoc(settingsRef, { seeded:true }, { merge:true });
+      }
     }catch(e){
       console.error('Lỗi khởi tạo dữ liệu mặc định (có thể do Firestore Rules chặn ghi):', e);
     }
@@ -1204,7 +1221,63 @@ footer{
     showToast('Đã đăng xuất.', 'info');
   });
 
-  // ==================== Cart / Thanh toán (transaction: trừ kho, ghi lịch sử mọi đơn) ====================
+  // ==================== Tài khoản: đổi tên đăng nhập / mật khẩu ====================
+  $('#btnAccount').addEventListener('click', () => {
+    const user = getCurrentUser();
+    if (!user) { showToast('Vui lòng đăng nhập!', 'error'); return; }
+    $('#accNewUsername').value = '';
+    $('#accCurrentPassword').value = '';
+    $('#accNewPassword').value = '';
+    $('#accNewPassword2').value = '';
+    $('#accountError').textContent = '';
+    $('#accountModal').classList.add('active');
+    $('#overlay').classList.add('active');
+  });
+  $('#cancelAccount').addEventListener('click', () => {
+    $('#accountModal').classList.remove('active');
+    $('#overlay').classList.remove('active');
+  });
+  $('#saveAccount').addEventListener('click', async () => {
+    const errEl = $('#accountError');
+    errEl.textContent = '';
+    const user = getCurrentUser();
+    if (!user) return;
+    const newUsername = sanitizeText($('#accNewUsername').value, 24);
+    const currentPassword = $('#accCurrentPassword').value;
+    const newPassword = $('#accNewPassword').value;
+    const newPassword2 = $('#accNewPassword2').value;
+    if (!currentPassword) { errEl.textContent = 'Nhập mật khẩu hiện tại để xác nhận.'; return; }
+    const btn = $('#saveAccount');
+    btn.disabled = true;
+    try{
+      const hashedCurrent = await hashPassword(currentPassword);
+      const freshUser = STATE.users.find(u => u.id === user.id);
+      if (!freshUser || freshUser.password !== hashedCurrent) { errEl.textContent = 'Mật khẩu hiện tại không đúng.'; return; }
+      if (newUsername && !isSafeUsername(newUsername)) { errEl.textContent = 'Tên đăng nhập chỉ gồm chữ, số, dấu gạch (3-24 ký tự).'; return; }
+      if (newUsername && STATE.users.some(u => u.id !== user.id && String(u.username).toLowerCase() === newUsername.toLowerCase())) { errEl.textContent = 'Tên đăng nhập đã tồn tại.'; return; }
+      if (newPassword || newPassword2) {
+        if (newPassword.length < 6) { errEl.textContent = 'Mật khẩu mới cần ít nhất 6 ký tự.'; return; }
+        if (newPassword !== newPassword2) { errEl.textContent = 'Mật khẩu nhập lại không khớp.'; return; }
+      }
+      const updates = {};
+      if (newUsername && newUsername !== freshUser.username) updates.username = newUsername;
+      if (newPassword) updates.password = await hashPassword(newPassword);
+      if (Object.keys(updates).length === 0) { errEl.textContent = 'Chưa có thay đổi nào.'; return; }
+      const updatedUser = Object.assign({}, freshUser, updates);
+      await fbSetUser(updatedUser);
+      setCurrentUser(updatedUser);
+      $('#accountModal').classList.remove('active');
+      $('#overlay').classList.remove('active');
+      showToast('Đã cập nhật tài khoản!', 'success');
+    }catch(e){
+      console.error(e);
+      errEl.textContent = 'Lỗi kết nối, vui lòng thử lại.';
+    }finally{
+      btn.disabled = false;
+    }
+  });
+
+  // ==================== Cart / Thanh toán (transaction: trừ kho hoặc key, ghi lịch sử mọi đơn) ====================
   $('#btnCart').addEventListener('click', async (e) => {
     e.preventDefault();
     if (botBlocked) return;
@@ -1220,22 +1293,30 @@ footer{
     $('#overlay').classList.remove('active');
   });
 
-  function buildOrderNote(cart){
+  function buildOrderNote(cart, assignedKeysByItem){
+    assignedKeysByItem = assignedKeysByItem || {};
     const defaultNote = STATE.settings.defaultOrderNote || DEFAULT_ORDER_NOTE;
-    const customLines = [];
+    const lines = [];
+    let hasAny = false;
     cart.forEach(item => {
       const prod = STATE.products.find(p => p.id === item.id);
-      if (prod && prod.note && prod.note.trim()) {
-        customLines.push(`• ${prod.name}: ${prod.note.trim()}`);
+      const keys = assignedKeysByItem[item.id];
+      if (keys && keys.length) {
+        hasAny = true;
+        lines.push(`• ${item.name}:\n${keys.join('\n')}`);
+      } else if (prod && prod.note && prod.note.trim()) {
+        hasAny = true;
+        lines.push(`• ${item.name}: ${prod.note.trim()}`);
+      } else {
+        lines.push(`• ${item.name}`);
       }
     });
-    if (customLines.length === 0) return defaultNote;
-    if (customLines.length === cart.length) return customLines.join('\n\n');
-    return customLines.join('\n\n') + '\n\n' + defaultNote;
+    if (!hasAny) return defaultNote;
+    return lines.join('\n\n') + '\n\n' + defaultNote;
   }
 
-  function showOrderSuccess(cart){
-    $('#orderNoteBox').textContent = buildOrderNote(cart);
+  function showOrderSuccess(cart, assignedKeysByItem){
+    $('#orderNoteBox').textContent = buildOrderNote(cart, assignedKeysByItem);
     $('#orderContactPhone').textContent = STATE.settings.contactPhone || DEFAULT_PHONE;
     $('#orderSuccessModal').classList.add('active');
     $('#overlay').classList.add('active');
@@ -1247,6 +1328,10 @@ footer{
   $('#copyOrderPhone').addEventListener('click', () => {
     const phone = STATE.settings.contactPhone || DEFAULT_PHONE;
     navigator.clipboard?.writeText(phone).then(() => showToast('Đã sao chép số!', 'success')).catch(() => showToast('Không thể sao chép.', 'warning'));
+  });
+  $('#copyOrderNote').addEventListener('click', () => {
+    const text = $('#orderNoteBox').textContent || '';
+    navigator.clipboard?.writeText(text).then(() => showToast('Đã sao chép!', 'success')).catch(() => showToast('Không thể sao chép.', 'warning'));
   });
   $('#copyDepositPhone').addEventListener('click', () => {
     const phone = STATE.settings.contactPhone || DEFAULT_PHONE;
@@ -1264,10 +1349,12 @@ footer{
     const total = cart.reduce((s, i) => s + i.price * i.quantity, 0);
     if (getBalance(user.id) < total) { showToast('Số dư không đủ!', 'error'); return; }
 
+    let assignedKeysByItem = {};
     try{
       const f = await withFb();
       if (!f) throw new Error('Chưa kết nối được máy chủ dữ liệu.');
       await f.runTransaction(f.db, async (transaction) => {
+        assignedKeysByItem = {}; // reset mỗi lần transaction chạy lại (retry)
         const userRef = f.doc(f.db, 'users', String(user.id));
         const userDoc = await transaction.get(userRef);
         if (!userDoc.exists()) throw new Error('Tài khoản không tồn tại.');
@@ -1279,24 +1366,34 @@ footer{
           const prodRef = f.doc(f.db, 'products', String(item.id));
           const prodDoc = await transaction.get(prodRef);
           if (!prodDoc.exists()) throw new Error(`Sản phẩm "${item.name}" không tồn tại.`);
-          const stock = prodDoc.data().stock || 0;
-          if (stock < item.quantity) throw new Error(`Sản phẩm "${item.name}" không đủ hàng.`);
+          const prodData = prodDoc.data();
+          const hasKeyList = Array.isArray(prodData.keys) && prodData.keys.length > 0;
+          const availableStock = hasKeyList ? prodData.keys.length : (Number(prodData.stock) || 0);
+          if (availableStock < item.quantity) throw new Error(`Sản phẩm "${item.name}" không đủ hàng.`);
           prodDocs[item.id] = prodDoc;
         }
 
         transaction.update(userRef, { balance: currentBalance - total });
 
-        // Mỗi đơn hàng đều được ghi vào "purchases" (lịch sử mua hàng), dù sản phẩm còn hàng
-        // hay đã hết — "món" (đơn vị tồn kho) vừa bán sẽ bị trừ khỏi kho hiển thị cho khách.
+        // Mỗi đơn hàng đều được ghi vào "purchases" (lịch sử mua hàng). Nếu sản phẩm dùng
+        // danh sách key riêng, mỗi đơn sẽ "rút" ra đúng số key cần và lưu lại trong đơn hàng
+        // đó để khách xem lại trong Lịch sử mua hàng.
         for (const item of cart) {
           const prodDoc = prodDocs[item.id];
+          const prodData = prodDoc.data();
           const prodRef = f.doc(f.db, 'products', String(item.id));
-          const newStock = (prodDoc.data().stock || 0) - item.quantity;
-          if (newStock <= 0) {
-            transaction.delete(prodRef);
+          const hasKeyList = Array.isArray(prodData.keys) && prodData.keys.length > 0;
+          let assignedKeys = [];
+          if (hasKeyList) {
+            const keysCopy = prodData.keys.slice();
+            assignedKeys = keysCopy.splice(0, item.quantity);
+            transaction.update(prodRef, { keys: keysCopy, stock: keysCopy.length });
           } else {
-            transaction.update(prodRef, { stock: newStock });
+            const newStock = (Number(prodData.stock) || 0) - item.quantity;
+            if (newStock <= 0) transaction.delete(prodRef);
+            else transaction.update(prodRef, { stock: newStock });
           }
+          assignedKeysByItem[item.id] = assignedKeys;
           const purchaseRef = f.doc(f.collection(f.db, 'purchases'));
           transaction.set(purchaseRef, {
             productId: item.id,
@@ -1305,7 +1402,9 @@ footer{
             buyerId: user.id,
             buyerName: user.username,
             quantity: item.quantity,
-            purchasedAt: new Date().toISOString()
+            purchasedAt: new Date().toISOString(),
+            keys: assignedKeys,
+            note: (prodData.note || '')
           });
         }
       });
@@ -1315,7 +1414,7 @@ footer{
       updateCartBadge();
       updateBalanceDisplay();
       $('#cartSidebar').classList.remove('active');
-      showOrderSuccess(cart);
+      showOrderSuccess(cart, assignedKeysByItem);
     }catch(e){
       console.error(e);
       showToast(e.message || 'Lỗi khi thanh toán, vui lòng thử lại.', 'error');
@@ -1390,7 +1489,7 @@ footer{
     $('#overlay').classList.remove('active');
   });
 
-  // ==================== Lịch sử mua hàng (khách xem đơn của chính mình) ====================
+  // ==================== Lịch sử mua hàng (khách xem đơn của chính mình, bấm để xem key) ====================
   $('#btnHistory').addEventListener('click', async () => {
     if (botBlocked) return;
     const user = getCurrentUser();
@@ -1409,15 +1508,38 @@ footer{
       const purchases = snap.docs.map(d => d.data());
       if (purchases.length === 0) {
         div.innerHTML = '<p style="color:var(--ink-soft);">Bạn chưa có đơn hàng nào.</p>';
-      } else {
-        div.innerHTML = purchases.map(p => `
-          <div style="background:var(--panel); border:1px solid var(--line); padding:0.8rem; border-radius:10px; margin-bottom:0.6rem;">
-            <strong>${escapeHtml(p.productName)}</strong> x${p.quantity}<br>
-            <span style="color:var(--gold-bright);">${(p.price * p.quantity).toLocaleString('vi-VN')}₫</span>
-            <div style="font-size:0.72rem; color:var(--ink-faint);">${escapeHtml(new Date(p.purchasedAt).toLocaleString('vi-VN'))}</div>
-          </div>
-        `).join('');
+        return;
       }
+      const purchaseTexts = purchases.map(p => {
+        if (Array.isArray(p.keys) && p.keys.length) return p.keys.join('\n');
+        if (p.note && p.note.trim()) return p.note.trim();
+        return 'Không có nội dung riêng cho đơn này — vui lòng liên hệ hỗ trợ.';
+      });
+      div.innerHTML = purchases.map((p, idx) => `
+        <div class="history-item" data-idx="${idx}">
+          <strong>${escapeHtml(p.productName)}</strong> x${p.quantity}<br>
+          <span style="color:var(--gold-bright);">${(p.price * p.quantity).toLocaleString('vi-VN')}₫</span>
+          <div style="font-size:0.72rem; color:var(--ink-faint);">${escapeHtml(new Date(p.purchasedAt).toLocaleString('vi-VN'))}</div>
+          <div class="history-detail" id="histDetail${idx}">
+            <div style="font-size:0.82rem; white-space:pre-wrap;">${escapeHtml(purchaseTexts[idx])}</div>
+            <button class="copy-phone-btn copy-history-key" data-idx="${idx}" style="margin-top:0.6rem;">Sao chép</button>
+          </div>
+        </div>
+      `).join('');
+      $$('.history-item').forEach(el => {
+        el.addEventListener('click', () => {
+          const idx = el.dataset.idx;
+          const det = document.getElementById('histDetail' + idx);
+          det.style.display = det.style.display === 'block' ? 'none' : 'block';
+        });
+      });
+      $$('.copy-history-key').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          const idx = btn.dataset.idx;
+          navigator.clipboard?.writeText(purchaseTexts[idx]).then(() => showToast('Đã sao chép!', 'success')).catch(() => showToast('Không thể sao chép.', 'warning'));
+        });
+      });
     }catch(e){
       console.error(e);
       div.innerHTML = `<p style="color:var(--danger);">Không tải được lịch sử: ${escapeHtml(e.message||'lỗi kết nối')}.<br><span style="color:var(--ink-faint); font-size:0.76rem;">Có thể cần tạo composite index cho truy vấn (buyerId + purchasedAt) trong Firestore Console — link tạo index thường xuất hiện ngay trong Console khi lỗi này xảy ra lần đầu.</span></p>`;
@@ -1546,6 +1668,10 @@ footer{
     });
   }
 
+  function parseKeysInput(text){
+    return String(text || '').split('\n').map(s => s.trim()).filter(Boolean).slice(0, 500);
+  }
+
   function renderAdminProducts(){
     const products = STATE.products;
     const categories = STATE.categories;
@@ -1555,7 +1681,7 @@ footer{
         <input class="field-name" value="${escapeHtml(p.name)}" data-field="name" data-id="${p.id}" placeholder="Tên" maxlength="80">
         <input class="field-author" value="${escapeHtml(p.author||'')}" data-field="author" data-id="${p.id}" placeholder="Thương hiệu" maxlength="60">
         <input class="field-price" type="number" value="${p.price}" data-field="price" data-id="${p.id}" placeholder="Giá" min="0" max="999999999">
-        <input class="field-stock" type="number" value="${Number(p.stock)||0}" data-field="stock" data-id="${p.id}" placeholder="Tồn kho" min="0" max="100">
+        <input class="field-stock" type="number" value="${Number(p.stock)||0}" data-field="stock" data-id="${p.id}" placeholder="Tồn kho" min="0" max="100" ${Array.isArray(p.keys)&&p.keys.length?'disabled title="Tồn kho tự tính theo số key"':''}>
         <select class="field-category" data-field="category" data-id="${p.id}">
           ${categories.map(c => `<option value="${escapeHtml(c)}" ${p.category===c?'selected':''}>${escapeHtml(c)}</option>`).join('')}
         </select>
@@ -1563,7 +1689,9 @@ footer{
         <div class="file-input-wrap">
           <input type="file" class="field-image" data-id="${p.id}" accept="image/*">
         </div>
-        <textarea class="field-note" data-field="note" data-id="${p.id}" placeholder="Nội dung riêng sau khi mua" maxlength="500" rows="2">${escapeHtml(p.note||'')}</textarea>
+        <label style="font-size:0.72rem; color:var(--ink-soft); width:100%;">Danh sách key còn lại (mỗi dòng 1 key — có key thì tồn kho tự = số key):</label>
+        <textarea class="field-keys" data-field="keys" data-id="${p.id}" placeholder="Để trống nếu không dùng key" rows="2">${escapeHtml((p.keys||[]).join('\n'))}</textarea>
+        <textarea class="field-note" data-field="note" data-id="${p.id}" placeholder="Nội dung riêng sau khi mua (dùng khi không có key)" maxlength="500" rows="2">${escapeHtml(p.note||'')}</textarea>
         <button class="btn-sm btn-danger delete-product" data-id="${p.id}">Xóa</button>
       </div>
     `).join('') || '<p style="color:var(--ink-soft);">Chưa có sản phẩm nào.</p>';
@@ -1585,10 +1713,13 @@ footer{
           if (field === 'name' && !value) { showToast('Tên sản phẩm không được để trống!', 'error'); renderAdminProducts(); return; }
         } else if (field === 'note') {
           value = sanitizeText(value, 500);
+        } else if (field === 'keys') {
+          value = parseKeysInput(value);
         }
         const prod = STATE.products.find(p => p.id === id);
         if (prod) {
           const updated = Object.assign({}, prod, { [field]: value });
+          if (field === 'keys' && value.length > 0) updated.stock = value.length;
           try{ await fbSetProduct(updated); showToast('Đã cập nhật!', 'success'); }
           catch(e){ console.error(e); showToast('Lỗi kết nối!', 'error'); renderAdminProducts(); }
         }
@@ -1623,12 +1754,17 @@ footer{
     const name = sanitizeText($('#newName').value, 80);
     const author = sanitizeText($('#newAuthor').value, 60);
     const price = parseInt($('#newPrice').value, 10);
-    const stock = parseInt($('#newStock').value, 10);
+    let stock = parseInt($('#newStock').value, 10);
     const category = $('#newCategory').value;
     const desc = sanitizeText($('#newDesc').value, 160);
     const note = sanitizeText($('#newNote').value, 500);
+    const keys = parseKeysInput($('#newKeys').value);
     if (!name || isNaN(price) || price < 0 || price > 999999999) { showToast('Nhập tên và giá hợp lệ!', 'error'); return; }
-    if (isNaN(stock) || stock < 1 || stock > 100) { showToast('Nhập tồn kho hợp lệ (1-100)!', 'error'); return; }
+    if (keys.length > 0) {
+      stock = keys.length;
+    } else if (isNaN(stock) || stock < 1 || stock > 100) {
+      showToast('Nhập tồn kho hợp lệ (1-100) hoặc nhập danh sách key!', 'error'); return;
+    }
     if (!category) { showToast('Hãy tạo danh mục trước!', 'error'); return; }
     let image = '';
     const fileInput = $('#newImageFile');
@@ -1639,10 +1775,10 @@ footer{
       }catch(err){ showToast(err.message, 'error'); return; }
     }
     const newId = STATE.products.length ? Math.max(...STATE.products.map(p => p.id)) + 1 : 1;
-    const product = { id:newId, name, author, price, stock, desc, emoji:'📦', image, category, note };
+    const product = { id:newId, name, author, price, stock, desc, emoji:'📦', image, category, note, keys };
     try{
       await fbSetProduct(product);
-      $('#newName').value=''; $('#newAuthor').value=''; $('#newPrice').value=''; $('#newStock').value='1'; $('#newDesc').value=''; $('#newNote').value=''; fileInput.value='';
+      $('#newName').value=''; $('#newAuthor').value=''; $('#newPrice').value=''; $('#newStock').value='1'; $('#newDesc').value=''; $('#newNote').value=''; $('#newKeys').value=''; fileInput.value='';
       showToast('Đã thêm sản phẩm mới!', 'success');
     }catch(e){ console.error(e); showToast('Lỗi kết nối!', 'error'); }
   });
