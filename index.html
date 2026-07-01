@@ -1,387 +1,557 @@
-<html lang="vi"><head>
-<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>CHEATPROXYVIP — Kích Hoạt Key</title>
-<link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;600;700&amp;display=swap" rel="stylesheet">
-<style>
-*{margin:0;padding:0;box-sizing:border-box}
-:root{--canvas:#f7f7f4;--card:#fff;--ink:#262510;--muted:#7a7974;--pebble:#e6e5e0;--accent:#f54e00;--green:#34785c;--red:#d63031;--border:#e6e5e0;--radius:4px;--font:'Lato',sans-serif;--mono:'Courier New',monospace}
-body{font-family:var(--font);background:var(--canvas);color:var(--ink);min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px}
-.container{width:100%;max-width:480px}
-.card{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:28px;margin-bottom:12px}
-.logo{display:flex;align-items:center;justify-content:center;gap:8px;margin-bottom:4px}
-.logo svg{color:var(--accent)}
-h1{font-size:22px;font-weight:700;text-align:center}
-.sub{text-align:center;color:var(--muted);font-size:13px;margin-bottom:20px}
-.field{margin-bottom:12px}
-.field label{display:block;font-size:11px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px}
-.field input{width:100%;padding:9px 12px;border:1px solid var(--border);border-radius:var(--radius);background:transparent;color:var(--ink);font-size:14px;font-family:var(--font);outline:none;transition:border-color .2s}
-.field input:focus{border-color:var(--ink)}
-.btn{width:100%;padding:10px;border:1px solid var(--ink);border-radius:var(--radius);font-size:14px;font-weight:700;cursor:pointer;background:var(--ink);color:var(--canvas);font-family:var(--font);display:flex;align-items:center;justify-content:center;gap:6px;transition:opacity .2s}
-.btn:hover{opacity:.85}.btn:disabled{opacity:.5;cursor:not-allowed}
-.btn-s{background:var(--green);border-color:var(--green);color:#fff}
-.btn-o{background:transparent;color:var(--ink);margin-top:8px}
-.btn-d{background:var(--red);border-color:var(--red);color:#fff;padding:6px 10px;font-size:12px;width:auto}
-.result{padding:10px 14px;border-radius:var(--radius);font-size:13px;margin-top:12px;border:1px solid;line-height:1.6}
-.result.ok{background:rgba(52,120,92,.06);border-color:rgba(52,120,92,.2);color:var(--green)}
-.result.err{background:rgba(214,48,49,.06);border-color:rgba(214,48,49,.2);color:var(--red)}
-.key-info{background:var(--canvas);border:1px solid var(--border);border-radius:var(--radius);padding:10px 14px;margin-bottom:12px;font-size:13px;line-height:1.6}
-.key-info strong{color:var(--accent);font-family:var(--mono)}
-.hidden{display:none}
-.steps{display:flex;gap:8px;margin-bottom:20px}
-.step{flex:1;text-align:center;padding:6px;border-radius:var(--radius);font-size:12px;font-weight:600;background:var(--pebble);color:var(--muted);border:1px solid transparent}
-.step.active{background:var(--ink);color:var(--canvas)}.step.done{background:rgba(52,120,92,.08);color:var(--green);border-color:rgba(52,120,92,.2)}
-.tabs{display:flex;gap:4px;margin-bottom:16px}.tab-btn{flex:1;padding:8px;border:1px solid var(--border);border-radius:var(--radius);font-size:13px;font-weight:600;cursor:pointer;background:var(--card);color:var(--muted);font-family:var(--font);text-align:center;transition:.15s}
-.tab-btn:hover{border-color:var(--ink);color:var(--ink)}.tab-btn.active{background:var(--ink);color:var(--canvas);border-color:var(--ink)}
-.uid-row{display:flex;justify-content:space-between;align-items:center;padding:8px;border-bottom:1px solid var(--pebble);font-size:13px}
-.uid-row:last-child{border:none}
-.uid-row .uid-info{flex:1}.uid-row code{font-family:var(--mono);font-size:12px;color:var(--accent)}
-.uid-row .uid-actions{display:flex;gap:4px}
-.uid-row .uid-actions button{padding:4px 8px;font-size:11px;border:1px solid var(--border);border-radius:var(--radius);cursor:pointer;background:var(--card);font-family:var(--font);font-weight:600}
-.uid-row .uid-actions .del{color:var(--red);border-color:rgba(214,48,49,.3)}
-.uid-row .uid-actions .rst{color:var(--accent);border-color:rgba(245,78,0,.3)}
-.hist-item{padding:10px;border:1px solid var(--border);border-radius:var(--radius);margin-bottom:8px;background:var(--card);font-size:13px;line-height:1.6;position:relative}
-.hist-item:hover{border-color:var(--ink)}
-.hist-item .hi-key{font-family:var(--mono);font-weight:700;color:var(--accent);font-size:13px}
-.hist-item .hi-uid{font-family:var(--mono);color:var(--ink);font-size:12px}
-.hist-item .hi-meta{color:var(--muted);font-size:11px}
-.hist-item .hi-inst{display:inline-block;background:rgba(52,120,92,.1);color:#347854;font-size:10px;padding:1px 5px;border-radius:3px;margin:1px 1px;font-weight:600}
-.hist-item .hi-actions{display:flex;gap:4px;margin-top:6px}
-.hist-item .hi-actions button{padding:3px 8px;font-size:11px;border:1px solid var(--border);border-radius:var(--radius);cursor:pointer;background:var(--canvas);font-family:var(--font);font-weight:600;transition:.15s}
-.hist-item .hi-actions button:hover{border-color:var(--ink)}
-.hist-item .hi-actions .hi-del{color:var(--red);border-color:rgba(214,48,49,.3)}
-.hist-empty{text-align:center;color:var(--muted);padding:24px;font-size:13px}
-</style>
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>SOLITUDE EDITION</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: #0a0408;
+            color: #f3f4f6;
+            min-height: 100vh;
+            touch-action: manipulation;
+            overflow-x: hidden;
+        }
+        .bg-mesh {
+            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+            background: 
+                radial-gradient(circle at 20% 20%, rgba(239,68,68,0.15) 0%, transparent 40%),
+                radial-gradient(circle at 80% 80%, rgba(251,146,60,0.12) 0%, transparent 40%),
+                radial-gradient(circle at 50% 50%, rgba(220,38,38,0.06) 0%, transparent 60%),
+                repeating-linear-gradient(0deg, rgba(255,255,255,0.01) 0px, transparent 1px, transparent 20px, rgba(255,255,255,0.02) 21px),
+                repeating-linear-gradient(90deg, rgba(255,255,255,0.01) 0px, transparent 1px, transparent 20px, rgba(255,255,255,0.02) 21px);
+            z-index: -1; pointer-events: none;
+        }
+        .premium-card {
+            background: rgba(20,10,14,0.7); backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px);
+            border: 1px solid rgba(239,68,68,0.12); box-shadow: 0 25px 50px -12px rgba(0,0,0,0.9), inset 0 1px 0 rgba(239,68,68,0.08);
+        }
+        .glass-input {
+            background: rgba(0,0,0,0.5); border: 1px solid rgba(239,68,68,0.15);
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.5); transition: all 0.3s ease;
+        }
+        .glass-input:focus {
+            background: rgba(20,10,14,0.9); border-color: rgba(239,68,68,0.7);
+            box-shadow: 0 0 20px rgba(239,68,68,0.2), inset 0 2px 4px rgba(0,0,0,0.3);
+        }
+        #aimModal {
+            position: fixed; inset: 0; z-index: 120; display: flex; align-items: center; justify-content: center;
+            padding: 1.5rem; background: rgba(0,0,0,0.9); backdrop-filter: blur(12px);
+            opacity: 0; visibility: hidden; transition: all 0.3s cubic-bezier(0.4,0,0.2,1);
+        }
+        #aimModal.active { opacity: 1; visibility: visible; }
+        #aimModal .modal-content {
+            transform: scale(0.95) translateY(10px); transition: all 0.4s cubic-bezier(0.34,1.56,0.64,1);
+            background: linear-gradient(145deg, rgba(30,15,18,0.95), rgba(20,10,14,0.98));
+            border: 1px solid rgba(239,68,68,0.2); box-shadow: 0 30px 60px -12px rgba(0,0,0,0.95);
+        }
+        #aimModal.active .modal-content { transform: scale(1) translateY(0); }
+        #toast {
+            position: fixed; top: 24px; left: 50%; transform: translate(-50%, -20px); opacity: 0; visibility: hidden;
+            z-index: 110; width: 90%; max-width: 400px; transition: all 0.4s cubic-bezier(0.175,0.885,0.32,1.275);
+        }
+        #toast.show { transform: translate(-50%, 0); opacity: 1; visibility: visible; }
+        #toastContent {
+            padding: 1rem 1.25rem; border-radius: 16px; background: rgba(20,10,14,0.95);
+            backdrop-filter: blur(10px); border: 1px solid rgba(239,68,68,0.25); color: #f4f4f5;
+            font-size: 13px; line-height: 1.6; box-shadow: 0 20px 25px -5px rgba(0,0,0,0.7);
+        }
+        .switch { position: relative; display: inline-block; width: 52px; height: 28px; }
+        .switch input { opacity: 0; width: 0; height: 0; }
+        .slider {
+            position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0;
+            background-color: rgba(255,255,255,0.08); transition: 0.4s; border-radius: 34px; border: 1px solid rgba(239,68,68,0.3);
+        }
+        .slider:before {
+            position: absolute; content: ""; height: 20px; width: 20px; left: 3px; bottom: 3px;
+            background-color: white; transition: 0.4s; border-radius: 50%;
+        }
+        input:checked + .slider {
+            background: linear-gradient(135deg, #dc2626 0%, #f97316 100%);
+            border-color: rgba(251,146,60,0.6); box-shadow: 0 0 18px rgba(251,146,60,0.5);
+        }
+        input:checked + .slider:before { transform: translateX(24px); }
+        @keyframes dynamicGlow {
+            0%, 100% { text-shadow: 0 0 15px rgba(239,68,68,0.4); }
+            50% { text-shadow: 0 0 28px rgba(251,146,60,0.8), 0 0 10px rgba(239,68,68,0.6); }
+        }
+        .cyber-glow { animation: dynamicGlow 3s infinite ease-in-out; }
+        @keyframes silverShine {
+            0% { background-position: -200% center; } 100% { background-position: 200% center; }
+        }
+        .premium-shimmer {
+            background: linear-gradient(90deg, #d4d4d8 25%, #fef08a 50%, #d4d4d8 75%);
+            background-size: 200% auto; -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            animation: silverShine 3s linear infinite;
+        }
+        @keyframes fadeInScale {
+            from { opacity: 0; transform: translateY(15px) scale(0.98); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
+        }
+        .animate-in { animation: fadeInScale 0.3s cubic-bezier(0.4,0,0.2,1) forwards; }
+        .btn-gradient-premium {
+            background: linear-gradient(135deg, #dc2626 0%, #f97316 100%);
+            box-shadow: inset 0 1px 0 rgba(255,255,255,0.2);
+        }
+        .btn-gradient-premium:hover { background: linear-gradient(135deg, #b91c1c 0%, #ea580c 100%); }
+        .btn-free-gradient {
+            background: linear-gradient(135deg, #7c3aed 0%, #a855f7 100%);
+            box-shadow: inset 0 1px 0 rgba(255,255,255,0.2);
+        }
+        .btn-free-gradient:hover { background: linear-gradient(135deg, #6d28d9 0%, #9333ea 100%); }
+        .btn-cert-gradient {
+            background: linear-gradient(135deg, #2563eb 0%, #60a5fa 100%);
+            box-shadow: inset 0 1px 0 rgba(255,255,255,0.2);
+        }
+        .btn-cert-gradient:hover { background: linear-gradient(135deg, #1d4ed8 0%, #3b82f6 100%); }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        .spinner {
+            display: inline-block; width: 18px; height: 18px; border: 2px solid rgba(255,255,255,0.3);
+            border-top-color: #fff; border-radius: 50%; animation: spin 0.6s linear infinite;
+        }
+        #countdownBox { background: rgba(239,68,68,0.08); border: 1px solid rgba(239,68,68,0.3); }
+        .countdown-warning { background: rgba(251,146,60,0.1) !important; border-color: rgba(251,146,60,0.4) !important; }
+        .countdown-danger {
+            background: rgba(239,68,68,0.1) !important; border-color: rgba(239,68,68,0.4) !important;
+            animation: pulse-danger 1s infinite;
+        }
+        @keyframes pulse-danger { 0%, 100% { opacity: 1; } 50% { opacity: 0.7; } }
+        .server-box { background: rgba(239,68,68,0.06); border: 1px solid rgba(239,68,68,0.3); }
+        .ip-badge {
+            background: rgba(0,0,0,0.7); border: 1px solid rgba(251,146,60,0.6); color: #fb923c;
+            font-size: 11px; font-weight: 700; padding: 4px 10px; border-radius: 20px;
+            text-shadow: 0 0 8px rgba(251,146,60,0.8); font-family: monospace;
+        }
+        .accent-line {
+            height: 1px; background: linear-gradient(90deg, transparent, rgba(239,68,68,0.4), transparent);
+            width: 60%; margin: 0.5rem auto;
+        }
+    </style>
 </head>
-<body>
-<div class="container">
-    <div class="card">
-        <div class="logo"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg></div>
-        <h1>CHEATPROXYVIP</h1>
-        <p class="sub">Kích hoạt Key &amp; Quản lý UID</p>
+<body class="flex flex-col items-center justify-center p-4 relative selection:bg-red-500/30">
+    <div class="bg-mesh"></div>
 
-        <div class="tabs">
-            <button class="tab-btn active" onclick="switchTab('activate')">Kích Hoạt</button>
-            <button class="tab-btn" onclick="switchTab('lookup')">Tra Cứu</button>
-            <button class="tab-btn" onclick="switchTab('history')">Lịch Sử</button>
-        </div>
-
-        <!-- TAB: ACTIVATE -->
-        <div id="tab-activate">
-            <div class="steps">
-                <div class="step active" id="s1">1. Key</div>
-                <div class="step" id="s2">2. UID</div>
-                <div class="step" id="s3">3. Tải</div>
+    <div class="w-full max-w-[440px] space-y-6 my-6 relative z-10">
+        <div class="flex items-center justify-between px-2">
+            <div>
+                <h1 class="cyber-glow text-[26px] font-black tracking-tight text-white uppercase leading-none">
+                    KEZMOD<span class="text-transparent bg-clip-text bg-gradient-to-r from-red-400 to-orange-400">PROXY</span>
+                </h1>
+                <p class="premium-shimmer text-[11px] font-bold uppercase tracking-widest mt-1.5">SOLITUDE</p>
             </div>
-            <div id="p-key">
-                <div class="field"><label>Access Key</label><input type="text" id="inp-key" placeholder="VD: EB24183E06 hoặc nminh-key-free" autofocus=""></div>
-                <button class="btn" onclick="checkKey()">Kiểm Tra Key</button>
-                <div id="key-result"></div>
-            </div>
-            <div id="p-uid" class="hidden">
-                <div class="key-info" id="key-info-box"></div>
-                <div id="connected-uids"></div>
-                <div class="field"><label>UID (Tài khoản Game)</label><input type="text" id="inp-uid" placeholder="Nhập UID game..."></div>
-                <button class="btn btn-s" onclick="activateKey()">Kích Hoạt</button>
-                <button class="btn btn-o" onclick="goBack()">Quay lại</button>
-                <div id="uid-result"></div>
-            </div>
-            <div id="p-download" class="hidden">
-                <div class="result ok" id="act-info"></div>
-                <button class="btn btn-s" style="margin-top:16px" id="btn-download" onclick="downloadProfile()">Tải .mobileconfig</button>
-                <button class="btn btn-o" onclick="location.reload()">Kích hoạt key khác</button>
+            <div class="flex flex-col items-end gap-1 px-3 py-2 rounded-2xl bg-black/60 backdrop-blur-md border border-red-500/10 text-[10px] font-bold tracking-wide shadow-xl">
+                <div class="flex items-center gap-1.5 text-zinc-300">
+                    <span class="w-1.5 h-1.5 rounded-full bg-green-500 shadow-[0_0_8px_rgba(34,197,94,0.9)] animate-pulse"></span>
+                    HỆ THỐNG: <span class="text-green-400">MƯỢT MÀ</span>
+                </div>
+                <div class="text-[9px] text-zinc-500 flex items-center gap-2">
+                    <span>PING: <span class="text-red-400 font-mono" id="realtime-ping">24ms</span></span>
+                    <span>ONLINE: <span class="text-orange-400 font-mono">121</span></span>
+                </div>
             </div>
         </div>
 
-        <!-- TAB: LOOKUP -->
-        <div id="tab-lookup" class="hidden">
-            <div class="field"><label>Nhập UID để tra cứu</label><input type="text" id="inp-lookup" placeholder="Nhập UID..."></div>
-            <button class="btn" onclick="lookupUID()">Tra Cứu</button>
-            <div id="lookup-result"></div>
+        <div class="premium-card rounded-[28px] p-6 space-y-6">
+            <form id="mainForm" onsubmit="return false;" class="space-y-6">
+                <input type="hidden" name="action" id="actionType">
+                <input type="hidden" name="browser_uuid" id="uuidField" value="VIP-217DA6E3-19F1D4B0960-2F371C70">
+
+                <div class="space-y-6 animate-in">
+                    <div class="space-y-2.5">
+                        <label class="text-[11px] font-bold text-zinc-400 uppercase tracking-widest ml-1 flex items-center gap-2">
+                            <i class="fa-solid fa-key text-red-400/70 text-[10px]"></i> Nhập License Key
+                        </label>
+                        <input type="text" id="keyInput" placeholder="Nhập mã bản quyền của bạn..." autocomplete="off" class="glass-input w-full rounded-2xl py-4 px-4 outline-none transition-all font-mono text-sm text-white placeholder-zinc-600" value="nminh-key-free">
+                    </div>
+
+                    <div id="statusBox" class="hidden space-y-3 bg-green-500/5 border border-green-500/20 p-4 rounded-2xl">
+                        <div class="flex items-center justify-between">
+                            <span class="ip-badge" id="clientIpDisplay">Đang lấy IP...</span>
+                            <div id="countdownBox" class="flex items-center gap-2 px-3 py-2 rounded-xl">
+                                <i class="fa-solid fa-hourglass-half text-[10px] text-red-400"></i>
+                                <span id="countdownTimer" class="text-[11px] font-mono font-bold text-white">--:--:--</span>
+                            </div>
+                        </div>
+                        <div class="accent-line"></div>
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center gap-3">
+                                <div class="w-10 h-10 rounded-full bg-green-500/10 border border-green-500/30 flex items-center justify-center">
+                                    <i class="fa-solid fa-check-circle text-green-400 text-lg"></i>
+                                </div>
+                                <div>
+                                    <p class="text-[11px] font-bold text-green-400 uppercase tracking-wider">ĐANG KÍCH HOẠT</p>
+                                    <p class="text-[13px] font-bold text-white" id="statusAimName">-</p>
+                                </div>
+                            </div>
+                            <label class="switch">
+                                <input type="checkbox" id="toggleSwitch" onchange="toggleAim()">
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                        <div id="serverBox" class="server-box hidden p-3 rounded-xl">
+                            <p class="text-[10px] font-bold text-red-400 uppercase tracking-wider mb-1 flex items-center gap-2">
+                                <i class="fa-solid fa-server"></i> THÔNG TIN MÁY CHỦ
+                            </p>
+                            <div class="flex items-center justify-between text-[11px]">
+                                <span class="text-zinc-400">Địa chỉ:</span>
+                                <span class="text-red-300 font-mono font-bold">server.zenithsolitude.store</span>
+                            </div>
+                            <div class="flex items-center justify-between text-[11px] mt-1">
+                                <span class="text-zinc-400">Cổng:</span>
+                                <span class="text-red-300 font-mono font-bold">2088</span>
+                            </div>
+                            <div class="flex items-center justify-between text-[11px] mt-1">
+                                <span class="text-zinc-400">Protocol:</span>
+                                <span class="text-green-400 font-bold">TCP</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <button type="button" id="btn-submit-main" onclick="handleInitialStep()" class="w-full py-4 rounded-2xl btn-gradient-premium text-white font-bold text-[13px] uppercase tracking-[0.15em] transition-all duration-300 hover:scale-[1.02] active:scale-[0.98] shadow-[0_10px_20px_-10px_rgba(251,146,60,0.5)] flex items-center justify-center gap-2 h-14">
+                        <span id="btnText">Xác Nhận Tiến Hành</span> <i class="fa-solid fa-arrow-right text-[11px]"></i>
+                    </button>
+
+                    <div class="grid grid-cols-2 gap-3 pt-2">
+                        <a href="key.php" class="py-3.5 rounded-2xl btn-free-gradient text-white font-bold text-[11px] uppercase tracking-[0.1em] transition-all duration-300 hover:scale-[1.02] active:scale-[0.98] shadow-[0_8px_16px_-8px_rgba(124,58,237,0.5)] flex items-center justify-center gap-2 border border-purple-500/30">
+                            <i class="fa-solid fa-gift text-xs"></i> GET KEY FREE
+                        </a>
+                        <a href="#" onclick="showToast('Tính năng đang phát triển', '#f97316'); return false;" class="py-3.5 rounded-2xl btn-cert-gradient text-white font-bold text-[11px] uppercase tracking-[0.1em] transition-all duration-300 hover:scale-[1.02] active:scale-[0.98] shadow-[0_8px_16px_-8px_rgba(37,99,235,0.5)] flex items-center justify-center gap-2 border border-blue-500/30">
+                            <i class="fa-solid fa-shield-halved text-xs"></i> CERT ANTIBAN
+                        </a>
+                    </div>
+                </div>
+            </form>
         </div>
 
-        <!-- TAB: HISTORY -->
-        <div id="tab-history" class="hidden">
-            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
-                <label style="font-size:11px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.4px">Lịch sử kích hoạt (lưu trên trình duyệt)</label>
-                <button class="btn btn-o" style="font-size:11px;padding:3px 8px" onclick="clearHistory()">Xóa tất cả</button>
-            </div>
-            <div id="history-list"></div>
+        <div class="text-center pb-4 pt-2">
+            <p class="text-[11px] text-zinc-500 font-medium tracking-wider flex items-center justify-center gap-2">
+                <i class="fa-solid fa-code text-xs"></i> Hệ thống được phát triển bởi zenithsolitude
+            </p>
         </div>
     </div>
-</div>
 
-<script>
-const API = 'activate.php';
-const FREE_KEY = 'nminh-key-free';
-let currentKey = '', currentKeyData = null;
+    <div id="aimModal">
+        <div class="modal-content w-full max-w-[320px] rounded-[22px] p-5 space-y-4">
+            <div class="text-center">
+                <div class="w-10 h-10 bg-red-500/10 border border-red-500/20 rounded-xl flex items-center justify-center mx-auto mb-2">
+                    <i class="fa-solid fa-crosshairs text-red-400 text-lg"></i>
+                </div>
+                <h3 class="text-[15px] font-black text-white tracking-wide">CHỌN AIM</h3>
+            </div>
+            <div class="space-y-3 bg-white/[0.03] border border-white/5 p-3 rounded-xl">
+                <div class="grid grid-cols-1 gap-2" id="aimList"></div>
+            </div>
+            <button onclick="closeAimModal()" class="w-full py-3 rounded-xl bg-zinc-800 hover:bg-zinc-700 text-zinc-400 border border-zinc-700 font-bold text-xs uppercase tracking-widest transition-colors">Đóng</button>
+        </div>
+    </div>
 
-function switchTab(tab) {
-    const tabs = ['activate','lookup','history'];
-    document.querySelectorAll('.tab-btn').forEach((b,i) => { b.classList.toggle('active', tabs[i]===tab); });
-    tabs.forEach(t => document.getElementById('tab-'+t).classList.toggle('hidden', t!==tab));
-    if (tab==='history') renderHistory();
-}
+    <div id="toast"><div id="toastContent"></div></div>
 
-// ── HISTORY (localStorage) ──
-const HIST_KEY = 'CHEATPROXYVIP_key_history';
-function getHistory() { try { return JSON.parse(localStorage.getItem(HIST_KEY)||'[]'); } catch(e) { return []; } }
-function saveHistory(arr) { localStorage.setItem(HIST_KEY, JSON.stringify(arr)); }
-function addHistory(entry) {
-    const hist = getHistory();
-    const idx = hist.findIndex(h => h.key_code===entry.key_code && h.uid===entry.uid);
-    if (idx >= 0) hist.splice(idx, 1);
-    hist.unshift(entry);
-    if (hist.length > 50) hist.length = 50;
-    saveHistory(hist);
-}
-function removeHistory(i) {
-    const hist = getHistory(); hist.splice(i, 1); saveHistory(hist); renderHistory();
-}
-function clearHistory() {
-    if (!confirm('Xóa toàn bộ lịch sử?')) return;
-    localStorage.removeItem(HIST_KEY); renderHistory();
-}
-function renderHistory() {
-    const hist = getHistory();
-    const el = document.getElementById('history-list');
-    if (!hist.length) { el.innerHTML = '<div class="hist-empty">Chưa có lịch sử kích hoạt nào</div>'; return; }
-    el.innerHTML = hist.map((h,i) => {
-        const instHtml = (h.instances||[]).map(n => '<span class="hi-inst">'+n+'</span>').join('');
-        const expStr = h.expires_human || (h.expires_at ? new Date(h.expires_at*1000).toLocaleString('vi-VN') : '—');
-        return '<div class="hist-item">'+
-            '<span class="hi-key">'+h.key_code+'</span> → <span class="hi-uid">'+h.uid+'</span><br>'+
-            '<span class="hi-meta">Hạn: '+expStr+' · '+h.duration_days+'d</span>'+
-            (instHtml ? '<br>'+instHtml : '')+
-            '<div class="hi-actions">'+
-                '<button onclick="useHistoryKey('+i+')">Dùng lại key</button>'+
-                '<button onclick="dlHistoryProfile('+i+')">Tải .mobileconfig</button>'+
-                '<button class="hi-del" onclick="removeHistory('+i+')">Xóa</button>'+
-            '</div></div>';
-    }).join('');
-}
-function useHistoryKey(i) {
-    const h = getHistory()[i]; if (!h) return;
-    document.getElementById('inp-key').value = h.key_code;
-    switchTab('activate'); checkKey();
-}
-function dlHistoryProfile(i) {
-    const h = getHistory()[i]; if (!h) return;
-    if (h.key_code === FREE_KEY) { alert('Chức năng tải file không khả dụng cho key miễn phí.'); return; }
-    const f = document.createElement('form'); f.method='POST'; f.action=API+'?api=download_profile';
-    f.innerHTML='<input name="key_code" value="'+h.key_code+'">'; document.body.appendChild(f); f.submit(); f.remove();
-}
+    <script>
+        // ============ BYPASS KEY "nminh-key-free" ============
+        const FREE_KEY = 'nminh-key-free';
+        let clientIP = '127.0.0.1'; // IP giả nếu chưa lấy được thật
+        let currentActiveAim = null;
+        let currentActiveFile = null;
+        let currentKey = null;
+        let isKeyChecked = false;
+        let expiresAt = null;
+        let countdownInterval = null;
 
-async function checkKey() {
-    const key = document.getElementById('inp-key').value.trim();
-    if (!key) return;
+        const aimList = [
+            { file: 'ips_noantena_vip.txt', name: 'Aim No Antena', icon: 'fa-circle-xmark', color: 'orange' },
+            { file: 'ips_antena_vip.txt', name: 'Neck Drag', icon: 'fa-gun', color: 'red' },
+            { file: 'ips_chest_vip.txt', name: 'Aim Chest', icon: 'fa-shield-halved', color: 'yellow' },
+            { file: 'ips_magic_bullet_vip.txt', name: 'Aim Magic Bullet', icon: 'fa-wand-magic-sparkles', color: 'amber' }
+        ];
 
-    // Nếu key miễn phí, bypass server
-    if (key === FREE_KEY) {
-        currentKey = key;
-        currentKeyData = {
-            valid: true,
-            key_code: key,
-            duration_days: 99999,
-            remaining: 999,
-            max_uids: 999,
-            instances: [],
-            connected_uids: [],
-            started_at: Math.floor(Date.now()/1000) - 86400*5
-        };
-        document.getElementById('key-info-box').innerHTML =
-            'Key: <strong>'+currentKeyData.key_code+'</strong><br>Thoi han: Vinh vien<br>Slot: Khong gioi han (Key FREE)';
-        document.getElementById('connected-uids').innerHTML = '';
-        document.getElementById('p-key').classList.add('hidden');
-        document.getElementById('p-uid').classList.remove('hidden');
-        document.getElementById('key-result').innerHTML = '';
-        document.getElementById('s1').className='step done'; document.getElementById('s2').className='step active';
-        return;
-    }
+        // Lấy IP thật (không bắt buộc)
+        fetch('https://api4.ipify.org?format=json')
+            .then(r => r.json())
+            .then(d => { if (d.ip) clientIP = d.ip; document.getElementById('clientIpDisplay').innerText = clientIP; })
+            .catch(() => document.getElementById('clientIpDisplay').innerText = clientIP);
 
-    // Luồng gốc cho key thường
-    const fd = new FormData(); fd.append('key_code', key);
-    const r = await fetch(API+'?api=check_key',{method:'POST',body:fd});
-    const d = await r.json();
-    if (!d.valid) { document.getElementById('key-result').innerHTML='<div class="result err">'+(d.error||'Key không hợp lệ')+'</div>'; return; }
-    currentKey = key; currentKeyData = d;
-    let instList = '';
-    if (d.instances && d.instances.length) {
-        const instRows = d.instances.map(i =>
-            '<div style="display:flex;justify-content:space-between;align-items:center;padding:3px 8px;background:rgba(52,120,92,.04);border:1px solid rgba(52,120,92,.12);border-radius:3px;margin:2px 0;font-size:12px">'+
-            '<span style="font-weight:600;color:var(--ink)">'+i.label+'</span>'+
-            '<span style="font-family:var(--mono);color:var(--accent);font-weight:700">'+i.ip_port+'</span></div>'
-        ).join('');
-        instList = '<br><div style="margin-top:8px"><div style="font-size:11px;font-weight:600;color:var(--muted);margin-bottom:4px">THONG TIN VPN:</div>' + instRows + '</div>';
-    }
-    let startInfo = '';
-    if (d.started_at && d.started_at > 0) {
-        const startDate = new Date(d.started_at * 1000).toLocaleString('vi-VN');
-        const daysLeft = Math.max(0, Math.ceil((d.started_at * 1000 + d.duration_days * 86400000 - Date.now()) / 86400000));
-        startInfo = '<br>Kich hoat: ' + startDate + '<br>Con lai: ' + daysLeft + '/' + d.duration_days + ' ngay';
-    }
-    document.getElementById('key-info-box').innerHTML = 'Key: <strong>'+d.key_code+'</strong><br>Thoi han: '+d.duration_days+' ngay<br>Slot: '+(d.remaining>0?d.remaining:0)+'/'+d.max_uids+' con trong'+startInfo+instList;
-    let html = '';
-    if (d.connected_uids && d.connected_uids.length > 0) {
-        html = '<div style="margin-bottom:12px"><div style="font-size:11px;font-weight:600;color:var(--muted);margin-bottom:6px">UID ĐÃ KẾT NỐI:</div>';
-        d.connected_uids.forEach(u => {
-            const exp = u.expires_at ? new Date(u.expires_at*1000).toLocaleString('vi-VN') : '—';
-            html += '<div class="uid-row"><div class="uid-info"><code>'+u.uid+'</code><br><span style="font-size:11px;color:var(--muted)">IP: '+(u.ip||'Chưa bind')+' · Hạn: '+exp+'</span></div>';
-            html += '<div class="uid-actions">';
-            html += '<button class="rst" onclick="resetIP(\''+u.uid+'\')">Xóa IP</button>';
-            html += '<button class="del" onclick="resetUID(\''+u.uid+'\')">Xóa UID</button>';
-            html += '</div></div>';
+        function renderAimList() {
+            const container = document.getElementById('aimList');
+            container.innerHTML = '';
+            aimList.forEach(aim => {
+                const isActive = (currentActiveFile === aim.file);
+                const div = document.createElement('div');
+                div.className = `aim-item flex items-center justify-between p-3 rounded-xl bg-black/40 border cursor-pointer transition-all ${
+                    isActive ? 'border-green-500/50 bg-green-500/10 text-white' : 'border-white/5 text-gray-300 hover:border-red-500/40 hover:bg-white/5'
+                }`;
+                div.onclick = () => activateAim(aim.file, aim.name);
+                div.innerHTML = `
+                    <div class="flex items-center gap-2.5">
+                        <i class="fa-solid ${aim.icon} text-${aim.color}-400/70 text-xs"></i>
+                        <span class="text-[12px] font-bold">${aim.name}</span>
+                        ${isActive ? '<span class="text-[8px] font-black px-1.5 py-0.5 rounded-md border border-green-500/40 bg-green-500/20 text-green-400 uppercase">ON</span>' : ''}
+                    </div>
+                    <i class="fa-solid ${isActive ? 'fa-check-circle text-green-400' : 'fa-chevron-right text-zinc-600'} text-xs"></i>
+                `;
+                container.appendChild(div);
+            });
+        }
+
+        function saveState(key, aimName, fileName, expires) {
+            localStorage.setItem('KEZMOD_aim_state', JSON.stringify({ key, aimName, fileName, expiresAt: expires, timestamp: Date.now() }));
+        }
+
+        function loadState() {
+            const saved = localStorage.getItem('KEZMOD_aim_state');
+            if (saved) try { return JSON.parse(saved); } catch(e) {}
+            return null;
+        }
+
+        function clearState() {
+            localStorage.removeItem('KEZMOD_aim_state');
+            isKeyChecked = false; currentKey = null; expiresAt = null;
+            stopCountdown();
+        }
+
+        function startCountdown(expiryTimestamp) {
+            stopCountdown();
+            expiresAt = expiryTimestamp;
+            updateCountdown();
+            countdownInterval = setInterval(updateCountdown, 1000);
+        }
+
+        function stopCountdown() { if (countdownInterval) { clearInterval(countdownInterval); countdownInterval = null; } }
+
+        function updateCountdown() {
+            const timerEl = document.getElementById('countdownTimer');
+            const countdownBox = document.getElementById('countdownBox');
+            if (!timerEl || !expiresAt) return;
+            const remaining = expiresAt - Math.floor(Date.now()/1000);
+            if (remaining <= 0) {
+                timerEl.innerText = 'HẾT HẠN';
+                countdownBox.className = 'flex items-center justify-between px-3 py-2 rounded-xl countdown-danger';
+                handleExpired(); return;
+            }
+            const h = String(Math.floor(remaining/3600)).padStart(2,'0');
+            const m = String(Math.floor((remaining%3600)/60)).padStart(2,'0');
+            const s = String(remaining%60).padStart(2,'0');
+            timerEl.innerText = `${h}:${m}:${s}`;
+            countdownBox.className = 'flex items-center justify-between px-3 py-2 rounded-xl' +
+                (remaining < 600 ? ' countdown-danger' : remaining < 3600 ? ' countdown-warning' : '');
+        }
+
+        function handleExpired() {
+            stopCountdown();
+            updateStatusUI(null, null);
+            clearState();
+            showToast("⏰ Key đã hết hạn!", "#ef4444");
+        }
+
+        function updateStatusUI(aimName, fileName) {
+            const statusBox = document.getElementById('statusBox');
+            const statusAimName = document.getElementById('statusAimName');
+            const toggleSwitch = document.getElementById('toggleSwitch');
+            const serverBox = document.getElementById('serverBox');
+            if (aimName && fileName) {
+                statusBox.classList.remove('hidden');
+                serverBox.classList.remove('hidden');
+                statusAimName.innerText = aimName;
+                toggleSwitch.checked = true;
+                currentActiveAim = aimName;
+                currentActiveFile = fileName;
+                document.getElementById('btnText').innerHTML = 'ĐỔI AIM KHÁC';
+            } else {
+                statusBox.classList.add('hidden');
+                serverBox.classList.add('hidden');
+                statusAimName.innerText = '-';
+                toggleSwitch.checked = false;
+                currentActiveAim = null;
+                currentActiveFile = null;
+                document.getElementById('btnText').innerHTML = 'Xác Nhận Tiến Hành';
+                stopCountdown();
+            }
+            renderAimList();
+        }
+
+        function handleInitialStep() {
+            const keyInput = document.getElementById('keyInput');
+            const key = keyInput.value.trim();
+            if (!key) return showToast("Vui lòng nhập License Key!", "#f87171");
+
+            if (key === FREE_KEY) {
+                // Bypass key miễn phí
+                isKeyChecked = true;
+                currentKey = key;
+                const expiry = Math.floor(Date.now()/1000) + 315360000; // 10 năm
+                if (!currentActiveAim) {
+                    renderAimList();
+                    document.getElementById('aimModal').classList.add('active');
+                    showToast("✅ Key miễn phí! Chọn AIM để kích hoạt.", "#22c55e");
+                } else {
+                    startCountdown(expiry);
+                    saveState(key, currentActiveAim, currentActiveFile, expiry);
+                    showToast("✅ Key miễn phí đã kích hoạt!", "#22c55e");
+                }
+                return;
+            }
+
+            // Logic gốc cho key khác
+            const btn = document.getElementById('btn-submit-main');
+            const btnText = document.getElementById('btnText');
+            btn.disabled = true;
+            btnText.innerHTML = '<span class="spinner"></span> ĐANG KIỂM TRA...';
+            showToast("⏳ Đang kiểm tra key...", "#f97316");
+
+            const fd = new FormData();
+            fd.append('action', 'check_key');
+            fd.append('key_code', key);
+            fetch(window.location.href, { method: 'POST', body: fd })
+                .then(r => r.json())
+                .then(data => {
+                    if (data.status === 'success') {
+                        isKeyChecked = true;
+                        currentKey = key;
+                        if (data.activated && data.activation_data && data.activation_data.aim) {
+                            updateStatusUI(data.activation_data.aim, data.activation_data.file);
+                            if (data.expires_at) startCountdown(data.expires_at);
+                            saveState(key, data.activation_data.aim, data.activation_data.file, data.expires_at || null);
+                        } else {
+                            renderAimList();
+                            document.getElementById('aimModal').classList.add('active');
+                        }
+                    } else {
+                        showToast("❌ " + (data.message || 'Key không hợp lệ'), "#f87171");
+                    }
+                })
+                .catch(() => showToast("❌ Lỗi kết nối", "#f87171"))
+                .finally(() => {
+                    btn.disabled = false;
+                    btnText.innerHTML = currentActiveAim ? 'ĐỔI AIM KHÁC' : 'Xác Nhận Tiến Hành';
+                });
+        }
+
+        function activateAim(fileName, aimName) {
+            const key = currentKey || document.getElementById('keyInput').value.trim();
+            if (!key) return showToast("Vui lòng nhập License Key!", "#f87171");
+            if (key === FREE_KEY) {
+                // Kích hoạt trực tiếp
+                updateStatusUI(aimName, fileName);
+                const expiry = Math.floor(Date.now()/1000) + 315360000;
+                startCountdown(expiry);
+                saveState(key, aimName, fileName, expiry);
+                showToast("✅ Kích hoạt " + aimName + " thành công!", "#22c55e");
+                closeAimModal();
+                return;
+            }
+
+            showToast("⏳ Đang kích hoạt...", "#f97316");
+            const fd = new FormData();
+            fd.append('action', 'add_ip');
+            fd.append('key_code', key);
+            fd.append('file_name', fileName);
+            fd.append('aim_type', aimName);
+            fd.append('client_ip', clientIP);
+            fetch(window.location.href, { method: 'POST', body: fd })
+                .then(r => r.json())
+                .then(data => {
+                    if (data.status === 'success') {
+                        updateStatusUI(aimName, fileName);
+                        if (data.expires_at) startCountdown(data.expires_at);
+                        saveState(key, aimName, fileName, data.expires_at || null);
+                        showToast("✅ Kích hoạt thành công!", "#22c55e");
+                        closeAimModal();
+                    } else {
+                        showToast("❌ " + (data.message || 'Lỗi'), "#f87171");
+                    }
+                })
+                .catch(() => showToast("❌ Lỗi kết nối", "#f87171"));
+        }
+
+        function toggleAim() {
+            const toggleSwitch = document.getElementById('toggleSwitch');
+            if (!toggleSwitch.checked && currentActiveFile) {
+                if (currentKey === FREE_KEY) {
+                    updateStatusUI(null, null);
+                    clearState();
+                    showToast("✅ Đã tắt", "#22c55e");
+                    return;
+                }
+                // Gửi yêu cầu xóa IP đến server
+                const fd = new FormData();
+                fd.append('action', 'remove_ip');
+                fd.append('key_code', currentKey);
+                fd.append('file_name', currentActiveFile);
+                fd.append('aim_type', currentActiveAim);
+                fd.append('client_ip', clientIP);
+                fetch(window.location.href, { method: 'POST', body: fd })
+                    .then(r => r.json())
+                    .then(data => {
+                        if (data.status === 'success') {
+                            updateStatusUI(null, null);
+                            clearState();
+                            showToast("✅ Đã tắt", "#22c55e");
+                        } else {
+                            toggleSwitch.checked = true;
+                            showToast("❌ Lỗi", "#f87171");
+                        }
+                    })
+                    .catch(() => {
+                        toggleSwitch.checked = true;
+                        showToast("❌ Lỗi kết nối", "#f87171");
+                    });
+            }
+        }
+
+        function closeAimModal() { document.getElementById('aimModal').classList.remove('active'); }
+
+        function showToast(msg, color) {
+            const t = document.getElementById('toast'), tc = document.getElementById('toastContent');
+            if(!t||!tc) return;
+            tc.innerText = msg;
+            if(color) tc.style.borderColor = color;
+            t.classList.add('show');
+            setTimeout(() => t.classList.remove('show'), 4000);
+        }
+
+        // Ping ảo
+        setInterval(() => {
+            const el = document.getElementById('realtime-ping');
+            if(el) el.innerText = (Math.floor(Math.random()*(35-18+1))+18)+'ms';
+        }, 3000);
+
+        // Khởi tạo
+        window.addEventListener('load', () => {
+            const saved = loadState();
+            if (saved && saved.key) {
+                document.getElementById('keyInput').value = saved.key;
+                currentKey = saved.key;
+                if (saved.key === FREE_KEY) {
+                    isKeyChecked = true;
+                    if (saved.aimName && saved.fileName) {
+                        updateStatusUI(saved.aimName, saved.fileName);
+                        if (saved.expiresAt) startCountdown(saved.expiresAt);
+                    }
+                } else {
+                    // Thử kiểm tra trạng thái với server
+                    const fd = new FormData();
+                    fd.append('action', 'check_status');
+                    fd.append('key_code', saved.key);
+                    fetch(window.location.href, { method: 'POST', body: fd })
+                        .then(r => r.json())
+                        .then(data => {
+                            if (data.active && data.data) {
+                                updateStatusUI(data.data.aim, data.data.file);
+                                if (data.data.expires_at) startCountdown(data.data.expires_at);
+                            }
+                        }).catch(() => {});
+                }
+            }
+            renderAimList();
         });
-        html += '</div>';
-    }
-    document.getElementById('connected-uids').innerHTML = html;
-    document.getElementById('p-key').classList.add('hidden');
-    document.getElementById('p-uid').classList.remove('hidden');
-    document.getElementById('key-result').innerHTML = '';
-    document.getElementById('s1').className='step done'; document.getElementById('s2').className='step active';
-}
 
-function goBack() {
-    document.getElementById('p-uid').classList.add('hidden');
-    document.getElementById('p-key').classList.remove('hidden');
-    document.getElementById('s1').className='step active'; document.getElementById('s2').className='step';
-}
-
-async function activateKey() {
-    const uid = document.getElementById('inp-uid').value.trim();
-    if (!uid) return;
-
-    // Nếu đang dùng key free, giả lập kích hoạt
-    if (currentKey === FREE_KEY) {
-        const d = {
-            success: true,
-            message: 'Kích hoạt thành công (Key FREE)',
-            uid: uid,
-            expires_human: 'Vinh vien',
-            instances: []
-        };
-        addHistory({
-            key_code: currentKey,
-            uid: d.uid,
-            expires_at: Math.floor(Date.now()/1000) + 99999*86400,
-            expires_human: d.expires_human,
-            duration_days: 'Vinh vien',
-            instances: [],
-            activated_at: new Date().toLocaleString('vi-VN')
+        document.getElementById('keyInput').addEventListener('keydown', function(e) {
+            if(e.key==='Enter'){ e.preventDefault(); handleInitialStep(); }
         });
-        document.getElementById('act-info').innerHTML = d.message+'<br>UID: <strong>'+d.uid+'</strong><br>Het han: '+d.expires_human;
-        document.getElementById('p-uid').classList.add('hidden');
-        document.getElementById('p-download').classList.remove('hidden');
-        document.getElementById('s2').className='step done'; document.getElementById('s3').className='step active';
-        // Ẩn nút tải file với key free
-        document.getElementById('btn-download').style.display = 'none';
-        return;
-    }
-
-    // Luồng gốc
-    const fd = new FormData(); fd.append('key_code', currentKey); fd.append('uid', uid);
-    const r = await fetch(API+'?api=activate',{method:'POST',body:fd});
-    const d = await r.json();
-    if (!d.success) { document.getElementById('uid-result').innerHTML='<div class="result err">'+(d.error||'Loi')+'</div>'; return; }
-
-    let actInst = '';
-    if (d.instances && d.instances.length) {
-        const instRows = d.instances.map(i => {
-            return '<div style="display:flex;justify-content:space-between;align-items:center;padding:4px 8px;background:rgba(52,120,92,.04);border:1px solid rgba(52,120,92,.12);border-radius:4px;margin:2px 0;font-size:12px">'+
-                '<span style="font-weight:600;color:var(--ink)">'+i.label+'</span>'+
-                '<span style="font-family:var(--mono);color:var(--accent);font-weight:700">'+i.ip_port+'</span></div>';
-        }).join('');
-        actInst = '<br><div style="margin-top:6px"><div style="font-size:11px;font-weight:600;color:var(--muted);margin-bottom:4px">THONG TIN VPN:</div>' + instRows + '</div>';
-    }
-
-    if (!d.is_existing) {
-        addHistory({
-            key_code: currentKey,
-            uid: d.uid,
-            expires_at: d.expires_at,
-            expires_human: d.expires_human,
-            duration_days: currentKeyData ? currentKeyData.duration_days : '',
-            instances: (d.instances||[]).map(i => i.label + ' | ' + i.ip_port || ''),
-            activated_at: new Date().toLocaleString('vi-VN')
-        });
-    }
-
-    if (d.is_existing) {
-        document.getElementById('uid-result').innerHTML='<div class="result ok">'+d.message+'</div>';
-        document.getElementById('inp-uid').value = '';
-        return;
-    }
-
-    document.getElementById('act-info').innerHTML = d.message+'<br>UID: <strong>'+d.uid+'</strong><br>Het han: '+d.expires_human+actInst;
-    document.getElementById('p-uid').classList.add('hidden');
-    document.getElementById('p-download').classList.remove('hidden');
-    document.getElementById('s2').className='step done'; document.getElementById('s3').className='step active';
-    document.getElementById('btn-download').style.display = ''; // hiện nút tải nếu key thường
-}
-
-function downloadProfile() {
-    if (currentKey === FREE_KEY) {
-        alert('Chức năng tải file không khả dụng cho key miễn phí.');
-        return;
-    }
-    const f = document.createElement('form'); f.method='POST'; f.action=API+'?api=download_profile';
-    f.innerHTML='<input name="key_code" value="'+currentKey+'">'; document.body.appendChild(f); f.submit(); f.remove();
-}
-
-async function resetUID(uid) {
-    if (currentKey === FREE_KEY) { alert('Tính năng không khả dụng cho key miễn phí.'); return; }
-    if (!confirm('Xoa UID '+uid+'?')) return;
-    const fd = new FormData(); fd.append('key_code', currentKey); fd.append('uid', uid);
-    const r = await fetch(API+'?api=reset_uid',{method:'POST',body:fd});
-    const d = await r.json();
-    alert(d.success ? d.message : d.error);
-    if (d.success) checkKey();
-}
-
-async function resetIP(uid) {
-    if (currentKey === FREE_KEY) { alert('Tính năng không khả dụng cho key miễn phí.'); return; }
-    if (!confirm('Xóa IP của UID '+uid+'?')) return;
-    const fd = new FormData(); fd.append('key_code', currentKey); fd.append('uid', uid);
-    const r = await fetch(API+'?api=reset_ip',{method:'POST',body:fd});
-    const d = await r.json();
-    alert(d.success ? d.message : d.error);
-    if (d.success) checkKey();
-}
-
-async function lookupUID() {
-    const uid = document.getElementById('inp-lookup').value.trim();
-    if (!uid) return;
-    const fd = new FormData(); fd.append('uid', uid);
-    const r = await fetch(API+'?api=lookup_uid',{method:'POST',body:fd});
-    const d = await r.json();
-    const box = document.getElementById('lookup-result');
-    if (!d.found) { box.innerHTML='<div class="result err">'+(d.error||'Không tìm thấy')+'</div>'; return; }
-    const expDate = d.expires_at ? new Date(d.expires_at*1000).toLocaleString('vi-VN') : '—';
-    const actDate = d.activated_at || '—';
-    box.innerHTML = '<div class="result ok">'+
-        '<strong>UID: '+d.uid+'</strong><br>'+
-        'Key: <code>'+d.key_masked+'</code><br>'+
-        'Trạng thái: '+(d.status==='active'?'✅ Active':'❌ Blocked')+'<br>'+
-        'IP: '+(d.ip||'Chưa bind')+'<br>'+
-        'Kích hoạt: '+actDate+'<br>'+
-        'Hết hạn: '+expDate+'<br>'+
-        '<div style="margin-top:8px;display:flex;gap:6px">'+
-            '<button class="btn btn-o" style="font-size:12px;padding:4px 10px" onclick="deleteUIDFromLookup(\''+d.uid+'\')">Xoa UID</button>'+
-        '</div>'+
-        '</div>';
-}
-
-document.getElementById('inp-key').addEventListener('keydown', e => { if(e.key==='Enter') checkKey(); });
-document.getElementById('inp-uid').addEventListener('keydown', e => { if(e.key==='Enter') activateKey(); });
-document.getElementById('inp-lookup').addEventListener('keydown', e => { if(e.key==='Enter') lookupUID(); });
-
-async function deleteUIDFromLookup(uid) {
-    if (currentKey === FREE_KEY) { alert('Tính năng không khả dụng cho key miễn phí.'); return; }
-    if (!confirm('Xóa UID '+uid+' khỏi key? Key sẽ được trả lại 1 slot.')) return;
-    const fd = new FormData(); fd.append('uid', uid);
-    const r = await fetch(API+'?api=delete_uid',{method:'POST',body:fd});
-    const d = await r.json();
-    alert(d.success ? d.message : (d.error||'Lỗi'));
-    if (d.success) document.getElementById('lookup-result').innerHTML='<div class="result ok">Đã xóa UID '+uid+'</div>';
-}
-</script>
-</body></html>
+    </script>
+</body>
+</html>
