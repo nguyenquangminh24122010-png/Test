@@ -195,6 +195,15 @@ h1,h2,h3,.display{ font-family:'Playfair Display',serif; }
 }
 .buy-btn:hover{ filter:brightness(1.08); transform:translateY(-2px); box-shadow:var(--shadow-sm); }
 .buy-btn:disabled{ background:var(--line); color:var(--ink-faint); cursor:not-allowed; transform:none; }
+
+/* ---------- Nút thanh toán trong giỏ hàng: to hơn, dễ bấm hơn ---------- */
+#btnCheckout{
+  padding:1rem 1.5rem;
+  font-size:0.95rem;
+  border-radius:12px;
+  box-shadow:var(--shadow-md);
+}
+
 .empty-state{ text-align:center; padding:3rem 1.5rem; color:var(--ink-soft); grid-column:1/-1; font-size:1.05rem; }
 
 footer{
@@ -745,6 +754,11 @@ footer{
   async function fbAddUser(user){
     const f = await withFb();
     const docRef = await f.addDoc(f.collection(f.db, 'users'), user);
+    // Ghi lại id (bằng đúng ID document Firestore vừa tạo) vào chính dữ liệu user.
+    // Nếu không có bước này, các tài khoản tự đăng ký sẽ thiếu field "id" trong dữ liệu,
+    // khiến các thao tác tìm user theo u.id (vd: duyệt yêu cầu nạp tiền) không tìm thấy
+    // được tài khoản đó -> duyệt tiền xong nhưng số dư không được cộng.
+    await f.updateDoc(docRef, { id: docRef.id });
     return docRef.id;
   }
   async function fbSetSettings(partial){
@@ -1633,6 +1647,9 @@ footer{
             if (user) {
               const updatedUser = Object.assign({}, user, { balance: (Number(user.balance)||0) + req.amount });
               await fbSetUser(updatedUser);
+            } else {
+              showToast('Không tìm thấy tài khoản để cộng tiền (tài khoản có thể được tạo trước khi sửa lỗi id). Vào Firestore Console, mở collection "users", thêm field "id" cho tài khoản này rồi thử lại.', 'error');
+              return;
             }
             await fbUpdateDeposit(req.id, { status:'approved' });
             showToast(`Đã duyệt ${Number(req.amount).toLocaleString('vi-VN')}₫ cho ${req.username}`, 'success');
