@@ -7,7 +7,6 @@
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,600;0,700;0,800;1,500&family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
 <style>
 :root{
-  /* ===== Bảng màu: hiện đại, sang trọng, tối giản (dark + gold) ===== */
   --bg:#0b0c10;
   --bg-deep:#07080b;
   --panel:#13151b;
@@ -56,9 +55,6 @@ h1,h2,h3,.display{ font-family:'Playfair Display',serif; }
 ::-webkit-scrollbar{ width:8px; }
 ::-webkit-scrollbar-thumb{ background:var(--line); border-radius:8px; }
 
-/* ====================================================== */
-/* ===================  LOADING SCREEN  ================== */
-/* ====================================================== */
 #loadScreen{
   position:fixed; inset:0; z-index:900; background:var(--bg-deep);
   display:flex; align-items:center; justify-content:center; flex-direction:column;
@@ -85,7 +81,6 @@ h1,h2,h3,.display{ font-family:'Playfair Display',serif; }
 .load-bar-track{ width:190px; height:2px; background:var(--line); border-radius:2px; overflow:hidden; }
 .load-bar-fill{ height:100%; width:0%; background:linear-gradient(90deg, var(--gold-deep), var(--gold-bright)); border-radius:2px; transition:width 0.25s ease; }
 
-/* ---------- Ambient / fx canvas (nhẹ, không che nội dung) ---------- */
 .ambient-glow{
   position:fixed; top:-10%; right:-10%; width:42vw; height:42vw; border-radius:50%;
   background:radial-gradient(circle, rgba(212,175,106,0.08), transparent 70%);
@@ -95,7 +90,6 @@ h1,h2,h3,.display{ font-family:'Playfair Display',serif; }
 
 #fxCanvas{ position:fixed; inset:0; pointer-events:none; z-index:2; opacity:0.45; }
 
-/* ---------- Navbar ---------- */
 .navbar{
   display:flex; justify-content:space-between; align-items:center;
   padding:1.1rem 4%; background:rgba(11,12,16,0.78); backdrop-filter:blur(14px);
@@ -135,7 +129,6 @@ h1,h2,h3,.display{ font-family:'Playfair Display',serif; }
 .balance{ font-weight:700; color:#1a1305; font-size:0.82rem; font-family:'Playfair Display',serif;
   background:linear-gradient(135deg, var(--gold-bright), var(--gold-deep)); padding:0.5rem 0.95rem; border-radius:var(--radius-nav); box-shadow:var(--shadow-sm); letter-spacing:0.01em; }
 
-/* ---------- Hero ---------- */
 .hero{ text-align:center; padding:4.4rem 1.5rem 1.6rem; position:relative; z-index:1; }
 .hero .eyebrow{
   text-transform:uppercase; letter-spacing:0.26em; font-size:0.66rem; color:var(--gold);
@@ -154,7 +147,6 @@ h1,h2,h3,.display{ font-family:'Playfair Display',serif; }
 .filter-chip:hover{ border-color:var(--gold); color:var(--gold-bright); transform:translateY(-1px); }
 .filter-chip.active{ background:linear-gradient(135deg, var(--gold-bright), var(--gold-deep)); border-color:var(--gold-deep); color:#1a1305; box-shadow:var(--shadow-sm); }
 
-/* ---------- Product grid ---------- */
 .products-grid{
   display:grid; grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); gap:1.7rem;
   padding:1.8rem 5% 4rem; max-width:1320px; margin:0 auto; position:relative; z-index:1;
@@ -196,7 +188,6 @@ h1,h2,h3,.display{ font-family:'Playfair Display',serif; }
 .buy-btn:hover{ filter:brightness(1.08); transform:translateY(-2px); box-shadow:var(--shadow-sm); }
 .buy-btn:disabled{ background:var(--line); color:var(--ink-faint); cursor:not-allowed; transform:none; }
 
-/* ---------- Nút thanh toán trong giỏ hàng: to hơn, dễ bấm hơn ---------- */
 #btnCheckout{
   padding:1rem 1.5rem;
   font-size:0.95rem;
@@ -212,7 +203,6 @@ footer{
   letter-spacing:0.03em;
 }
 
-/* ---------- Sidebars ---------- */
 .admin-sidebar,.cart-sidebar{
   position:fixed; top:0; right:-420px; width:390px; max-width:92vw; height:100vh;
   background:var(--bg-deep); box-shadow:-16px 0 40px rgba(0,0,0,0.5); z-index:200;
@@ -312,7 +302,6 @@ footer{
 .btn-secondary:hover{ background:var(--panel-2); }
 .captcha-question{ font-family:'Playfair Display',serif; font-size:1.85rem; font-weight:700; color:var(--gold-bright); margin:1rem 0; }
 
-/* ---------- Auth screens ---------- */
 .auth-modal{ max-width:385px; text-align:left; }
 .auth-brand{ text-align:center; margin-bottom:0.4rem; }
 .auth-brand .mark-circle{
@@ -340,7 +329,6 @@ footer{
 
 .cart-total{ font-family:'Playfair Display',serif; font-weight:800; font-size:1.15rem; padding-top:0.6rem; border-top:1px solid var(--line); color:var(--gold-bright); }
 
-/* ---------- Order success ---------- */
 .order-success-modal{ max-width:440px; text-align:left; }
 .order-success-icon{
   width:60px; height:60px; border-radius:50%; background:var(--success); color:#06251a;
@@ -380,7 +368,6 @@ footer{
 </head>
 <body>
 
-<!-- ===== Loading screen ===== -->
 <div id="loadScreen">
   <div class="load-mark">NM</div>
   <div class="load-title">nminhshop</div>
@@ -424,7 +411,6 @@ footer{
 
 <div class="overlay" id="overlay"></div>
 
-<!-- CAPTCHA -->
 <div class="modal" id="captchaModal">
   <h3>Xác minh bạn là con người</h3>
   <p style="color:var(--ink-soft); font-size:0.9rem;">Giải phép tính sau để vào cửa hàng:</p>
@@ -433,7 +419,6 @@ footer{
   <button class="btn-primary" id="submitCaptcha" style="margin-top:0.6rem; width:100%;">Xác nhận</button>
 </div>
 
-<!-- Login -->
 <div class="modal auth-modal" id="loginModal">
   <div class="auth-brand"><div class="mark-circle">NM</div></div>
   <h3>Chào mừng trở lại</h3>
@@ -448,7 +433,6 @@ footer{
   <div id="fbDiagLine" style="text-align:center; font-size:0.68rem; color:var(--ink-faint); margin-top:0.6rem;"></div>
 </div>
 
-<!-- Register -->
 <div class="modal auth-modal" id="registerModal">
   <div class="auth-brand"><div class="mark-circle">NM</div></div>
   <h3>Tạo tài khoản</h3>
@@ -464,7 +448,6 @@ footer{
   <div class="auth-switch">Đã có tài khoản? <a id="goLogin">Đăng nhập</a></div>
 </div>
 
-<!-- Deposit -->
 <div class="modal" id="depositModal">
   <h3>Nạp tiền</h3>
   <select id="depositAmountSelect">
@@ -481,7 +464,6 @@ footer{
   </div>
 </div>
 
-<!-- Deposit detail -->
 <div class="modal" id="depositDetailModal">
   <h3>Thông tin chuyển khoản</h3>
   <p>Số tài khoản: <strong id="bankAccountDisplay">0976788751</strong></p>
@@ -493,7 +475,6 @@ footer{
   </div>
 </div>
 
-<!-- Contact confirm -->
 <div class="modal" id="zaloModal">
   <h3>Xác nhận giao dịch</h3>
   <p style="color:var(--ink-soft);">Yêu cầu nạp của bạn đã được ghi nhận và đang chờ quản trị viên duyệt.</p>
@@ -507,7 +488,6 @@ footer{
   <button class="btn-primary" id="closeZaloModal" style="margin-top:1.1rem; width:100%;">Đã hiểu</button>
 </div>
 
-<!-- Order success -->
 <div class="modal order-success-modal" id="orderSuccessModal">
   <div class="order-success-icon">✓</div>
   <h3>Đặt hàng thành công</h3>
@@ -524,13 +504,11 @@ footer{
   <button class="btn-primary" id="closeOrderSuccess" style="margin-top:1.2rem; width:100%;">Đã hiểu, đóng lại</button>
 </div>
 
-<!-- Bot block -->
 <div class="modal" id="botModal">
   <h3>Bạn đang thao tác quá nhanh</h3>
   <p style="color:var(--ink-soft);">Vui lòng chờ <span id="countdown">5</span> giây...</p>
 </div>
 
-<!-- Lịch sử mua hàng -->
 <div class="modal" id="historyModal" style="max-width:500px; text-align:left;">
   <h3>Lịch sử mua hàng</h3>
   <p class="help-text">Bấm vào một đơn hàng để xem key / nội dung đã nhận.</p>
@@ -538,7 +516,6 @@ footer{
   <button class="btn-secondary" id="closeHistory" style="width:100%;">Đóng</button>
 </div>
 
-<!-- Tài khoản: đổi tên đăng nhập / mật khẩu (cho cả user thường và admin) -->
 <div class="modal" id="accountModal" style="text-align:left;">
   <h3>Tài khoản của tôi</h3>
   <p class="auth-sub" style="text-align:left;">Đổi tên đăng nhập hoặc mật khẩu cho dễ nhớ.</p>
@@ -557,7 +534,6 @@ footer{
   </div>
 </div>
 
-<!-- Admin sidebar -->
 <div class="admin-sidebar" id="adminSidebar">
   <div class="admin-header"><h2>Quản trị</h2><button class="close-btn" id="closeAdmin">&times;</button></div>
   <div class="admin-tabs">
@@ -631,14 +607,14 @@ footer{
     <h4 style="color:var(--danger);">⚠ Bảo mật dữ liệu — vui lòng đọc</h4>
     <p class="help-text">
       Trang này đã được sửa để KHÔNG còn phát (broadcast) danh sách key còn lại tới trình duyệt của khách hàng nữa — key chỉ được tải khi chính bạn (admin) mở bảng Quản trị, và được cấp ra từng cái một trong lúc thanh toán.<br><br>
-      Tuy nhiên, đây vẫn KHÔNG phải là bảo mật tuyệt đối, vì trang không dùng Firebase Authentication: quyền "admin" hiện chỉ là một cờ (isAdmin) lưu trong trình duyệt, Firestore không tự phân biệt được ai là admin thật. Muốn khoá hẳn, bạn cần vào Firebase Console → Firestore → Rules và giới hạn quyền đọc collection "productKeys" (và ai được ghi vào "users", "products"...). Nếu cần, hãy nhờ người có chuyên môn thiết lập Firestore Rules + Firebase Authentication để đạt mức bảo mật thực sự.
+      Tuy nhiên, đây vẫn KHÔNG phải là bảo mật tuyệt đối, vì trang không dùng Firebase Authentication: quyền "admin" hiện chỉ là một cờ (isAdmin) lưu trong trình duyệt, Firestore không tự phân biệt được ai là admin thật. Muốn khoá hẳn, bạn cần vào Firebase Console → Firestore → Rules và giới hạn quyền đọc collection "productKeys" (và ai được ghi vào "users", "products"...). Nếu cần, hãy nhờ người có chuyên môn thiết lập Firestore Rules + Firebase Authentication để đạt mức bảo mật thực sự.<br><br>
+      <strong style="color:var(--ink);">Về việc chống sao chép giao diện web:</strong> mình đã bật vài lớp "gây khó" phía trình duyệt (chặn chuột phải, chặn phím tắt mở DevTools/xem mã nguồn, cảnh báo trong Console). Đây chỉ là rào cản làm chậm người sao chép thông thường — KHÔNG có cách nào ở phía trình duyệt ngăn được 100% việc xem/tải mã HTML-CSS-JS, vì trình duyệt của bất kỳ ai truy cập trang đều bắt buộc phải tải toàn bộ mã đó về để hiển thị trang (qua tab Network, chế độ xem nguồn, hoặc công cụ tải trang tĩnh). Muốn bảo vệ chắc chắn hơn, cách duy nhất là chuyển phần hiển thị sang render ở server (backend) thay vì một trang tĩnh như hiện tại.
     </p>
   </div>
 
   <button class="btn-sm btn-secondary" id="logoutAdmin" style="margin-top:0.5rem;">Đóng bảng quản trị</button>
 </div>
 
-<!-- Cart sidebar -->
 <div class="cart-sidebar" id="cartSidebar">
   <div class="cart-header"><h3>Giỏ hàng</h3><button class="close-btn" id="closeCart">&times;</button></div>
   <div id="cartItems">Giỏ hàng trống.</div>
@@ -648,7 +624,6 @@ footer{
 
 <div class="toast" id="toast"></div>
 
-<!-- ===== Firebase (đồng bộ dữ liệu real-time giữa các thiết bị) ===== -->
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-app.js";
   import {
@@ -685,7 +660,6 @@ footer{
 (() => {
   'use strict';
 
-  // ==================== Hằng số ====================
   const DEFAULT_PHONE = '0976788751';
   const DEFAULT_ORDER_NOTE = 'Cảm ơn bạn đã mua hàng tại nminhshop! Vui lòng liên hệ số điện thoại bên trên để xác nhận và nhận hàng trong vòng 24-48h.';
   const defaultCategories = ['Nổi bật', 'Đồ điện tử', 'Phụ kiện', 'Khác'];
@@ -695,16 +669,11 @@ footer{
   ];
   const DEFAULT_ADMIN_USERNAME = 'nminh';
   const DEFAULT_ADMIN_PASSWORD = '1';
-  // Nếu sau chừng này giây mà dữ liệu vẫn chưa tải xong (mạng chậm / Firestore Rules chặn /
-  // dự án chưa khởi tạo Firestore...), tự thoát màn tải thay vì treo vô thời hạn.
   const LOADING_SAFETY_MS = 7000;
 
   const $ = (sel) => document.querySelector(sel);
   const $$ = (sel) => document.querySelectorAll(sel);
   let activeCategory = 'all';
-  // Cache cục bộ (chỉ tồn tại trong phiên làm việc của admin) để hiển thị key trong bảng
-  // Quản trị. KHÔNG được đồng bộ real-time và KHÔNG gửi cho khách thường — chỉ được nạp
-  // theo yêu cầu (getDoc) mỗi khi admin mở bảng Quản trị hoặc sửa một sản phẩm cụ thể.
   let adminKeysCache = {};
 
   function escapeHtml(str){
@@ -769,23 +738,15 @@ footer{
 
   async function withFb(){ if (!fb) await fbReady; return fb; }
 
-  // ==================== FB helpers ====================
-  // QUAN TRỌNG (bảo mật): tài liệu "products" không bao giờ chứa field "keys" nữa.
-  // Key được lưu riêng trong collection "productKeys" (doc id = id sản phẩm), và collection
-  // này chỉ được ĐỌC theo yêu cầu (getDoc) từ bảng Quản trị hoặc bên trong transaction thanh
-  // toán — KHÔNG có onSnapshot lắng nghe real-time cho toàn bộ khách, nên trình duyệt của
-  // khách thường không bao giờ nhận được danh sách key còn lại.
   async function fbSetProduct(product){
     const f = await withFb();
-    // Luôn loại field "keys" ra khỏi tài liệu products trước khi ghi, phòng trường hợp code
-    // gọi hàm này với object còn sót field keys từ dữ liệu cũ.
     const { keys, ...safeProduct } = product;
     await f.setDoc(f.doc(f.db, 'products', String(safeProduct.id)), safeProduct);
   }
   async function fbDeleteProduct(id){
     const f = await withFb();
     await f.deleteDoc(f.doc(f.db, 'products', String(id)));
-    try{ await f.deleteDoc(f.doc(f.db, 'productKeys', String(id))); }catch(e){ /* có thể chưa tồn tại */ }
+    try{ await f.deleteDoc(f.doc(f.db, 'productKeys', String(id))); }catch(e){}
     delete adminKeysCache[id];
   }
   async function fbSetProductKeys(id, keysArr){
@@ -820,10 +781,6 @@ footer{
   async function fbAddUser(user){
     const f = await withFb();
     const docRef = await f.addDoc(f.collection(f.db, 'users'), user);
-    // Ghi lại id (bằng đúng ID document Firestore vừa tạo) vào chính dữ liệu user.
-    // Nếu không có bước này, các tài khoản tự đăng ký sẽ thiếu field "id" trong dữ liệu,
-    // khiến các thao tác tìm user theo u.id (vd: duyệt yêu cầu nạp tiền) không tìm thấy
-    // được tài khoản đó -> duyệt tiền xong nhưng số dư không được cộng.
     await f.updateDoc(docRef, { id: docRef.id });
     return docRef.id;
   }
@@ -855,10 +812,6 @@ footer{
     try{ await fbSaveCart(userId, cart); }catch(e){ console.error('Lỗi đồng bộ giỏ hàng:', e); }
   }
 
-  // Di dời dữ liệu cũ: nếu một sản phẩm vẫn còn field "keys" ngay trên tài liệu products
-  // (được tạo trước khi bản vá bảo mật này tồn tại), chuyển toàn bộ key đó sang collection
-  // riêng "productKeys" rồi xoá hẳn field "keys" khỏi tài liệu products. Chỉ chạy khi admin
-  // mở bảng Quản trị, không chạy cho khách thường.
   async function migrateLegacyKeysIfNeeded(){
     const f = await withFb();
     if (!f) return;
@@ -872,12 +825,6 @@ footer{
     }
   }
 
-  // ==================== Khởi tạo dữ liệu mặc định (chỉ chạy đúng 1 lần cho cả đời dự án) ====================
-  // QUAN TRỌNG: trước đây hàm này kiểm tra "sản phẩm mẫu id=1/2 có tồn tại chưa" mỗi lần tải
-  // trang, và tự tạo lại nếu thiếu. Hệ quả: hễ sản phẩm đó bán hết (bị xoá khỏi products),
-  // chỉ cần tải lại trang vài lần là nó "tự hồi lại hàng". Giờ chỉ seed đúng 1 lần dựa vào
-  // cờ "seeded" lưu trong config/settings — sau lần đó, dù sản phẩm bị xoá/hết hàng sẽ
-  // KHÔNG bao giờ tự động được tạo lại nữa.
   async function seedIfEmpty(){
     const f = await withFb();
     if (!f) return;
@@ -906,8 +853,6 @@ footer{
           const pSnap = await f.getDoc(f.doc(f.db, 'products', String(p.id)));
           if (!pSnap.exists()) await f.setDoc(f.doc(f.db, 'products', String(p.id)), p);
         }));
-        // Đánh dấu đã seed xong — từ giờ sẽ không bao giờ tự tạo lại sản phẩm/danh mục mẫu nữa,
-        // dù chúng có bị xoá hay bán hết trong tương lai.
         await f.setDoc(settingsRef, { seeded:true }, { merge:true });
       }
     }catch(e){
@@ -915,7 +860,6 @@ footer{
     }
   }
 
-  // ==================== Lắng nghe real-time ====================
   function startListeners(){
     fb.onSnapshot(fb.collection(fb.db, 'products'), snap => {
       STATE.products = snap.docs.map(d => d.data());
@@ -985,7 +929,6 @@ footer{
     else showLoginModal();
   }
 
-  // ==================== Filter bar ====================
   function renderFilterBar(){
     const categories = STATE.categories;
     const chips = ['<button class="filter-chip' + (activeCategory==='all'?' active':'') + '" data-cat="all">Tất cả</button>']
@@ -1006,7 +949,6 @@ footer{
     return `<span class="stock-tag in">Còn ${stock}</span>`;
   }
 
-  // ==================== Product grid ====================
   function renderProducts(){
     if (!getCurrentUser()) return;
     const products = STATE.products.filter(p => activeCategory === 'all' || p.category === activeCategory);
@@ -1111,7 +1053,6 @@ footer{
     showToast(`Đã thêm "${product.name}" vào giỏ`, 'success');
   }
 
-  // ==================== Auth ====================
   function closeAllAuth(){
     $('#loginModal').classList.remove('active');
     $('#registerModal').classList.remove('active');
@@ -1202,8 +1143,6 @@ footer{
     if (lockedSec > 0) { errEl.textContent = `Quá nhiều lần thử. Vui lòng chờ ${lockedSec}s.`; return; }
     btn.disabled = true;
     try{
-      // Nếu danh sách tài khoản chưa tải được (thường do Firestore Rules chặn đọc collection
-      // "users"), báo đúng nguyên nhân thay vì để người dùng tưởng nhầm là gõ sai mật khẩu.
       if (!STATE.ready.users) {
         errEl.textContent = 'Chưa tải được dữ liệu tài khoản từ máy chủ. Vui lòng đợi vài giây rồi thử lại.';
         return;
@@ -1254,8 +1193,6 @@ footer{
       showToast('Tạo tài khoản thành công!', 'success');
     }catch(e){
       console.error('Lỗi tạo tài khoản:', e);
-      // Hiện lỗi thật (vd "permission-denied") để dễ biết cần sửa Firestore Rules ở đâu,
-      // thay vì chỉ báo chung chung "lỗi kết nối".
       errEl.textContent = 'Lỗi: ' + (e && e.message ? e.message : 'không kết nối được máy chủ dữ liệu.');
     }finally{
       btn.disabled = false; btn.textContent = 'Tạo tài khoản';
@@ -1276,7 +1213,6 @@ footer{
     showToast('Đã đăng xuất.', 'info');
   });
 
-  // ==================== Tài khoản: đổi tên đăng nhập / mật khẩu ====================
   $('#btnAccount').addEventListener('click', () => {
     const user = getCurrentUser();
     if (!user) { showToast('Vui lòng đăng nhập!', 'error'); return; }
@@ -1332,7 +1268,6 @@ footer{
     }
   });
 
-  // ==================== Cart / Thanh toán (transaction: trừ kho hoặc key, ghi lịch sử mọi đơn) ====================
   $('#btnCart').addEventListener('click', async (e) => {
     e.preventDefault();
     if (botBlocked) return;
@@ -1409,7 +1344,7 @@ footer{
       const f = await withFb();
       if (!f) throw new Error('Chưa kết nối được máy chủ dữ liệu.');
       await f.runTransaction(f.db, async (transaction) => {
-        assignedKeysByItem = {}; // reset mỗi lần transaction chạy lại (retry)
+        assignedKeysByItem = {};
         const userRef = f.doc(f.db, 'users', String(user.id));
         const userDoc = await transaction.get(userRef);
         if (!userDoc.exists()) throw new Error('Tài khoản không tồn tại.');
@@ -1423,9 +1358,6 @@ footer{
           const prodDoc = await transaction.get(prodRef);
           if (!prodDoc.exists()) throw new Error(`Sản phẩm "${item.name}" không tồn tại.`);
           const prodData = prodDoc.data();
-          // Đọc số key còn lại từ collection riêng "productKeys" (không còn nằm trên products
-          // nữa) — vẫn đọc bên trong transaction để đảm bảo tính nhất quán khi nhiều người
-          // mua cùng lúc (transaction sẽ tự retry nếu có xung đột).
           const keyRef = f.doc(f.db, 'productKeys', String(item.id));
           const keyDoc = await transaction.get(keyRef);
           const existingKeys = keyDoc.exists() ? (keyDoc.data().keys || []) : [];
@@ -1438,10 +1370,6 @@ footer{
 
         transaction.update(userRef, { balance: currentBalance - total });
 
-        // Mỗi đơn hàng đều được ghi vào "purchases" (lịch sử mua hàng). Nếu sản phẩm dùng
-        // danh sách key riêng, mỗi đơn sẽ "rút" ra đúng số key cần và lưu lại trong đơn hàng
-        // đó để khách xem lại trong Lịch sử mua hàng — nhưng key KHÔNG bao giờ được ghi trở
-        // lại vào tài liệu products (nơi mọi khách đều đang lắng nghe real-time).
         for (const item of cart) {
           const prodDoc = prodDocs[item.id];
           const prodData = prodDoc.data();
@@ -1487,7 +1415,6 @@ footer{
   }
   $('#btnCheckout').addEventListener('click', processCheckout);
 
-  // ==================== Deposit ====================
   $('#btnDeposit').addEventListener('click', async (e) => {
     e.preventDefault();
     if (botBlocked) return;
@@ -1554,7 +1481,6 @@ footer{
     $('#overlay').classList.remove('active');
   });
 
-  // ==================== Lịch sử mua hàng (khách xem đơn của chính mình, bấm để xem key) ====================
   $('#btnHistory').addEventListener('click', async () => {
     if (botBlocked) return;
     const user = getCurrentUser();
@@ -1615,7 +1541,6 @@ footer{
     $('#overlay').classList.remove('active');
   });
 
-  // ==================== Admin ====================
   $('#btnAdmin').addEventListener('click', async (e) => {
     e.preventDefault();
     if (botBlocked) return;
@@ -1739,9 +1664,6 @@ footer{
     return String(text || '').split('\n').map(s => s.trim()).filter(Boolean).slice(0, 500);
   }
 
-  // Giờ là hàm async: với mỗi sản phẩm, tải riêng số key còn lại (từ collection
-  // "productKeys") chỉ để hiển thị trong bảng Quản trị — không lắng nghe real-time, không
-  // gửi cho khách thường.
   async function renderAdminProducts(){
     const products = STATE.products;
     const categories = STATE.categories;
@@ -1793,15 +1715,21 @@ footer{
         if (!prod) return;
         try{
           if (field === 'keys') {
-            // Key được ghi vào collection riêng "productKeys", KHÔNG ghi vào products.
             await fbSetProductKeys(id, value);
             if (value.length > 0) {
               await fbSetProduct(Object.assign({}, prod, { stock: value.length }));
             }
-          } else {
-            const updated = Object.assign({}, prod, { [field]: value });
-            await fbSetProduct(updated);
+            // SỬA LỖI: trước đây nếu admin XOÁ HẾT key (value.length === 0), hàm chỉ ghi vào
+            // "productKeys" mà không đụng tới "products", nên KHÔNG có sự kiện onSnapshot nào
+            // bắn ra để làm mới bảng Quản trị. Kết quả: ô "Tồn kho" vẫn hiện "disabled" và số
+            // liệu cũ dù key đã bị xoá, cho tới khi đóng/mở lại bảng Quản trị. Giờ luôn gọi lại
+            // renderAdminProducts() sau khi sửa key để bảng luôn khớp với dữ liệu mới nhất.
+            showToast('Đã cập nhật!', 'success');
+            renderAdminProducts();
+            return;
           }
+          const updated = Object.assign({}, prod, { [field]: value });
+          await fbSetProduct(updated);
           showToast('Đã cập nhật!', 'success');
         }catch(e){ console.error(e); showToast('Lỗi kết nối!', 'error'); renderAdminProducts(); }
       });
@@ -1825,7 +1753,7 @@ footer{
     $$('.delete-product').forEach(btn => {
       btn.addEventListener('click', async function(){
         const id = parseInt(this.dataset.id, 10);
-        try{ await fbDeleteProduct(id); showToast('Đã xóa sản phẩm.', 'info'); }
+        try{ await fbDeleteProduct(id); showToast('Đã xóa sản phẩm.', 'info'); renderAdminProducts(); }
         catch(e){ console.error(e); showToast('Lỗi kết nối!', 'error'); }
       });
     });
@@ -1856,8 +1784,6 @@ footer{
       }catch(err){ showToast(err.message, 'error'); return; }
     }
     const newId = STATE.products.length ? Math.max(...STATE.products.map(p => p.id)) + 1 : 1;
-    // Sản phẩm không còn chứa field "keys" — key (nếu có) được ghi riêng vào "productKeys"
-    // ngay sau khi tạo sản phẩm, để không bao giờ bị phát tới trình duyệt của khách.
     const product = { id:newId, name, author, price, stock, desc, emoji:'📦', image, category, note };
     try{
       await fbSetProduct(product);
@@ -1903,7 +1829,6 @@ footer{
     });
   }
 
-  // ==================== Chống thao tác nhanh ====================
   let botBlocked = false;
   let consecutiveViolations = 0;
   async function checkRateLimit(actionKey, minIntervalMs){
@@ -1947,7 +1872,6 @@ footer{
     }, 1000);
   }
 
-  // ==================== CAPTCHA ====================
   function generateCaptcha(){
     const arr = new Uint32Array(2);
     if (window.crypto && window.crypto.getRandomValues) window.crypto.getRandomValues(arr);
@@ -2039,7 +1963,6 @@ footer{
     el.addEventListener('click', e => e.stopPropagation());
   });
 
-  // ==================== Hiệu ứng rơi (nhẹ, không che nội dung) ====================
   let fxParticles = [];
   let fxRunning = false;
   let fxMode = null;
@@ -2157,18 +2080,13 @@ footer{
     }, 140);
   })();
 
-  // Bộ đếm an toàn được khởi động NGAY LẬP TỨC khi trang chạy, độc lập với mọi thao tác
-  // Firestore khác — đây là fix chính cho lỗi "treo màn tải rất lâu": trước đây bộ đếm chỉ
-  // được kích hoạt SAU KHI seedIfEmpty() hoàn tất, nên nếu Firestore không phản hồi (mạng
-  // chặn, sai cấu hình dự án...) trang sẽ treo vô thời hạn vì bộ đếm chưa từng được bật.
   setTimeout(() => { finishLoading(); }, LOADING_SAFETY_MS);
 
-  // ==================== Khởi động ====================
   async function boot(){
     const f = await withFb();
     if (!f) { maybeHideLoading(true); return; }
     startListeners();
-    seedIfEmpty(); // không await — không được phép chặn màn tải
+    seedIfEmpty();
   }
   boot();
 })();
