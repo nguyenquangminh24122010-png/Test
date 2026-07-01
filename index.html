@@ -569,6 +569,7 @@ footer{
 
   <div id="tabProducts" class="admin-section active">
     <h4>Danh sách sản phẩm</h4>
+    <p class="help-text" style="color:var(--warning);">⚠ Lưu ý bảo mật: key sản phẩm chỉ được tải khi bạn mở bảng Quản trị, và không còn được gửi tới trình duyệt của khách khi họ chỉ xem/mua hàng. Tuy nhiên bảo mật thật sự cho dữ liệu key nằm ở Firestore Security Rules — xem tab "Cài đặt" để biết thêm.</p>
     <div id="adminProductList"></div>
     <div class="product-item-admin" style="margin-top:1rem; flex-direction:column; align-items:stretch;">
       <input placeholder="Tên sản phẩm" id="newName" maxlength="80">
@@ -626,6 +627,12 @@ footer{
       <span>🌸 Hoa đào rơi</span>
       <label class="switch"><input type="checkbox" id="toggleBlossom"><span class="slider"></span></label>
     </div>
+
+    <h4 style="color:var(--danger);">⚠ Bảo mật dữ liệu — vui lòng đọc</h4>
+    <p class="help-text">
+      Trang này đã được sửa để KHÔNG còn phát (broadcast) danh sách key còn lại tới trình duyệt của khách hàng nữa — key chỉ được tải khi chính bạn (admin) mở bảng Quản trị, và được cấp ra từng cái một trong lúc thanh toán.<br><br>
+      Tuy nhiên, đây vẫn KHÔNG phải là bảo mật tuyệt đối, vì trang không dùng Firebase Authentication: quyền "admin" hiện chỉ là một cờ (isAdmin) lưu trong trình duyệt, Firestore không tự phân biệt được ai là admin thật. Muốn khoá hẳn, bạn cần vào Firebase Console → Firestore → Rules và giới hạn quyền đọc collection "productKeys" (và ai được ghi vào "users", "products"...). Nếu cần, hãy nhờ người có chuyên môn thiết lập Firestore Rules + Firebase Authentication để đạt mức bảo mật thực sự.
+    </p>
   </div>
 
   <button class="btn-sm btn-secondary" id="logoutAdmin" style="margin-top:0.5rem;">Đóng bảng quản trị</button>
@@ -646,7 +653,7 @@ footer{
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-app.js";
   import {
     getFirestore, collection, doc, setDoc, updateDoc, deleteDoc, getDoc, getDocs, addDoc,
-    onSnapshot, query, orderBy, where, serverTimestamp, runTransaction
+    onSnapshot, query, orderBy, where, serverTimestamp, runTransaction, deleteField
   } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-firestore.js";
 
   const firebaseConfig = {
@@ -669,7 +676,7 @@ footer{
 
   window.__fb = db ? {
     db, collection, doc, setDoc, updateDoc, deleteDoc, getDoc, getDocs, addDoc,
-    onSnapshot, query, orderBy, where, serverTimestamp, runTransaction
+    onSnapshot, query, orderBy, where, serverTimestamp, runTransaction, deleteField
   } : null;
   window.dispatchEvent(new Event('fb-ready'));
 </script>
@@ -683,8 +690,8 @@ footer{
   const DEFAULT_ORDER_NOTE = 'Cảm ơn bạn đã mua hàng tại nminhshop! Vui lòng liên hệ số điện thoại bên trên để xác nhận và nhận hàng trong vòng 24-48h.';
   const defaultCategories = ['Nổi bật', 'Đồ điện tử', 'Phụ kiện', 'Khác'];
   const defaultProducts = [
-    { id:1, name:'Sản phẩm mẫu 1', author:'nminhshop', desc:'Mô tả ngắn cho sản phẩm mẫu. Hãy chỉnh sửa trong trang Quản trị.', price:120000, stock:25, emoji:'📦', image:'', category:'Nổi bật', note:'', keys:[] },
-    { id:2, name:'Sản phẩm mẫu 2', author:'nminhshop', desc:'Một sản phẩm khác để bạn tham khảo cách hiển thị.', price:95000, stock:10, emoji:'🎁', image:'', category:'Phụ kiện', note:'', keys:[] }
+    { id:1, name:'Sản phẩm mẫu 1', author:'nminhshop', desc:'Mô tả ngắn cho sản phẩm mẫu. Hãy chỉnh sửa trong trang Quản trị.', price:120000, stock:25, emoji:'📦', image:'', category:'Nổi bật', note:'' },
+    { id:2, name:'Sản phẩm mẫu 2', author:'nminhshop', desc:'Một sản phẩm khác để bạn tham khảo cách hiển thị.', price:95000, stock:10, emoji:'🎁', image:'', category:'Phụ kiện', note:'' }
   ];
   const DEFAULT_ADMIN_USERNAME = 'nminh';
   const DEFAULT_ADMIN_PASSWORD = '1';
@@ -695,6 +702,10 @@ footer{
   const $ = (sel) => document.querySelector(sel);
   const $$ = (sel) => document.querySelectorAll(sel);
   let activeCategory = 'all';
+  // Cache cục bộ (chỉ tồn tại trong phiên làm việc của admin) để hiển thị key trong bảng
+  // Quản trị. KHÔNG được đồng bộ real-time và KHÔNG gửi cho khách thường — chỉ được nạp
+  // theo yêu cầu (getDoc) mỗi khi admin mở bảng Quản trị hoặc sửa một sản phẩm cụ thể.
+  let adminKeysCache = {};
 
   function escapeHtml(str){
     return String(str).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -759,13 +770,40 @@ footer{
   async function withFb(){ if (!fb) await fbReady; return fb; }
 
   // ==================== FB helpers ====================
+  // QUAN TRỌNG (bảo mật): tài liệu "products" không bao giờ chứa field "keys" nữa.
+  // Key được lưu riêng trong collection "productKeys" (doc id = id sản phẩm), và collection
+  // này chỉ được ĐỌC theo yêu cầu (getDoc) từ bảng Quản trị hoặc bên trong transaction thanh
+  // toán — KHÔNG có onSnapshot lắng nghe real-time cho toàn bộ khách, nên trình duyệt của
+  // khách thường không bao giờ nhận được danh sách key còn lại.
   async function fbSetProduct(product){
     const f = await withFb();
-    await f.setDoc(f.doc(f.db, 'products', String(product.id)), product);
+    // Luôn loại field "keys" ra khỏi tài liệu products trước khi ghi, phòng trường hợp code
+    // gọi hàm này với object còn sót field keys từ dữ liệu cũ.
+    const { keys, ...safeProduct } = product;
+    await f.setDoc(f.doc(f.db, 'products', String(safeProduct.id)), safeProduct);
   }
   async function fbDeleteProduct(id){
     const f = await withFb();
     await f.deleteDoc(f.doc(f.db, 'products', String(id)));
+    try{ await f.deleteDoc(f.doc(f.db, 'productKeys', String(id))); }catch(e){ /* có thể chưa tồn tại */ }
+    delete adminKeysCache[id];
+  }
+  async function fbSetProductKeys(id, keysArr){
+    const f = await withFb();
+    await f.setDoc(f.doc(f.db, 'productKeys', String(id)), { keys: keysArr || [] });
+    adminKeysCache[id] = keysArr || [];
+  }
+  async function fbGetProductKeys(id){
+    const f = await withFb();
+    try{
+      const snap = await f.getDoc(f.doc(f.db, 'productKeys', String(id)));
+      const keys = snap.exists() ? (snap.data().keys || []) : [];
+      adminKeysCache[id] = keys;
+      return keys;
+    }catch(e){
+      console.error('Lỗi tải key sản phẩm', id, e);
+      return adminKeysCache[id] || [];
+    }
   }
   async function fbSetCategory(name){
     const f = await withFb();
@@ -815,6 +853,23 @@ footer{
   async function saveCart(userId, cart){
     saveCartLocal(userId, cart);
     try{ await fbSaveCart(userId, cart); }catch(e){ console.error('Lỗi đồng bộ giỏ hàng:', e); }
+  }
+
+  // Di dời dữ liệu cũ: nếu một sản phẩm vẫn còn field "keys" ngay trên tài liệu products
+  // (được tạo trước khi bản vá bảo mật này tồn tại), chuyển toàn bộ key đó sang collection
+  // riêng "productKeys" rồi xoá hẳn field "keys" khỏi tài liệu products. Chỉ chạy khi admin
+  // mở bảng Quản trị, không chạy cho khách thường.
+  async function migrateLegacyKeysIfNeeded(){
+    const f = await withFb();
+    if (!f) return;
+    for (const p of STATE.products) {
+      if (Array.isArray(p.keys) && p.keys.length > 0) {
+        try{
+          await fbSetProductKeys(p.id, p.keys);
+          await f.updateDoc(f.doc(f.db, 'products', String(p.id)), { keys: f.deleteField() });
+        }catch(e){ console.error('Lỗi di dời key cũ cho sản phẩm', p.id, e); }
+      }
+    }
   }
 
   // ==================== Khởi tạo dữ liệu mặc định (chỉ chạy đúng 1 lần cho cả đời dự án) ====================
@@ -1362,32 +1417,42 @@ footer{
         if (currentBalance < total) throw new Error('Số dư không đủ.');
 
         const prodDocs = {};
+        const keyDocs = {};
         for (const item of cart) {
           const prodRef = f.doc(f.db, 'products', String(item.id));
           const prodDoc = await transaction.get(prodRef);
           if (!prodDoc.exists()) throw new Error(`Sản phẩm "${item.name}" không tồn tại.`);
           const prodData = prodDoc.data();
-          const hasKeyList = Array.isArray(prodData.keys) && prodData.keys.length > 0;
-          const availableStock = hasKeyList ? prodData.keys.length : (Number(prodData.stock) || 0);
+          // Đọc số key còn lại từ collection riêng "productKeys" (không còn nằm trên products
+          // nữa) — vẫn đọc bên trong transaction để đảm bảo tính nhất quán khi nhiều người
+          // mua cùng lúc (transaction sẽ tự retry nếu có xung đột).
+          const keyRef = f.doc(f.db, 'productKeys', String(item.id));
+          const keyDoc = await transaction.get(keyRef);
+          const existingKeys = keyDoc.exists() ? (keyDoc.data().keys || []) : [];
+          const hasKeyList = existingKeys.length > 0;
+          const availableStock = hasKeyList ? existingKeys.length : (Number(prodData.stock) || 0);
           if (availableStock < item.quantity) throw new Error(`Sản phẩm "${item.name}" không đủ hàng.`);
           prodDocs[item.id] = prodDoc;
+          keyDocs[item.id] = { ref:keyRef, exists:keyDoc.exists(), keys:existingKeys, hasKeyList };
         }
 
         transaction.update(userRef, { balance: currentBalance - total });
 
         // Mỗi đơn hàng đều được ghi vào "purchases" (lịch sử mua hàng). Nếu sản phẩm dùng
         // danh sách key riêng, mỗi đơn sẽ "rút" ra đúng số key cần và lưu lại trong đơn hàng
-        // đó để khách xem lại trong Lịch sử mua hàng.
+        // đó để khách xem lại trong Lịch sử mua hàng — nhưng key KHÔNG bao giờ được ghi trở
+        // lại vào tài liệu products (nơi mọi khách đều đang lắng nghe real-time).
         for (const item of cart) {
           const prodDoc = prodDocs[item.id];
           const prodData = prodDoc.data();
           const prodRef = f.doc(f.db, 'products', String(item.id));
-          const hasKeyList = Array.isArray(prodData.keys) && prodData.keys.length > 0;
+          const kd = keyDocs[item.id];
           let assignedKeys = [];
-          if (hasKeyList) {
-            const keysCopy = prodData.keys.slice();
+          if (kd.hasKeyList) {
+            const keysCopy = kd.keys.slice();
             assignedKeys = keysCopy.splice(0, item.quantity);
-            transaction.update(prodRef, { keys: keysCopy, stock: keysCopy.length });
+            transaction.set(kd.ref, { keys: keysCopy });
+            transaction.update(prodRef, { stock: keysCopy.length });
           } else {
             const newStock = (Number(prodData.stock) || 0) - item.quantity;
             if (newStock <= 0) transaction.delete(prodRef);
@@ -1562,7 +1627,9 @@ footer{
     $('#adminSidebar').classList.add('active');
     $('#overlay').classList.add('active');
     populateCategorySelect();
-    renderAdminProducts();
+    $('#adminProductList').innerHTML = '<p style="color:var(--ink-soft);">Đang tải...</p>';
+    await migrateLegacyKeysIfNeeded();
+    await renderAdminProducts();
     renderAdminCategories();
     renderDepositRequests();
     $('#bankAccountInput').value = STATE.settings.bankAccount || DEFAULT_PHONE;
@@ -1672,16 +1739,22 @@ footer{
     return String(text || '').split('\n').map(s => s.trim()).filter(Boolean).slice(0, 500);
   }
 
-  function renderAdminProducts(){
+  // Giờ là hàm async: với mỗi sản phẩm, tải riêng số key còn lại (từ collection
+  // "productKeys") chỉ để hiển thị trong bảng Quản trị — không lắng nghe real-time, không
+  // gửi cho khách thường.
+  async function renderAdminProducts(){
     const products = STATE.products;
     const categories = STATE.categories;
-    $('#adminProductList').innerHTML = products.map(p => `
+    await Promise.all(products.map(p => fbGetProductKeys(p.id)));
+    $('#adminProductList').innerHTML = products.map(p => {
+      const keysForProduct = adminKeysCache[p.id] || [];
+      return `
       <div class="product-item-admin">
         ${isSafeImageDataUrl(p.image) ? `<img class="img-preview" src="${p.image}" alt="">` : `<div class="img-preview" style="display:flex;align-items:center;justify-content:center;font-size:1.2rem;">${escapeHtml(p.emoji||'📦')}</div>`}
         <input class="field-name" value="${escapeHtml(p.name)}" data-field="name" data-id="${p.id}" placeholder="Tên" maxlength="80">
         <input class="field-author" value="${escapeHtml(p.author||'')}" data-field="author" data-id="${p.id}" placeholder="Thương hiệu" maxlength="60">
         <input class="field-price" type="number" value="${p.price}" data-field="price" data-id="${p.id}" placeholder="Giá" min="0" max="999999999">
-        <input class="field-stock" type="number" value="${Number(p.stock)||0}" data-field="stock" data-id="${p.id}" placeholder="Tồn kho" min="0" max="100" ${Array.isArray(p.keys)&&p.keys.length?'disabled title="Tồn kho tự tính theo số key"':''}>
+        <input class="field-stock" type="number" value="${Number(p.stock)||0}" data-field="stock" data-id="${p.id}" placeholder="Tồn kho" min="0" max="100" ${keysForProduct.length?'disabled title="Tồn kho tự tính theo số key"':''}>
         <select class="field-category" data-field="category" data-id="${p.id}">
           ${categories.map(c => `<option value="${escapeHtml(c)}" ${p.category===c?'selected':''}>${escapeHtml(c)}</option>`).join('')}
         </select>
@@ -1689,12 +1762,12 @@ footer{
         <div class="file-input-wrap">
           <input type="file" class="field-image" data-id="${p.id}" accept="image/*">
         </div>
-        <label style="font-size:0.72rem; color:var(--ink-soft); width:100%;">Danh sách key còn lại (mỗi dòng 1 key — có key thì tồn kho tự = số key):</label>
-        <textarea class="field-keys" data-field="keys" data-id="${p.id}" placeholder="Để trống nếu không dùng key" rows="2">${escapeHtml((p.keys||[]).join('\n'))}</textarea>
+        <label style="font-size:0.72rem; color:var(--ink-soft); width:100%;">Danh sách key còn lại (mỗi dòng 1 key — có key thì tồn kho tự = số key). Chỉ bạn (admin) mới tải được danh sách này:</label>
+        <textarea class="field-keys" data-field="keys" data-id="${p.id}" placeholder="Để trống nếu không dùng key" rows="2">${escapeHtml(keysForProduct.join('\n'))}</textarea>
         <textarea class="field-note" data-field="note" data-id="${p.id}" placeholder="Nội dung riêng sau khi mua (dùng khi không có key)" maxlength="500" rows="2">${escapeHtml(p.note||'')}</textarea>
         <button class="btn-sm btn-danger delete-product" data-id="${p.id}">Xóa</button>
       </div>
-    `).join('') || '<p style="color:var(--ink-soft);">Chưa có sản phẩm nào.</p>';
+    `;}).join('') || '<p style="color:var(--ink-soft);">Chưa có sản phẩm nào.</p>';
 
     $$('[data-field]').forEach(input => {
       if (input.classList.contains('field-image')) return;
@@ -1717,12 +1790,20 @@ footer{
           value = parseKeysInput(value);
         }
         const prod = STATE.products.find(p => p.id === id);
-        if (prod) {
-          const updated = Object.assign({}, prod, { [field]: value });
-          if (field === 'keys' && value.length > 0) updated.stock = value.length;
-          try{ await fbSetProduct(updated); showToast('Đã cập nhật!', 'success'); }
-          catch(e){ console.error(e); showToast('Lỗi kết nối!', 'error'); renderAdminProducts(); }
-        }
+        if (!prod) return;
+        try{
+          if (field === 'keys') {
+            // Key được ghi vào collection riêng "productKeys", KHÔNG ghi vào products.
+            await fbSetProductKeys(id, value);
+            if (value.length > 0) {
+              await fbSetProduct(Object.assign({}, prod, { stock: value.length }));
+            }
+          } else {
+            const updated = Object.assign({}, prod, { [field]: value });
+            await fbSetProduct(updated);
+          }
+          showToast('Đã cập nhật!', 'success');
+        }catch(e){ console.error(e); showToast('Lỗi kết nối!', 'error'); renderAdminProducts(); }
       });
     });
     $$('.field-image').forEach(input => {
@@ -1775,11 +1856,15 @@ footer{
       }catch(err){ showToast(err.message, 'error'); return; }
     }
     const newId = STATE.products.length ? Math.max(...STATE.products.map(p => p.id)) + 1 : 1;
-    const product = { id:newId, name, author, price, stock, desc, emoji:'📦', image, category, note, keys };
+    // Sản phẩm không còn chứa field "keys" — key (nếu có) được ghi riêng vào "productKeys"
+    // ngay sau khi tạo sản phẩm, để không bao giờ bị phát tới trình duyệt của khách.
+    const product = { id:newId, name, author, price, stock, desc, emoji:'📦', image, category, note };
     try{
       await fbSetProduct(product);
+      if (keys.length > 0) await fbSetProductKeys(newId, keys);
       $('#newName').value=''; $('#newAuthor').value=''; $('#newPrice').value=''; $('#newStock').value='1'; $('#newDesc').value=''; $('#newNote').value=''; $('#newKeys').value=''; fileInput.value='';
       showToast('Đã thêm sản phẩm mới!', 'success');
+      renderAdminProducts();
     }catch(e){ console.error(e); showToast('Lỗi kết nối!', 'error'); }
   });
 
