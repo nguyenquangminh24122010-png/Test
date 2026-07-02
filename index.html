@@ -125,11 +125,11 @@ h1,h2,h3,.display{ font-family:'Playfair Display',serif; }
 }
 .btn-icon{
   background:var(--panel); border:1px solid var(--line); border-radius:var(--radius-nav);
-  font-size:1rem; cursor:pointer; position:relative;
-  color:var(--gold-bright); transition:all var(--t-fast); padding:0.5rem 0.75rem;
+  font-size:0.72rem; cursor:pointer; position:relative;
+  color:var(--gold-bright); transition:all var(--t-fast); padding:0.5rem 0.85rem;
   box-shadow:var(--shadow-sm); font-weight:700;
   display:inline-flex; align-items:center; justify-content:center;
-  line-height:1;
+  line-height:1; text-transform:uppercase; letter-spacing:0.05em; white-space:nowrap;
 }
 .btn-icon:hover{ color:#1a1305; background:var(--gold-bright); border-color:var(--gold-bright); transform:translateY(-2px); box-shadow:var(--shadow-md); }
 .balance{ font-weight:700; color:#1a1305; font-size:0.82rem; font-family:'Playfair Display',serif;
@@ -153,6 +153,24 @@ h1,h2,h3,.display{ font-family:'Playfair Display',serif; }
 }
 .filter-chip:hover{ border-color:var(--gold); color:var(--gold-bright); transform:translateY(-1px); }
 .filter-chip.active{ background:linear-gradient(135deg, var(--gold-bright), var(--gold-deep)); border-color:var(--gold-deep); color:#1a1305; box-shadow:var(--shadow-sm); }
+
+.leaderboard-wrap{ max-width:720px; margin:0 auto; padding:1.4rem 5% 0; position:relative; z-index:1; }
+.leaderboard-card{
+  background:linear-gradient(180deg, var(--card), var(--panel)); border:1px solid var(--line);
+  border-radius:var(--radius-card); padding:1.2rem 1.4rem; box-shadow:var(--shadow-sm);
+}
+.leaderboard-card h4{ font-family:'Playfair Display',serif; color:var(--gold-bright); margin-bottom:0.8rem; display:flex; align-items:center; justify-content:space-between; gap:0.6rem; }
+.lb-tabs{ display:flex; gap:0.4rem; }
+.lb-tab{ padding:0.3rem 0.75rem; border-radius:999px; background:var(--panel-2); color:var(--ink-soft); border:1px solid var(--line); font-size:0.7rem; cursor:pointer; font-weight:700; }
+.lb-tab.active{ background:linear-gradient(135deg, var(--gold-bright), var(--gold-deep)); color:#1a1305; border-color:transparent; }
+.lb-row{ display:flex; align-items:center; gap:0.8rem; padding:0.55rem 0; border-bottom:1px solid var(--line-soft); font-size:0.86rem; }
+.lb-row:last-child{ border-bottom:none; }
+.lb-rank{ width:26px; height:26px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-weight:800; font-size:0.76rem; background:var(--panel-2); color:var(--ink-soft); flex:none; }
+.lb-row:nth-child(1) .lb-rank{ background:linear-gradient(135deg,#f0cf8e,#a87f3c); color:#1a1305; }
+.lb-row:nth-child(2) .lb-rank{ background:#c9ccd6; color:#1a1305; }
+.lb-row:nth-child(3) .lb-rank{ background:#c98a4b; color:#1a1305; }
+.lb-name{ flex:1; font-weight:600; }
+.lb-amount{ font-family:'Playfair Display',serif; font-weight:800; color:var(--gold-bright); }
 
 .products-grid{
   display:grid; grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); gap:1.7rem;
@@ -268,12 +286,13 @@ footer{
 .img-preview{ width:46px; height:46px; border-radius:6px; object-fit:cover; border:1px solid var(--line); flex:none; background:var(--bg); grid-row:span 1; }
 .file-input-wrap{ display:flex; align-items:center; gap:0.5rem; flex-wrap:wrap; grid-column:1 / -1; }
 .file-input-wrap input[type=file]{ font-size:0.72rem; color:var(--ink-soft); max-width:100%; }
-.admin-row-actions{ grid-column:1 / -1; display:flex; justify-content:flex-end; }
+.admin-row-actions{ grid-column:1 / -1; display:flex; justify-content:flex-end; gap:0.5rem; }
 
 .btn-sm{ padding:0.42rem 0.9rem; border-radius:8px; border:none; font-weight:700; cursor:pointer; font-size:0.76rem; transition:all var(--t-fast); }
 .btn-sm:hover{ opacity:0.88; transform:translateY(-1px); }
 .btn-danger{ background:var(--danger); color:#1a0506; }
 .btn-success{ background:var(--success); color:#06251a; }
+.btn-muted{ background:var(--panel-2); color:var(--ink-soft); border:1px solid var(--line); }
 
 .toggle-row{ display:flex; align-items:center; justify-content:space-between; padding:0.85rem 1rem;
   background:var(--panel); border:1px solid var(--line); border-radius:10px; margin-bottom:0.6rem; }
@@ -384,6 +403,21 @@ footer{
   font-family:'Playfair Display',serif; font-size:1.1rem;
 }
 
+.customer-search-row{ display:flex; gap:0.5rem; margin-bottom:0.9rem; }
+.customer-search-row input{ flex:1; padding:0.6rem 0.8rem; border:1px solid var(--line); border-radius:8px; background:var(--panel); color:var(--ink); font-family:'Inter',sans-serif; }
+.customer-row{
+  display:flex; align-items:center; justify-content:space-between; gap:0.6rem;
+  background:var(--panel); border:1px solid var(--line); border-radius:10px; padding:0.75rem 0.9rem; margin-bottom:0.55rem; cursor:pointer;
+  transition:border-color var(--t-fast);
+}
+.customer-row:hover{ border-color:var(--gold); }
+.customer-row .cname{ font-weight:700; }
+.customer-row .cmeta{ font-size:0.72rem; color:var(--ink-faint); }
+.customer-detail-box{ background:var(--panel); border:1px solid var(--line); border-radius:10px; padding:1rem; margin-top:0.8rem; }
+.customer-detail-box .row{ display:flex; justify-content:space-between; padding:0.35rem 0; border-bottom:1px solid var(--line-soft); font-size:0.85rem; }
+.customer-detail-box .row:last-child{ border-bottom:none; }
+.customer-purchase-item{ background:var(--panel-2); border-radius:8px; padding:0.6rem 0.7rem; margin-top:0.5rem; font-size:0.8rem; }
+
 @media (max-width:900px){
   .product-item-admin{ grid-template-columns:46px 1fr; }
 }
@@ -424,11 +458,11 @@ footer{
   </ul>
   <div class="header-actions">
     <span class="balance" id="balanceDisplay">0₫</span>
-    <button class="btn-icon" id="btnCart" aria-label="Giỏ hàng">🛒<span class="badge" id="cartBadge">0</span></button>
-    <button class="btn-icon" id="btnHistory" aria-label="Lịch sử mua hàng">📋</button>
-    <button class="btn-icon" id="btnDeposit" aria-label="Nạp tiền">💰</button>
-    <button class="btn-icon" id="btnAccount" aria-label="Tài khoản">👤</button>
-    <button class="btn-icon" id="btnAdmin" aria-label="Quản trị">⚙️</button>
+    <button class="btn-icon" id="btnCart" aria-label="Giỏ hàng">Giỏ hàng<span class="badge" id="cartBadge">0</span></button>
+    <button class="btn-icon" id="btnHistory" aria-label="Lịch sử mua hàng">Lịch sử</button>
+    <button class="btn-icon" id="btnDeposit" aria-label="Nạp tiền">Nạp tiền</button>
+    <button class="btn-icon" id="btnAccount" aria-label="Tài khoản">Tài khoản</button>
+    <button class="btn-icon" id="btnAdmin" aria-label="Quản trị">Quản trị</button>
     <button class="btn-icon" id="btnLogout">Thoát</button>
   </div>
 </nav>
@@ -438,6 +472,17 @@ footer{
     <div class="eyebrow">nminhshop · cửa hàng số</div>
     <h2 class="section-title">Sản phẩm chất lượng, giao dịch an toàn</h2>
     <p class="section-sub">Quản trị viên toàn quyền tuỳ chỉnh sản phẩm, giá bán và tồn kho — trải nghiệm mua sắm hiện đại, mượt mà.</p>
+  </div>
+  <div class="leaderboard-wrap" id="leaderboardWrap" style="display:none;">
+    <div class="leaderboard-card">
+      <h4>Top nạp tiền
+        <span class="lb-tabs">
+          <button class="lb-tab active" data-period="week">Tuần</button>
+          <button class="lb-tab" data-period="month">Tháng</button>
+        </span>
+      </h4>
+      <div id="leaderboardContent"><p style="color:var(--ink-soft); font-size:0.85rem;">Chưa có dữ liệu.</p></div>
+    </div>
   </div>
   <div class="filter-bar" id="filterBar"></div>
   <div class="products-grid" id="productsContainer"></div>
@@ -569,12 +614,23 @@ footer{
   </div>
 </div>
 
+<div class="modal" id="confirmDeleteCustomerModal">
+  <h3 style="color:var(--danger);">Xác nhận xoá tài khoản</h3>
+  <p style="color:var(--ink-soft); font-size:0.9rem;">Bạn sắp xoá vĩnh viễn tài khoản <strong id="delCustomerName" style="color:var(--ink);"></strong>. Khách hàng sẽ phải tạo tài khoản hoàn toàn mới. Hành động này không thể hoàn tác.</p>
+  <div class="modal-buttons">
+    <button class="btn-secondary" id="cancelDeleteCustomer">Hủy</button>
+    <button class="btn-primary" id="confirmDeleteCustomer" style="background:linear-gradient(135deg,#ff8a94,var(--danger)); color:#1a0506;">Xoá vĩnh viễn</button>
+  </div>
+</div>
+
 <div class="admin-sidebar" id="adminSidebar">
   <div class="admin-header"><h2>Quản trị</h2><button class="close-btn" id="closeAdmin">&times;</button></div>
   <div class="admin-tabs">
     <button class="admin-tab active" data-tab="tabProducts">Sản phẩm</button>
     <button class="admin-tab" data-tab="tabCategories">Danh mục</button>
     <button class="admin-tab" data-tab="tabDeposits">Yêu cầu nạp</button>
+    <button class="admin-tab" data-tab="tabCustomers">Khách hàng</button>
+    <button class="admin-tab" data-tab="tabLeaderboard">Top nạp</button>
     <button class="admin-tab" data-tab="tabStyle">Cài đặt</button>
   </div>
 
@@ -609,8 +665,34 @@ footer{
   </div>
 
   <div id="tabDeposits" class="admin-section">
-    <h4>Yêu cầu nạp tiền</h4>
+    <h4>Yêu cầu nạp tiền đang chờ</h4>
     <div id="depositRequestsList"></div>
+    <h5>Lịch sử đã xử lý gần đây</h5>
+    <div id="depositHistoryList"></div>
+  </div>
+
+  <div id="tabCustomers" class="admin-section">
+    <h4>Quản lý khách hàng</h4>
+    <p class="help-text">Tìm kiếm theo tên đăng nhập để xem số dư, lịch sử mua hàng, hoặc xoá tài khoản.</p>
+    <div class="customer-search-row">
+      <input type="text" id="customerSearchInput" placeholder="Tìm theo tên đăng nhập...">
+    </div>
+    <div id="customerList"></div>
+    <div id="customerDetailBox"></div>
+  </div>
+
+  <div id="tabLeaderboard" class="admin-section">
+    <h4>Bảng xếp hạng top nạp tiền</h4>
+    <div class="toggle-row">
+      <span>Hiển thị bảng xếp hạng cho khách</span>
+      <label class="switch"><input type="checkbox" id="toggleLeaderboard"><span class="slider"></span></label>
+    </div>
+    <p class="help-text">Xếp hạng được tính từ các yêu cầu nạp tiền đã <strong>được duyệt</strong>. Chỉ admin mới xem được ở đây; khách chỉ thấy khi bạn bật công tắc trên.</p>
+    <div class="lb-tabs" style="margin-bottom:0.8rem;">
+      <button class="lb-tab active admin-lb-tab" data-period="week">Tuần này</button>
+      <button class="lb-tab admin-lb-tab" data-period="month">Tháng này</button>
+    </div>
+    <div id="adminLeaderboardContent"></div>
   </div>
 
   <div id="tabStyle" class="admin-section">
@@ -631,18 +713,18 @@ footer{
     <h4>Hiệu ứng rơi trên nền</h4>
     <p class="help-text">Hiệu ứng nhẹ, mờ, không chắn nội dung chính.</p>
     <div class="toggle-row">
-      <span>❄️ Tuyết rơi</span>
+      <span>Tuyết rơi</span>
       <label class="switch"><input type="checkbox" id="toggleSnow"><span class="slider"></span></label>
     </div>
     <div class="toggle-row">
-      <span>🌸 Hoa đào rơi</span>
+      <span>Hoa đào rơi</span>
       <label class="switch"><input type="checkbox" id="toggleBlossom"><span class="slider"></span></label>
     </div>
 
     <h4>Chặn thao tác sao chép mã nguồn</h4>
     <p class="help-text">Bật chuột phải/phím tắt DevTools bị chặn trên trình duyệt của khách (chỉ là rào cản làm chậm, không phải bảo mật tuyệt đối — đọc mục cảnh báo bên dưới).</p>
     <div class="toggle-row">
-      <span>🔒 Chặn chuột phải &amp; phím tắt DevTools</span>
+      <span>Chặn chuột phải &amp; phím tắt DevTools</span>
       <label class="switch"><input type="checkbox" id="toggleAntiCopy"><span class="slider"></span></label>
     </div>
 
@@ -718,6 +800,9 @@ footer{
   const $$ = (sel) => document.querySelectorAll(sel);
   let activeCategory = 'all';
   let adminKeysCache = {};
+  let publicLbPeriod = 'week';
+  let adminLbPeriod = 'week';
+  let selectedCustomerId = null;
 
   function escapeHtml(str){
     return String(str).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -760,7 +845,7 @@ footer{
     categories: [],
     users: [],
     depositRequests: [],
-    settings: { bankAccount: DEFAULT_PHONE, contactPhone: DEFAULT_PHONE, defaultOrderNote: DEFAULT_ORDER_NOTE, fx:{snow:false,blossom:false}, antiCopy:false },
+    settings: { bankAccount: DEFAULT_PHONE, contactPhone: DEFAULT_PHONE, defaultOrderNote: DEFAULT_ORDER_NOTE, fx:{snow:false,blossom:false}, antiCopy:false, leaderboardEnabled:false },
     ready: { products:false, categories:false, users:false, deposits:false, settings:false }
   };
 
@@ -827,6 +912,11 @@ footer{
     await f.updateDoc(docRef, { id: docRef.id });
     return docRef.id;
   }
+  async function fbDeleteUser(id){
+    const f = await withFb();
+    await f.deleteDoc(f.doc(f.db, 'users', String(id)));
+    try{ await f.deleteDoc(f.doc(f.db, 'carts', String(id))); }catch(e){}
+  }
   async function fbSetSettings(partial){
     const f = await withFb();
     await f.setDoc(f.doc(f.db, 'config', 'settings'), partial, { merge:true });
@@ -855,6 +945,19 @@ footer{
     try{ await fbSaveCart(userId, cart); }catch(e){ console.error('Lỗi đồng bộ giỏ hàng:', e); }
   }
 
+  async function fetchUserPurchases(userId){
+    const f = await withFb();
+    if (!f) return [];
+    try{
+      const q = f.query(f.collection(f.db, 'purchases'), f.where('buyerId', '==', userId), f.orderBy('purchasedAt', 'desc'));
+      const snap = await f.getDocs(q);
+      return snap.docs.map(d => d.data());
+    }catch(e){
+      console.error('Lỗi tải lịch sử mua hàng khách hàng:', e);
+      return [];
+    }
+  }
+
   async function migrateLegacyKeysIfNeeded(){
     const f = await withFb();
     if (!f) return;
@@ -878,7 +981,7 @@ footer{
       if (!settingsSnap.exists()) {
         await f.setDoc(settingsRef, {
           bankAccount: DEFAULT_PHONE, contactPhone: DEFAULT_PHONE,
-          defaultOrderNote: DEFAULT_ORDER_NOTE, fx:{snow:false,blossom:false}, antiCopy:false, seeded:false
+          defaultOrderNote: DEFAULT_ORDER_NOTE, fx:{snow:false,blossom:false}, antiCopy:false, leaderboardEnabled:false, seeded:false
         });
       }
       const adminSnap = await f.getDoc(f.doc(f.db, 'users', '1'));
@@ -930,13 +1033,17 @@ footer{
         const fresh = STATE.users.find(u => u.id === cur.id);
         if (fresh) setCurrentUser(fresh);
       }
+      if ($('#adminSidebar').classList.contains('active')) {
+        renderCustomerList($('#customerSearchInput') ? $('#customerSearchInput').value : '');
+      }
       maybeHideLoading();
     }, err => { console.error('users:', err); STATE.ready.users = true; maybeHideLoading(true); });
 
     fb.onSnapshot(fb.collection(fb.db, 'depositRequests'), snap => {
       STATE.depositRequests = snap.docs.map(d => d.data());
       STATE.ready.deposits = true;
-      if ($('#adminSidebar').classList.contains('active')) renderDepositRequests();
+      if ($('#adminSidebar').classList.contains('active')) { renderDepositRequests(); renderAdminLeaderboard(); }
+      renderPublicLeaderboard();
       maybeHideLoading();
     }, err => { console.error('deposits:', err); STATE.ready.deposits = true; maybeHideLoading(true); });
 
@@ -945,6 +1052,7 @@ footer{
       STATE.ready.settings = true;
       applyFx();
       applyAntiCopy();
+      renderPublicLeaderboard();
       maybeHideLoading();
     }, err => { console.error('settings:', err); STATE.ready.settings = true; maybeHideLoading(true); });
   }
@@ -1536,11 +1644,7 @@ footer{
     $('#historyModal').classList.add('active');
     $('#overlay').classList.add('active');
     try{
-      const f = await withFb();
-      if (!f) throw new Error('Chưa kết nối được máy chủ dữ liệu.');
-      const q = f.query(f.collection(f.db, 'purchases'), f.where('buyerId', '==', user.id), f.orderBy('purchasedAt', 'desc'));
-      const snap = await f.getDocs(q);
-      const purchases = snap.docs.map(d => d.data());
+      const purchases = await fetchUserPurchases(user.id);
       if (purchases.length === 0) {
         div.innerHTML = '<p style="color:var(--ink-soft);">Bạn chưa có đơn hàng nào.</p>';
         return;
@@ -1601,6 +1705,8 @@ footer{
     await renderAdminProducts();
     renderAdminCategories();
     renderDepositRequests();
+    renderCustomerList('');
+    renderAdminLeaderboard();
     $('#bankAccountInput').value = STATE.settings.bankAccount || DEFAULT_PHONE;
     $('#contactPhoneInput').value = STATE.settings.contactPhone || DEFAULT_PHONE;
     $('#defaultOrderNoteInput').value = STATE.settings.defaultOrderNote || DEFAULT_ORDER_NOTE;
@@ -1608,6 +1714,7 @@ footer{
     $('#toggleSnow').checked = !!fx.snow;
     $('#toggleBlossom').checked = !!fx.blossom;
     $('#toggleAntiCopy').checked = !!STATE.settings.antiCopy;
+    $('#toggleLeaderboard').checked = !!STATE.settings.leaderboardEnabled;
   });
   $('#closeAdmin').addEventListener('click', closeAdminPanel);
   $('#logoutAdmin').addEventListener('click', closeAdminPanel);
@@ -1659,6 +1766,10 @@ footer{
   });
   $('#toggleAntiCopy').addEventListener('change', async function(){
     try{ await fbSetSettings({ antiCopy: this.checked }); showToast('Đã lưu cài đặt!', 'success'); }
+    catch(e){ console.error(e); showToast('Lỗi kết nối!', 'error'); this.checked = !this.checked; }
+  });
+  $('#toggleLeaderboard').addEventListener('change', async function(){
+    try{ await fbSetSettings({ leaderboardEnabled: this.checked }); showToast('Đã lưu cài đặt!', 'success'); }
     catch(e){ console.error(e); showToast('Lỗi kết nối!', 'error'); this.checked = !this.checked; }
   });
 
@@ -1839,18 +1950,21 @@ footer{
   });
 
   function renderDepositRequests(){
-    const requests = STATE.depositRequests.filter(r => r.status === 'pending');
+    const pending = STATE.depositRequests.filter(r => r.status === 'pending');
     const div = $('#depositRequestsList');
-    if (requests.length === 0) { div.innerHTML = '<p style="color:var(--ink-soft);">Không có yêu cầu nào.</p>'; return; }
-    div.innerHTML = requests.map(r => `
-      <div class="deposit-item">
-        <div style="flex:1;">
-          <strong>${escapeHtml(r.username)}</strong> — ${Number(r.amount).toLocaleString('vi-VN')}₫<br>
-          <small style="color:var(--ink-soft);">Mã: ${escapeHtml(r.randomCode)}</small>
+    if (pending.length === 0) { div.innerHTML = '<p style="color:var(--ink-soft);">Không có yêu cầu nào.</p>'; }
+    else {
+      div.innerHTML = pending.map(r => `
+        <div class="deposit-item">
+          <div style="flex:1;">
+            <strong>${escapeHtml(r.username)}</strong> — ${Number(r.amount).toLocaleString('vi-VN')}₫<br>
+            <small style="color:var(--ink-soft);">Mã: ${escapeHtml(r.randomCode)}</small>
+          </div>
+          <button class="btn-sm btn-success approve-deposit" data-id="${r.id}">Duyệt</button>
+          <button class="btn-sm btn-danger reject-deposit" data-id="${r.id}">Từ chối</button>
         </div>
-        <button class="btn-sm btn-success approve-deposit" data-id="${r.id}">Duyệt</button>
-      </div>
-    `).join('');
+      `).join('');
+    }
     $$('.approve-deposit').forEach(btn => {
       btn.addEventListener('click', async function(){
         const requestId = parseInt(this.dataset.id, 10);
@@ -1865,13 +1979,191 @@ footer{
               showToast('Không tìm thấy tài khoản để cộng tiền (tài khoản có thể được tạo trước khi sửa lỗi id). Vào Firestore Console, mở collection "users", thêm field "id" cho tài khoản này rồi thử lại.', 'error');
               return;
             }
-            await fbUpdateDeposit(req.id, { status:'approved' });
+            await fbUpdateDeposit(req.id, { status:'approved', processedAt: new Date().toISOString() });
             showToast(`Đã duyệt ${Number(req.amount).toLocaleString('vi-VN')}₫ cho ${req.username}`, 'success');
           }catch(e){ console.error(e); showToast('Lỗi kết nối!', 'error'); }
         }
       });
     });
+    $$('.reject-deposit').forEach(btn => {
+      btn.addEventListener('click', async function(){
+        const requestId = parseInt(this.dataset.id, 10);
+        const req = STATE.depositRequests.find(r => r.id === requestId);
+        if (req && req.status === 'pending') {
+          try{
+            await fbUpdateDeposit(req.id, { status:'rejected', processedAt: new Date().toISOString() });
+            showToast(`Đã từ chối yêu cầu nạp của ${req.username}`, 'info');
+          }catch(e){ console.error(e); showToast('Lỗi kết nối!', 'error'); }
+        }
+      });
+    });
+    renderDepositHistory();
   }
+
+  function renderDepositHistory(){
+    const histDiv = $('#depositHistoryList');
+    if (!histDiv) return;
+    const processed = STATE.depositRequests
+      .filter(r => r.status === 'approved' || r.status === 'rejected')
+      .sort((a,b) => new Date(b.processedAt||b.timestamp) - new Date(a.processedAt||a.timestamp))
+      .slice(0, 20);
+    if (processed.length === 0) { histDiv.innerHTML = '<p style="color:var(--ink-soft); font-size:0.82rem;">Chưa có lịch sử.</p>'; return; }
+    histDiv.innerHTML = processed.map(r => `
+      <div class="deposit-item" style="opacity:0.85;">
+        <div style="flex:1;">
+          <strong>${escapeHtml(r.username)}</strong> — ${Number(r.amount).toLocaleString('vi-VN')}₫
+          <span style="font-size:0.7rem; padding:0.15rem 0.5rem; border-radius:99px; margin-left:0.4rem; font-weight:800; ${r.status==='approved'?'background:rgba(61,220,151,0.16); color:var(--success);':'background:rgba(255,93,108,0.16); color:var(--danger);'}">${r.status==='approved'?'Đã duyệt':'Đã từ chối'}</span>
+        </div>
+      </div>
+    `).join('');
+  }
+
+  function getPeriodStart(period){
+    const now = new Date();
+    if (period === 'month') {
+      return new Date(now.getFullYear(), now.getMonth(), 1);
+    }
+    const day = now.getDay();
+    const diffToMonday = (day === 0 ? 6 : day - 1);
+    const monday = new Date(now.getFullYear(), now.getMonth(), now.getDate() - diffToMonday);
+    monday.setHours(0,0,0,0);
+    return monday;
+  }
+
+  function computeTopDepositors(period){
+    const start = getPeriodStart(period);
+    const totals = {};
+    STATE.depositRequests
+      .filter(r => r.status === 'approved')
+      .forEach(r => {
+        const ts = new Date(r.processedAt || r.timestamp);
+        if (ts >= start) {
+          totals[r.username] = (totals[r.username] || 0) + Number(r.amount || 0);
+        }
+      });
+    return Object.entries(totals).sort((a,b) => b[1]-a[1]).slice(0, 10);
+  }
+
+  function renderLeaderboardListHtml(list){
+    if (list.length === 0) return '<p style="color:var(--ink-soft); font-size:0.85rem;">Chưa có dữ liệu nạp tiền trong khoảng thời gian này.</p>';
+    return list.map(([name, amount], idx) => `
+      <div class="lb-row">
+        <div class="lb-rank">${idx+1}</div>
+        <div class="lb-name">${escapeHtml(name)}</div>
+        <div class="lb-amount">${amount.toLocaleString('vi-VN')}₫</div>
+      </div>
+    `).join('');
+  }
+
+  function renderPublicLeaderboard(){
+    const wrap = $('#leaderboardWrap');
+    if (!STATE.settings.leaderboardEnabled) { wrap.style.display = 'none'; return; }
+    wrap.style.display = 'block';
+    $('#leaderboardContent').innerHTML = renderLeaderboardListHtml(computeTopDepositors(publicLbPeriod));
+  }
+  $$('.lb-tab').forEach(btn => {
+    if (btn.classList.contains('admin-lb-tab')) return;
+    btn.addEventListener('click', function(){
+      $$('#leaderboardWrap .lb-tab').forEach(b => b.classList.remove('active'));
+      this.classList.add('active');
+      publicLbPeriod = this.dataset.period;
+      renderPublicLeaderboard();
+    });
+  });
+
+  function renderAdminLeaderboard(){
+    const el = $('#adminLeaderboardContent');
+    if (!el) return;
+    el.innerHTML = renderLeaderboardListHtml(computeTopDepositors(adminLbPeriod));
+  }
+  $$('.admin-lb-tab').forEach(btn => {
+    btn.addEventListener('click', function(){
+      $$('.admin-lb-tab').forEach(b => b.classList.remove('active'));
+      this.classList.add('active');
+      adminLbPeriod = this.dataset.period;
+      renderAdminLeaderboard();
+    });
+  });
+
+  function renderCustomerList(searchTerm){
+    const term = sanitizeText(searchTerm || '', 40).toLowerCase();
+    const listDiv = $('#customerList');
+    if (!listDiv) return;
+    const filtered = STATE.users.filter(u => !term || String(u.username).toLowerCase().includes(term));
+    if (filtered.length === 0) { listDiv.innerHTML = '<p style="color:var(--ink-soft); font-size:0.85rem;">Không tìm thấy khách hàng nào.</p>'; return; }
+    listDiv.innerHTML = filtered.slice(0, 50).map(u => `
+      <div class="customer-row" data-id="${u.id}">
+        <div>
+          <div class="cname">${escapeHtml(u.username)} ${u.isAdmin?'<span style="color:var(--gold-bright); font-size:0.7rem;">(Admin)</span>':''}</div>
+          <div class="cmeta">Số dư: ${(Number(u.balance)||0).toLocaleString('vi-VN')}₫</div>
+        </div>
+        <span style="color:var(--ink-faint); font-size:0.8rem;">Xem ›</span>
+      </div>
+    `).join('');
+    $$('.customer-row').forEach(row => {
+      row.addEventListener('click', () => showCustomerDetail(row.dataset.id));
+    });
+  }
+  $('#customerSearchInput').addEventListener('input', function(){ renderCustomerList(this.value); });
+
+  async function showCustomerDetail(userId){
+    selectedCustomerId = userId;
+    const user = STATE.users.find(u => String(u.id) === String(userId));
+    const box = $('#customerDetailBox');
+    if (!user) { box.innerHTML = ''; return; }
+    box.innerHTML = `<div class="customer-detail-box"><p style="color:var(--ink-soft); font-size:0.85rem;">Đang tải chi tiết...</p></div>`;
+    const purchases = await fetchUserPurchases(user.id);
+    const totalSpent = purchases.reduce((s,p) => s + (p.price * p.quantity), 0);
+    const approvedDeposits = STATE.depositRequests.filter(r => r.userId === user.id && r.status === 'approved');
+    const totalDeposited = approvedDeposits.reduce((s,r) => s + Number(r.amount||0), 0);
+    box.innerHTML = `
+      <div class="customer-detail-box">
+        <div class="row"><span>Tên đăng nhập</span><strong>${escapeHtml(user.username)}</strong></div>
+        <div class="row"><span>Vai trò</span><strong>${user.isAdmin ? 'Quản trị viên' : 'Khách hàng'}</strong></div>
+        <div class="row"><span>Số dư hiện tại</span><strong style="color:var(--gold-bright);">${(Number(user.balance)||0).toLocaleString('vi-VN')}₫</strong></div>
+        <div class="row"><span>Tổng đã nạp (đã duyệt)</span><strong>${totalDeposited.toLocaleString('vi-VN')}₫</strong></div>
+        <div class="row"><span>Tổng đã chi tiêu</span><strong>${totalSpent.toLocaleString('vi-VN')}₫</strong></div>
+        <div class="row"><span>Số đơn đã mua</span><strong>${purchases.length}</strong></div>
+        <h5 style="margin-top:0.9rem;">Lịch sử mua hàng</h5>
+        ${purchases.length === 0 ? '<p style="color:var(--ink-soft); font-size:0.82rem;">Chưa mua sản phẩm nào.</p>' : purchases.map(p => `
+          <div class="customer-purchase-item">
+            <strong>${escapeHtml(p.productName)}</strong> x${p.quantity} — ${(p.price*p.quantity).toLocaleString('vi-VN')}₫
+            <div style="color:var(--ink-faint); font-size:0.72rem;">${escapeHtml(new Date(p.purchasedAt).toLocaleString('vi-VN'))}</div>
+          </div>
+        `).join('')}
+        ${user.isAdmin ? '<p class="help-text" style="margin-top:0.9rem;">Không thể xoá tài khoản quản trị viên.</p>' : `<button class="btn-sm btn-danger" id="btnDeleteCustomer" style="margin-top:1rem; width:100%;">Xoá tài khoản này vĩnh viễn</button>`}
+      </div>
+    `;
+    const delBtn = $('#btnDeleteCustomer');
+    if (delBtn) {
+      delBtn.addEventListener('click', () => {
+        $('#delCustomerName').textContent = user.username;
+        $('#confirmDeleteCustomerModal').classList.add('active');
+        $('#overlay').classList.add('active');
+      });
+    }
+  }
+  $('#cancelDeleteCustomer').addEventListener('click', () => {
+    $('#confirmDeleteCustomerModal').classList.remove('active');
+    $('#overlay').classList.remove('active');
+  });
+  $('#confirmDeleteCustomer').addEventListener('click', async () => {
+    if (!selectedCustomerId) return;
+    const user = STATE.users.find(u => String(u.id) === String(selectedCustomerId));
+    if (!user || user.isAdmin) { $('#confirmDeleteCustomerModal').classList.remove('active'); $('#overlay').classList.remove('active'); return; }
+    try{
+      await fbDeleteUser(user.id);
+      showToast(`Đã xoá tài khoản "${user.username}".`, 'success');
+      $('#confirmDeleteCustomerModal').classList.remove('active');
+      $('#overlay').classList.remove('active');
+      $('#customerDetailBox').innerHTML = '';
+      selectedCustomerId = null;
+      renderCustomerList($('#customerSearchInput').value);
+    }catch(e){
+      console.error(e);
+      showToast('Lỗi kết nối, không thể xoá tài khoản!', 'error');
+    }
+  });
 
   let botBlocked = false;
   let consecutiveViolations = 0;
@@ -1995,6 +2287,7 @@ footer{
     renderProducts();
     updateBalanceDisplay();
     updateCartBadge();
+    renderPublicLeaderboard();
   }
 
   $('#overlay').addEventListener('click', () => {
