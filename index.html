@@ -95,6 +95,7 @@ h1,h2,h3,.display{ font-family:'Playfair Display',serif; }
   padding:1.1rem 4%; background:rgba(11,12,16,0.78); backdrop-filter:blur(14px);
   border-bottom:1px solid var(--line);
   position:sticky; top:0; z-index:100; flex-wrap:wrap; gap:0.8rem;
+  box-shadow:0 8px 24px rgba(0,0,0,0.28);
 }
 .logo{
   font-family:'Playfair Display',serif; font-weight:700; font-size:1.55rem; letter-spacing:0.01em;
@@ -244,6 +245,7 @@ footer{
   transition:right var(--t-smooth); padding:1.8rem 1.6rem; overflow-y:auto;
   border-left:1px solid var(--line); display:flex; flex-direction:column; gap:1.1rem;
 }
+.admin-sidebar{ border-left:3px solid var(--gold); }
 .admin-sidebar.active,.cart-sidebar.active{ right:0; }
 .close-btn{
   background:none; border:none; font-size:1.6rem; cursor:pointer; color:var(--ink-soft);
@@ -272,11 +274,15 @@ footer{
   align-items:center;
   padding:0.8rem; background:var(--panel); border-radius:10px;
   margin-bottom:0.55rem; border:1px solid var(--line);
+  transition:border-color var(--t-fast), box-shadow var(--t-fast);
 }
+.product-item-admin:hover{ border-color:rgba(212,175,106,0.35); box-shadow:var(--shadow-sm); }
 .deposit-item{
   display:flex; align-items:center; padding:0.8rem; background:var(--panel); border-radius:10px;
   margin-bottom:0.55rem; gap:0.5rem; flex-wrap:wrap; border:1px solid var(--line);
+  transition:border-color var(--t-fast);
 }
+.deposit-item:hover{ border-color:rgba(212,175,106,0.3); }
 .product-item-admin input,.product-item-admin select,.product-item-admin textarea{
   padding:0.45rem 0.6rem; border:1px solid var(--line); border-radius:6px; font-size:0.82rem; background:var(--bg);
   font-family:'Inter',sans-serif; color:var(--ink); width:100%;
@@ -296,7 +302,9 @@ footer{
 .btn-muted{ background:var(--panel-2); color:var(--ink-soft); border:1px solid var(--line); }
 
 .toggle-row{ display:flex; align-items:center; justify-content:space-between; padding:0.85rem 1rem;
-  background:var(--panel); border:1px solid var(--line); border-radius:10px; margin-bottom:0.6rem; }
+  background:var(--panel); border:1px solid var(--line); border-radius:10px; margin-bottom:0.6rem;
+  transition:border-color var(--t-fast); }
+.toggle-row:hover{ border-color:rgba(212,175,106,0.3); }
 .toggle-row span{ font-weight:600; font-size:0.86rem; }
 .switch{ position:relative; display:inline-block; width:46px; height:26px; flex:none; }
 .switch input{ opacity:0; width:0; height:0; }
@@ -472,7 +480,7 @@ footer{
     <button class="btn-icon" id="btnHistory" aria-label="Lịch sử mua hàng">Lịch sử</button>
     <button class="btn-icon" id="btnDeposit" aria-label="Nạp tiền">Nạp tiền</button>
     <button class="btn-icon" id="btnAccount" aria-label="Tài khoản">Tài khoản</button>
-    <button class="btn-icon" id="btnAdmin" aria-label="Quản trị">Quản trị</button>
+    <button class="btn-icon" id="btnAdmin" aria-label="Quản trị" style="display:none;">⚙ Quản trị</button>
     <button class="btn-icon" id="btnLogout">Thoát</button>
   </div>
 </nav>
@@ -640,14 +648,20 @@ footer{
 </div>
 
 <div class="admin-sidebar" id="adminSidebar">
-  <div class="admin-header"><h2>Quản trị</h2><button class="close-btn" id="closeAdmin">&times;</button></div>
+  <div class="admin-header">
+    <div>
+      <h2>Quản trị</h2>
+      <div style="font-size:0.68rem; color:var(--gold-bright); font-weight:700; letter-spacing:0.04em; margin-top:0.15rem;">🔒 Đang đăng nhập: <span id="adminHeaderUsername">—</span></div>
+    </div>
+    <button class="close-btn" id="closeAdmin">&times;</button>
+  </div>
   <div class="admin-tabs">
-    <button class="admin-tab active" data-tab="tabProducts">Sản phẩm</button>
-    <button class="admin-tab" data-tab="tabCategories">Danh mục</button>
-    <button class="admin-tab" data-tab="tabDeposits">Yêu cầu nạp</button>
-    <button class="admin-tab" data-tab="tabCustomers">Khách hàng</button>
-    <button class="admin-tab" data-tab="tabLeaderboard">Top nạp</button>
-    <button class="admin-tab" data-tab="tabStyle">Cài đặt</button>
+    <button class="admin-tab active" data-tab="tabProducts">🛍️ Sản phẩm</button>
+    <button class="admin-tab" data-tab="tabCategories">🏷️ Danh mục</button>
+    <button class="admin-tab" data-tab="tabDeposits">💰 Yêu cầu nạp</button>
+    <button class="admin-tab" data-tab="tabCustomers">👥 Khách hàng</button>
+    <button class="admin-tab" data-tab="tabLeaderboard">🏆 Top nạp</button>
+    <button class="admin-tab" data-tab="tabStyle">⚙️ Cài đặt</button>
   </div>
 
   <div id="tabProducts" class="admin-section active">
@@ -1144,6 +1158,12 @@ footer{
       if (cur) {
         const fresh = STATE.users.find(u => u.id === cur.id);
         if (fresh) setCurrentUser(fresh);
+        else { setCurrentUser(null); showToast('Tài khoản của bạn đã bị xoá hoặc không còn tồn tại.', 'warning'); }
+      }
+      updateAdminNavVisibility();
+      if (!getCurrentUser()) { showLoginModal(); }
+      if ($('#adminSidebar').classList.contains('active') && !(getCurrentUser() && getCurrentUser().isAdmin)) {
+        closeAdminPanel();
       }
       if ($('#adminSidebar').classList.contains('active')) {
         renderCustomerList($('#customerSearchInput') ? $('#customerSearchInput').value : '');
@@ -1849,6 +1869,7 @@ footer{
     if (!allowed) return;
     $('#adminSidebar').classList.add('active');
     $('#overlay').classList.add('active');
+    $('#adminHeaderUsername').textContent = user.username;
     populateCategorySelect();
     $('#adminProductList').innerHTML = '<p style="color:var(--ink-soft);">Đang tải...</p>';
     await migrateLegacyKeysIfNeeded();
@@ -2489,8 +2510,19 @@ footer{
     if (isVerified()) then(); else showCaptcha(then);
   }
 
+  /* Chỉ hiện nút "Quản trị" khi đúng tài khoản đang đăng nhập có isAdmin === true.
+     Người dùng thường sẽ không thấy nút này tồn tại trên giao diện (display:none),
+     không chỉ là bị click vào báo lỗi như trước. */
+  function updateAdminNavVisibility(){
+    const user = getCurrentUser();
+    const btn = $('#btnAdmin');
+    if (!btn) return;
+    btn.style.display = (user && user.isAdmin) ? 'inline-flex' : 'none';
+  }
+
   function refreshUI(){
     const currentUser = getCurrentUser();
+    updateAdminNavVisibility();
     if (!currentUser) {
       $('#productsContainer').innerHTML = '<div class="empty-state">Vui lòng đăng nhập để xem sản phẩm.</div>';
       $('#filterBar').innerHTML = '';
@@ -2512,9 +2544,11 @@ footer{
     $('#overlay').classList.remove('active');
     document.body.classList.remove('body-locked');
   });
-  $$('.modal, .admin-sidebar, .cart-sidebar').forEach(el => {
-    el.addEventListener('click', e => e.stopPropagation());
-  });
+  /* Lưu ý: KHÔNG gắn stopPropagation() trên .modal/.admin-sidebar/.cart-sidebar nữa —
+     #overlay là một <div> riêng biệt (không phải cha của các modal/sidebar) nên click
+     bên trong modal/sidebar không bao giờ "chạm" tới #overlay để cần phải chặn nổi bọt.
+     Việc chặn nổi bọt trước đây vô tình làm hỏng nút "Xóa" trong giỏ hàng (nút đó lắng
+     nghe sự kiện click ở cấp document bằng cách uỷ quyền — event delegation). */
 
   let fxParticles = [];
   let fxRunning = false;
