@@ -800,7 +800,7 @@ footer{
     </div>
 
     <h4>Chặn thao tác sao chép mã nguồn</h4>
-    <p class="help-text">Bật chuột phải/phím tắt DevTools bị chặn trên trình duyệt của khách (chỉ là rào cản làm chậm, không phải bảo mật tuyệt đối — đọc mục cảnh báo bên dưới).</p>
+    <p class="help-text">Bật chuột phải/phím tắt DevTools bị chặn trên trình duyệt của khách (chỉ là rào cản làm chậm, không phải bảo mật tuyệt đối — đọc mục cảnh báo bên dưới). Cảnh báo "đang mở DevTools" chỉ áp dụng trên máy tính (desktop); trên điện thoại/máy tính bảng, hệ thống sẽ không hiện cảnh báo này để tránh báo nhầm khi bạn phóng to màn hình hoặc mở bàn phím ảo.</p>
     <div class="toggle-row">
       <span>Chặn chuột phải &amp; phím tắt DevTools</span>
       <label class="switch"><input type="checkbox" id="toggleAntiCopy"><span class="slider"></span></label>
@@ -810,7 +810,7 @@ footer{
     <p class="help-text">
       Trang này KHÔNG còn phát (broadcast) danh sách key còn lại tới trình duyệt của khách hàng — key chỉ được tải khi chính bạn (admin) mở bảng Quản trị, và được cấp ra từng cái một trong lúc thanh toán. Ảnh QR chuyển khoản cũng không còn được mã hoá cứng trong mã nguồn — bạn tự tải lên trong mục "Ảnh QR chuyển khoản" phía trên, ảnh được lưu trong Firestore (collection "config") thay vì nằm trong file HTML.<br><br>
       Tuy nhiên, đây vẫn KHÔNG phải là bảo mật tuyệt đối, vì trang không dùng Firebase Authentication: quyền "admin" hiện chỉ là một cờ (isAdmin) lưu trong trình duyệt, Firestore không tự phân biệt được ai là admin thật. Muốn khoá hẳn, bạn cần vào Firebase Console → Firestore → Rules và giới hạn quyền đọc collection "productKeys" (và ai được ghi vào "users", "products", "config"...). Nếu cần, hãy nhờ người có chuyên môn thiết lập Firestore Rules + Firebase Authentication để đạt mức bảo mật thực sự.<br><br>
-      <strong style="color:var(--ink);">Về việc chống sao chép giao diện web:</strong> công tắc phía trên chỉ bật thêm vài lớp "gây khó" phía trình duyệt (chặn chuột phải, chặn phím tắt mở DevTools/xem mã nguồn, cảnh báo trong Console). Đây chỉ là rào cản làm chậm người sao chép thông thường — KHÔNG có cách nào ở phía trình duyệt ngăn được 100% việc xem/tải mã HTML-CSS-JS, vì trình duyệt của bất kỳ ai truy cập trang đều bắt buộc phải tải toàn bộ mã đó về để hiển thị trang. Muốn bảo vệ chắc chắn hơn, cách duy nhất là chuyển phần hiển thị sang render ở server (backend) thay vì một trang tĩnh như hiện tại.
+      <strong style="color:var(--ink);">Về việc chống sao chép giao diện web:</strong> công tắc phía trên chỉ bật thêm vài lớp "gây khó" phía trình duyệt (chặn chuột phải, chặn phím tắt mở DevTools/xem mã nguồn, cảnh báo trong Console trên desktop). Đây chỉ là rào cản làm chậm người sao chép thông thường — KHÔNG có cách nào ở phía trình duyệt ngăn được 100% việc xem/tải mã HTML-CSS-JS, vì trình duyệt của bất kỳ ai truy cập trang đều bắt buộc phải tải toàn bộ mã đó về để hiển thị trang. Muốn bảo vệ chắc chắn hơn, cách duy nhất là chuyển phần hiển thị sang render ở server (backend) thay vì một trang tĩnh như hiện tại.
     </p>
   </div>
 
@@ -879,6 +879,9 @@ footer{
 
   const $ = (sel) => document.querySelector(sel);
   const $$ = (sel) => document.querySelectorAll(sel);
+
+  /* Phát hiện thiết bị cảm ứng (điện thoại/tablet) để tắt các heuristic chỉ đáng tin trên desktop */
+  const IS_TOUCH_DEVICE = ('ontouchstart' in window) || (navigator.maxTouchPoints && navigator.maxTouchPoints > 0) || (navigator.msMaxTouchPoints && navigator.msMaxTouchPoints > 0);
 
   /* Chặn cử chỉ chạm nhanh liên tiếp (double/triple-tap) làm trang tự phóng to trên di động.
      CSS touch-action:manipulation đã xử lý phần lớn, đoạn này là lớp dự phòng cho các
@@ -2485,6 +2488,10 @@ footer{
     return { question:`${a} ${op} ${b} = ?`, answer:result };
   }
 
+  /* ===== SỬA LỖI: captcha không còn bị đóng/mất khi bấm ra ngoài (overlay) =====
+     Trước đây, click vào #overlay sẽ đóng MỌI modal .active — kể cả captcha bắt buộc,
+     khiến người dùng tưởng captcha "biến mất" dù chưa xác minh xong. Giờ captcha được
+     đánh dấu 'mandatory' và bị loại trừ khỏi thao tác đóng-bằng-overlay. */
   function showCaptcha(callback){
     const captchaModal = $('#captchaModal');
     const overlay = $('#overlay');
@@ -2497,12 +2504,14 @@ footer{
     questionEl.textContent = captcha.question;
     answerInput.value = '';
     captchaModal.classList.add('active');
+    captchaModal.dataset.mandatory = 'true';
     overlay.classList.add('active');
     setTimeout(() => answerInput.focus(), 50);
 
     function attempt(){
       if (answerInput.value !== '' && parseInt(answerInput.value, 10) === captcha.answer) {
         captchaModal.classList.remove('active');
+        delete captchaModal.dataset.mandatory;
         overlay.classList.remove('active');
         sessionStorage.setItem('nminhshop_verified', 'true');
         callback();
@@ -2568,9 +2577,14 @@ footer{
     renderPublicLeaderboard();
   }
 
+  /* ===== SỬA LỖI: click ra ngoài (overlay) không còn đóng captcha bắt buộc ===== */
   $('#overlay').addEventListener('click', () => {
     if (botBlocked) return;
-    $$('.modal.active, .admin-sidebar.active, .cart-sidebar.active').forEach(el => el.classList.remove('active'));
+    if ($('#captchaModal').dataset.mandatory === 'true') return; // captcha bắt buộc: không đóng khi bấm ra ngoài
+    $$('.modal.active, .admin-sidebar.active, .cart-sidebar.active').forEach(el => {
+      if (el.id === 'captchaModal') return;
+      el.classList.remove('active');
+    });
     $('#overlay').classList.remove('active');
     document.body.classList.remove('body-locked');
   });
@@ -2679,7 +2693,14 @@ footer{
     else stopFx();
   }
 
-  /* ===== Anti-copy deterrents (best-effort only, see admin help text for real limits) ===== */
+  /* ===== Anti-copy deterrents (best-effort only, see admin help text for real limits) =====
+     SỬA LỖI: heuristic dò kích thước cửa sổ (outerWidth/innerWidth) để đoán DevTools đang mở
+     CHỈ đáng tin trên máy tính (desktop). Trên điện thoại/máy tính bảng, việc người dùng
+     pinch-zoom, xoay màn hình, hoặc bàn phím ảo bật lên cũng làm lệch outerWidth/innerHeight,
+     khiến trang báo nhầm "đang mở DevTools" dù người dùng không hề làm vậy.
+     -> Giải pháp: heuristic này giờ CHỈ chạy trên thiết bị không phải cảm ứng (desktop thật sự).
+     Chặn chuột phải + phím tắt F12/Ctrl+Shift+I... vẫn hoạt động trên mọi thiết bị vì đó là
+     sự kiện rõ ràng, không dựa vào suy đoán kích thước màn hình. */
   let antiCopyBound = false;
   let devtoolsWarned = false;
   function onContextMenu(e){ e.preventDefault(); }
@@ -2694,6 +2715,8 @@ footer{
   }
   let devtoolsPoll = null;
   function pollDevtoolsHeuristic(){
+    // Chỉ áp dụng cho desktop thật sự — bỏ qua hoàn toàn trên thiết bị cảm ứng để tránh báo nhầm khi zoom.
+    if (IS_TOUCH_DEVICE) return;
     const threshold = 160;
     const widthDiff = window.outerWidth - window.innerWidth;
     const heightDiff = window.outerHeight - window.innerHeight;
@@ -2709,7 +2732,10 @@ footer{
     if (enabled && !antiCopyBound) {
       document.addEventListener('contextmenu', onContextMenu);
       document.addEventListener('keydown', onKeyDown);
-      devtoolsPoll = setInterval(pollDevtoolsHeuristic, 1000);
+      // Chỉ bật polling đoán DevTools trên desktop; trên di động bỏ qua để tránh báo nhầm khi zoom.
+      if (!IS_TOUCH_DEVICE) {
+        devtoolsPoll = setInterval(pollDevtoolsHeuristic, 1000);
+      }
       if (!devtoolsWarned) {
         console.log('%cDừng lại!', 'color:#ff5d6c; font-size:32px; font-weight:bold;');
         console.log('%cĐây là tính năng dành cho trình duyệt. Việc dán mã lạ vào đây có thể khiến tài khoản của bạn bị lợi dụng.', 'font-size:14px;');
@@ -2720,6 +2746,7 @@ footer{
       document.removeEventListener('contextmenu', onContextMenu);
       document.removeEventListener('keydown', onKeyDown);
       if (devtoolsPoll) clearInterval(devtoolsPoll);
+      devtoolsPoll = null;
       const el = $('#devtoolsWarning');
       if (el) el.style.display = 'none';
       antiCopyBound = false;
