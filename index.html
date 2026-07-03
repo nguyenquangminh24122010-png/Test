@@ -463,6 +463,54 @@ footer{
 @media (prefers-reduced-motion: reduce){
   *{ scroll-behavior:auto !important; }
 }
+
+/* ===== Hiệu ứng cuộn/vuốt cho sản phẩm (mới) ===== */
+.product-card{
+  opacity:0;
+  transform:translateY(46px) scale(0.94);
+  filter:blur(6px);
+  transition:
+    opacity 0.75s cubic-bezier(.19,1,.22,1),
+    transform 0.75s cubic-bezier(.19,1,.22,1),
+    filter 0.75s cubic-bezier(.19,1,.22,1),
+    box-shadow var(--t-smooth),
+    border-color var(--t-smooth);
+  will-change:transform, opacity, filter;
+}
+.product-card.reveal-up{
+  opacity:1;
+  transform:translateY(0) scale(1);
+  filter:blur(0);
+}
+.product-card.reveal-hide-up{
+  opacity:0;
+  transform:translateY(-40px) scale(0.96);
+  filter:blur(4px);
+}
+.product-card.reveal-hide-down{
+  opacity:0;
+  transform:translateY(40px) scale(0.96);
+  filter:blur(4px);
+}
+.product-card:active{
+  transform:scale(0.985);
+}
+.product-card .product-img{
+  transition:transform 0.6s cubic-bezier(.19,1,.22,1);
+}
+.product-card.reveal-up:hover .product-img,
+.product-card.reveal-up:active .product-img{
+  transform:scale(1.035);
+}
+.product-card .product-img img{
+  transition:transform 0.7s cubic-bezier(.19,1,.22,1), filter 0.7s ease;
+}
+.product-card:hover .product-img img{
+  transform:scale(1.08);
+}
+@media (prefers-reduced-motion: reduce){
+  .product-card{ opacity:1 !important; transform:none !important; filter:none !important; transition:none !important; }
+}
 </style>
 </head>
 <body>
@@ -1272,6 +1320,38 @@ footer{
     return `<span class="stock-tag in">Còn ${stock}</span>`;
   }
 
+  /* ===== Hiệu ứng cuộn/vuốt lên-xuống cho sản phẩm ===== */
+  let productObserver = null;
+  function setupScrollRevealObserver(){
+    if (productObserver) productObserver.disconnect();
+    if (!('IntersectionObserver' in window)) return;
+    const prefersReduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (prefersReduced) return;
+    productObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        const el = entry.target;
+        if (entry.isIntersecting) {
+          el.classList.remove('reveal-hide-up', 'reveal-hide-down');
+          el.classList.add('reveal-up');
+        } else {
+          el.classList.remove('reveal-up');
+          // Vuốt lên (card ra khỏi phía trên) -> bay lên; vuốt xuống (ra khỏi phía dưới) -> rơi xuống
+          if (entry.boundingClientRect.top < 0) {
+            el.classList.add('reveal-hide-up');
+            el.classList.remove('reveal-hide-down');
+          } else {
+            el.classList.add('reveal-hide-down');
+            el.classList.remove('reveal-hide-up');
+          }
+        }
+      });
+    }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+    $$('.product-card').forEach((card, idx) => {
+      card.style.transitionDelay = Math.min(idx % 8, 7) * 0.05 + 's';
+      productObserver.observe(card);
+    });
+  }
+
   function renderProducts(){
     if (!getCurrentUser()) return;
     const products = STATE.products.filter(p => activeCategory === 'all' || p.category === activeCategory);
@@ -1305,6 +1385,7 @@ footer{
         if (product) addToCart(product);
       });
     });
+    setupScrollRevealObserver();
   }
 
   function updateBalanceDisplay(){
