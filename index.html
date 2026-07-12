@@ -1,10 +1,8 @@
-<!DOCTYPE html>
-<html lang="vi">
-<head>
+<html lang="vi"><head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 <title>nminhshop — Cửa Hàng Trực Tuyến</title>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,600;0,700;0,800;1,500&family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,600;0,700;0,800;1,500&amp;family=Inter:wght@400;500;600;700;800;900&amp;display=swap" rel="stylesheet">
 <style>
 :root{
   --bg:#0b0c10;
@@ -121,15 +119,15 @@ h1,h2,h3,.display{ font-family:'Playfair Display',serif; }
   line-height:1.3; min-width:16px; text-align:center;
 }
 .btn-icon{
-  background:var(--panel); border:1px solid var(--line); border-radius:50%;
-  font-size:0.95rem; cursor:pointer; position:relative;
+  background:var(--panel); border:1px solid var(--line); border-radius:999px;
+  font-size:0.72rem; cursor:pointer; position:relative;
   color:var(--gold-bright); transition:all var(--t-fast);
-  width:40px; height:40px; padding:0;
+  height:38px; padding:0 0.85rem;
   box-shadow:var(--shadow-sm); font-weight:700;
   display:inline-flex; align-items:center; justify-content:center;
-  line-height:1; flex:none;
+  line-height:1; flex:none; white-space:nowrap; letter-spacing:0.02em;
+  font-family:'Inter',sans-serif;
 }
-.btn-icon .ic-label{ display:none; }
 .btn-icon:hover{ color:#1a1305; background:var(--gold-bright); border-color:var(--gold-bright); transform:translateY(-2px); box-shadow:var(--shadow-md); }
 .balance{ font-weight:700; color:#1a1305; font-size:0.76rem; font-family:'Playfair Display',serif;
   background:linear-gradient(135deg, var(--gold-bright), var(--gold-deep)); padding:0.45rem 0.8rem; border-radius:999px; box-shadow:var(--shadow-sm); letter-spacing:0.01em;
@@ -246,10 +244,8 @@ h1,h2,h3,.display{ font-family:'Playfair Display',serif; }
   cursor:pointer; transition:all var(--t-fast); text-transform:uppercase; letter-spacing:0.04em;
   display:flex; align-items:center; justify-content:center; gap:0.3rem;
 }
-.buy-btn::before{ content:'🛒'; font-size:0.72rem; }
 .buy-btn:hover{ filter:brightness(1.08); transform:translateY(-2px); box-shadow:var(--shadow-sm); }
 .buy-btn:disabled{ background:var(--line); color:var(--ink-faint); cursor:not-allowed; transform:none; }
-.buy-btn:disabled::before{ content:''; }
 
 #btnCheckout{
   width:100%;
@@ -280,11 +276,10 @@ footer{
 }
 .bottom-nav-item{
   flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center;
-  gap:0.2rem; background:none; border:none; color:var(--ink-faint); font-size:0.62rem;
+  gap:0.2rem; background:none; border:none; color:var(--ink-faint); font-size:0.68rem;
   font-weight:700; cursor:pointer; position:relative; letter-spacing:0.01em;
   transition:color var(--t-fast);
 }
-.bottom-nav-item .bn-icon{ font-size:1.15rem; line-height:1; }
 .bottom-nav-item:hover, .bottom-nav-item.active{ color:var(--gold-bright); }
 .bottom-nav-item .bn-badge{
   position:absolute; top:2px; right:calc(50% - 20px); background:var(--danger); color:#fff;
@@ -509,7 +504,7 @@ footer{
   .section-title{ font-size:1.4rem; }
   .product-item-admin{ grid-template-columns:1fr; }
   .img-preview{ margin:0 auto; }
-  .bottom-nav-item span.bn-text{ font-size:0.6rem; }
+  .btn-icon{ font-size:0.68rem; padding:0 0.65rem; height:34px; }
 }
 @media (prefers-reduced-motion: reduce){
   *{ scroll-behavior:auto !important; }
@@ -570,23 +565,23 @@ footer{
   <div class="load-mark">NM</div>
   <div class="load-title">nminhshop</div>
   <div class="load-sub">Đang chuẩn bị cửa hàng...</div>
-  <div class="load-bar-track"><div class="load-bar-fill" id="loadBarFill"></div></div>
+  <div class="load-bar-track"><div class="load-bar-fill" id="loadBarFill" style="width: 9.413551%;"></div></div>
 </div>
 
 <div class="ambient-glow"></div>
 <div class="ambient-glow two"></div>
-<canvas id="fxCanvas"></canvas>
+<canvas id="fxCanvas" width="414" height="673"></canvas>
 
 <nav class="navbar">
-  <div class="logo"><span class="mark">nminh</span><span class="rest">shop</span></div>
+  <div class="logo" id="shopLogo"><span class="mark">nminh</span><span class="rest">shop</span></div>
   <div class="header-actions">
     <span class="balance" id="balanceDisplay">0₫</span>
-    <button class="btn-icon" id="btnCart" aria-label="Giỏ hàng" title="Giỏ hàng">🛒<span class="badge" id="cartBadge">0</span></button>
-    <button class="btn-icon" id="btnHistory" aria-label="Lịch sử mua hàng" title="Lịch sử">🧾</button>
-    <button class="btn-icon" id="btnDeposit" aria-label="Nạp tiền" title="Nạp tiền">💰</button>
-    <button class="btn-icon" id="btnAccount" aria-label="Tài khoản" title="Tài khoản">👤</button>
-    <button class="btn-icon" id="btnAdmin" aria-label="Quản trị" title="Quản trị" style="display:none;">⚙️</button>
-    <button class="btn-icon" id="btnLogout" aria-label="Thoát" title="Thoát">⎋</button>
+    <button class="btn-icon" id="btnCart" aria-label="Giỏ hàng" title="Giỏ hàng">Giỏ hàng<span class="badge" id="cartBadge">0</span></button>
+    <button class="btn-icon" id="btnHistory" aria-label="Lịch sử mua hàng" title="Lịch sử">Lịch sử</button>
+    <button class="btn-icon" id="btnDeposit" aria-label="Nạp tiền" title="Nạp tiền">Nạp tiền</button>
+    <button class="btn-icon" id="btnAccount" aria-label="Tài khoản" title="Tài khoản">Tài khoản</button>
+    <button class="btn-icon" id="btnAdmin" aria-label="Quản trị" title="Quản trị" style="display:none;">Quản trị</button>
+    <button class="btn-icon" id="btnLogout" aria-label="Thoát" title="Thoát">Thoát</button>
   </div>
 </nav>
 
@@ -615,20 +610,20 @@ footer{
 
 <nav class="bottom-nav" id="bottomNav">
   <button class="bottom-nav-item active" id="bnHome">
-    <span class="bn-icon">🏠</span><span class="bn-text">Trang chủ</span>
+    <span class="bn-text">Trang chủ</span>
   </button>
   <button class="bottom-nav-item" id="bnCategories">
-    <span class="bn-icon">🗂️</span><span class="bn-text">Danh mục</span>
+    <span class="bn-text">Danh mục</span>
   </button>
   <button class="bottom-nav-item" id="bnCart">
-    <span class="bn-icon">🛒</span><span class="bn-text">Giỏ hàng</span>
+    <span class="bn-text">Giỏ hàng</span>
     <span class="bn-badge" id="bnCartBadge">0</span>
   </button>
   <button class="bottom-nav-item" id="bnDeposit">
-    <span class="bn-icon">💳</span><span class="bn-text">Nạp tiền</span>
+    <span class="bn-text">Nạp tiền</span>
   </button>
   <button class="bottom-nav-item" id="bnAccount">
-    <span class="bn-icon">👤</span><span class="bn-text">Tài khoản</span>
+    <span class="bn-text">Tài khoản</span>
   </button>
 </nav>
 
@@ -776,15 +771,15 @@ footer{
       <h2>Quản trị</h2>
       <div style="font-size:0.68rem; color:var(--gold-bright); font-weight:700; letter-spacing:0.04em; margin-top:0.15rem;">🔒 Đang đăng nhập: <span id="adminHeaderUsername">—</span></div>
     </div>
-    <button class="close-btn" id="closeAdmin">&times;</button>
+    <button class="close-btn" id="closeAdmin">×</button>
   </div>
   <div class="admin-tabs">
-    <button class="admin-tab active" data-tab="tabProducts">🛍️ Sản phẩm</button>
-    <button class="admin-tab" data-tab="tabCategories">🏷️ Danh mục</button>
-    <button class="admin-tab" data-tab="tabDeposits">💰 Yêu cầu nạp</button>
-    <button class="admin-tab" data-tab="tabCustomers">👥 Khách hàng</button>
-    <button class="admin-tab" data-tab="tabLeaderboard">🏆 Top nạp</button>
-    <button class="admin-tab" data-tab="tabStyle">⚙️ Cài đặt</button>
+    <button class="admin-tab active" data-tab="tabProducts">Sản phẩm</button>
+    <button class="admin-tab" data-tab="tabCategories">Danh mục</button>
+    <button class="admin-tab" data-tab="tabDeposits">Yêu cầu nạp</button>
+    <button class="admin-tab" data-tab="tabCustomers">Khách hàng</button>
+    <button class="admin-tab" data-tab="tabLeaderboard">Top nạp</button>
+    <button class="admin-tab" data-tab="tabStyle">Cài đặt</button>
   </div>
 
   <div id="tabProducts" class="admin-section active">
@@ -874,6 +869,11 @@ footer{
   </div>
 
   <div id="tabStyle" class="admin-section">
+    <h4>Tên cửa hàng</h4>
+    <p class="help-text">Tên hiển thị ở góc trên bên trái trang (logo). Không ảnh hưởng đến dữ liệu sản phẩm hay tài khoản.</p>
+    <input id="shopNameInput" placeholder="Tên cửa hàng" maxlength="40">
+    <button class="btn-sm btn-primary" id="saveShopName" style="margin-bottom:1.2rem;">Lưu tên cửa hàng</button>
+
     <h4>Số điện thoại liên hệ</h4>
     <p class="help-text">Số này hiển thị cho khách sau khi nạp tiền và sau khi mua hàng thành công.</p>
     <input id="contactPhoneInput" placeholder="Số điện thoại liên hệ" maxlength="20">
@@ -929,7 +929,7 @@ footer{
 </div>
 
 <div class="cart-sidebar" id="cartSidebar">
-  <div class="cart-header"><h3>Giỏ hàng</h3><button class="close-btn" id="closeCart">&times;</button></div>
+  <div class="cart-header"><h3>Giỏ hàng</h3><button class="close-btn" id="closeCart">×</button></div>
   <div id="cartItems" class="cart-items-scroll">Giỏ hàng trống.</div>
   <div class="cart-footer">
     <div class="cart-total" id="cartTotal">Tổng: 0₫</div>
@@ -979,6 +979,7 @@ footer{
 
   const DEFAULT_PHONE = '0976788751';
   const DEFAULT_ORDER_NOTE = 'Cảm ơn bạn đã mua hàng tại nminhshop! Vui lòng liên hệ số điện thoại bên trên để xác nhận và nhận hàng trong vòng 24-48h.';
+  const DEFAULT_SHOP_NAME = 'nminhshop';
   const defaultCategories = ['Nổi bật', 'Đồ điện tử', 'Phụ kiện', 'Khác'];
   const defaultProducts = [
     { id:1, name:'Sản phẩm mẫu 1', author:'nminhshop', desc:'Mô tả ngắn cho sản phẩm mẫu. Hãy chỉnh sửa trong trang Quản trị.', price:120000, stock:25, emoji:'📦', image:'', category:'Nổi bật', note:'' },
@@ -1058,6 +1059,7 @@ footer{
     users: [],
     depositRequests: [],
     settings: {
+      shopName: DEFAULT_SHOP_NAME,
       bankAccount: DEFAULT_PHONE,
       contactPhone: DEFAULT_PHONE,
       defaultOrderNote: DEFAULT_ORDER_NOTE,
@@ -1079,6 +1081,14 @@ footer{
   function getBalance(userId){
     const user = STATE.users.find(u => u.id === userId);
     return user ? (Number(user.balance)||0) : 0;
+  }
+
+  function renderShopName(){
+    const el = $('#shopLogo');
+    if (!el) return;
+    const name = (STATE.settings.shopName || DEFAULT_SHOP_NAME).trim() || DEFAULT_SHOP_NAME;
+    el.innerHTML = `<span class="mark">${escapeHtml(name)}</span>`;
+    document.title = name + ' — Cửa Hàng Trực Tuyến';
   }
 
   function getPeriodStart(period){
@@ -1247,6 +1257,7 @@ footer{
       const settingsData = settingsSnap.exists() ? settingsSnap.data() : null;
       if (!settingsSnap.exists()) {
         await f.setDoc(settingsRef, {
+          shopName: DEFAULT_SHOP_NAME,
           bankAccount: DEFAULT_PHONE, contactPhone: DEFAULT_PHONE,
           defaultOrderNote: DEFAULT_ORDER_NOTE, fx:{snow:false,blossom:false}, antiCopy:false,
           leaderboardEnabled:false, qrImage:'', leaderboardResetAt:{},
@@ -1330,6 +1341,7 @@ footer{
     fb.onSnapshot(fb.doc(fb.db, 'config', 'settings'), snap => {
       if (snap.exists()) STATE.settings = Object.assign({}, STATE.settings, snap.data());
       STATE.ready.settings = true;
+      renderShopName();
       applyFx();
       applyAntiCopy();
       renderPublicLeaderboard();
@@ -1926,8 +1938,7 @@ footer{
             transaction.update(prodRef, { stock: keysCopy.length });
           } else {
             const newStock = (Number(prodData.stock) || 0) - item.quantity;
-            if (newStock <= 0) transaction.delete(prodRef);
-            else transaction.update(prodRef, { stock: newStock });
+            transaction.update(prodRef, { stock: Math.max(0, newStock) });
           }
           assignedKeysByItem[item.id] = assignedKeys;
           const purchaseRef = f.doc(f.collection(f.db, 'purchases'));
@@ -2115,6 +2126,7 @@ footer{
     renderDepositRequests();
     renderCustomerList('');
     renderAdminLeaderboard();
+    $('#shopNameInput').value = STATE.settings.shopName || DEFAULT_SHOP_NAME;
     $('#bankAccountInput').value = STATE.settings.bankAccount || DEFAULT_PHONE;
     $('#contactPhoneInput').value = STATE.settings.contactPhone || DEFAULT_PHONE;
     $('#defaultOrderNoteInput').value = STATE.settings.defaultOrderNote || DEFAULT_ORDER_NOTE;
@@ -2152,6 +2164,13 @@ footer{
       $$('.admin-section').forEach(s => s.classList.remove('active'));
       $('#' + tab.dataset.tab).classList.add('active');
     });
+  });
+
+  $('#saveShopName').addEventListener('click', async () => {
+    const val = sanitizeText($('#shopNameInput').value, 40);
+    if (!val) { showToast('Nhập tên cửa hàng!', 'error'); return; }
+    try{ await fbSetSettings({ shopName: val }); showToast('Đã lưu tên cửa hàng!', 'success'); }
+    catch(e){ console.error(e); showToast('Lỗi kết nối!', 'error'); }
   });
 
   $('#saveContactPhone').addEventListener('click', async () => {
@@ -2453,22 +2472,27 @@ footer{
     }
     $$('.approve-deposit').forEach(btn => {
       btn.addEventListener('click', async function(){
+        this.disabled = true;
         const requestId = parseInt(this.dataset.id, 10);
-        const req = STATE.depositRequests.find(r => r.id === requestId);
-        if (req && req.status === 'pending') {
-          try{
-            const user = STATE.users.find(u => u.id === req.userId);
-            if (user) {
-              const updatedUser = Object.assign({}, user, { balance: (Number(user.balance)||0) + req.amount });
-              await fbSetUser(updatedUser);
-            } else {
-              showToast('Không tìm thấy tài khoản để cộng tiền (tài khoản có thể được tạo trước khi sửa lỗi id). Vào Firestore Console, mở collection "users", thêm field "id" cho tài khoản này rồi thử lại.', 'error');
-              return;
-            }
-            await fbUpdateDeposit(req.id, { status:'approved', processedAt: new Date().toISOString() });
-            showToast(`Đã duyệt ${Number(req.amount).toLocaleString('vi-VN')}₫ cho ${req.username}`, 'success');
-          }catch(e){ console.error(e); showToast('Lỗi kết nối!', 'error'); }
-        }
+        try{
+          const f = await withFb();
+          if (!f) throw new Error('Chưa kết nối được máy chủ dữ liệu.');
+          await f.runTransaction(f.db, async (transaction) => {
+            const reqRef = f.doc(f.db, 'depositRequests', String(requestId));
+            const reqDoc = await transaction.get(reqRef);
+            if (!reqDoc.exists()) throw new Error('Yêu cầu không tồn tại.');
+            const reqData = reqDoc.data();
+            if (reqData.status !== 'pending') throw new Error('Yêu cầu này đã được xử lý.');
+            const userRef = f.doc(f.db, 'users', String(reqData.userId));
+            const userDoc = await transaction.get(userRef);
+            if (!userDoc.exists()) throw new Error('Không tìm thấy tài khoản để cộng tiền.');
+            const currentBalance = Number(userDoc.data().balance) || 0;
+            transaction.update(userRef, { balance: currentBalance + Number(reqData.amount || 0) });
+            transaction.update(reqRef, { status:'approved', processedAt: new Date().toISOString() });
+          });
+          showToast(`Đã duyệt yêu cầu nạp tiền.`, 'success');
+        }catch(e){ console.error(e); showToast(e.message || 'Lỗi kết nối!', 'error'); }
+        finally{ this.disabled = false; }
       });
     });
     $$('.reject-deposit').forEach(btn => {
@@ -2984,5 +3008,6 @@ footer{
 })();
 </script>
 
-</body>
-</html>
+
+
+</body></html>
