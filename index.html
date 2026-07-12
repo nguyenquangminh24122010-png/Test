@@ -129,6 +129,11 @@ h1,h2,h3,.display{ font-family:'Playfair Display',serif; }
   font-family:'Inter',sans-serif;
 }
 .btn-icon:hover{ color:#1a1305; background:var(--gold-bright); border-color:var(--gold-bright); transform:translateY(-2px); box-shadow:var(--shadow-md); }
+.btn-icon.btn-deposit-highlight{
+  background:linear-gradient(135deg, var(--gold-bright), var(--gold-deep));
+  color:#1a1305; border-color:transparent;
+}
+.btn-icon.btn-deposit-highlight:hover{ filter:brightness(1.08); }
 .balance{ font-weight:700; color:#1a1305; font-size:0.76rem; font-family:'Playfair Display',serif;
   background:linear-gradient(135deg, var(--gold-bright), var(--gold-deep)); padding:0.45rem 0.8rem; border-radius:999px; box-shadow:var(--shadow-sm); letter-spacing:0.01em;
   white-space:nowrap; flex:none; }
@@ -414,6 +419,36 @@ footer{
   color:var(--ink-faint); font-size:0.8rem; background:var(--panel);
 }
 
+/* ===================== DEPOSIT MODAL — quick-tap amount grid ===================== */
+.amount-grid{
+  display:grid; grid-template-columns:repeat(2, 1fr); gap:0.6rem; margin:0.8rem 0 0.2rem;
+}
+.amount-chip{
+  padding:0.85rem 0.6rem; border-radius:12px; border:1.5px solid var(--line); background:var(--panel);
+  color:var(--ink); font-family:'Playfair Display',serif; font-size:1rem; font-weight:700;
+  cursor:pointer; transition:all var(--t-fast); text-align:center; min-height:56px;
+  display:flex; align-items:center; justify-content:center;
+}
+.amount-chip:hover{ border-color:var(--gold); transform:translateY(-2px); }
+.amount-chip.active{
+  background:linear-gradient(135deg, var(--gold-bright), var(--gold-deep)); color:#1a1305;
+  border-color:transparent; box-shadow:var(--shadow-sm);
+}
+.amount-chip.other-chip{ grid-column:1 / -1; font-family:'Inter',sans-serif; font-size:0.9rem; }
+#customAmount{ font-size:1.1rem; font-weight:700; text-align:center; font-family:'Playfair Display',serif; }
+.deposit-summary{
+  background:var(--panel); border:1px solid var(--line); border-radius:12px; padding:0.9rem 1rem;
+  margin:0.9rem 0 0.2rem; text-align:left; font-size:0.86rem; color:var(--ink-soft);
+}
+.deposit-summary strong{ color:var(--gold-bright); font-family:'Playfair Display',serif; font-size:1.15rem; }
+.deposit-info-row{
+  display:flex; align-items:center; justify-content:space-between; gap:0.7rem;
+  background:var(--panel); border:1px solid var(--line); border-radius:10px; padding:0.85rem 1rem; margin-top:0.7rem;
+  text-align:left;
+}
+.deposit-info-row .label{ font-size:0.7rem; text-transform:uppercase; letter-spacing:0.06em; color:var(--ink-soft); font-weight:700; margin-bottom:0.25rem; }
+.deposit-info-row .value{ font-family:'Playfair Display',serif; font-size:1.15rem; font-weight:800; color:var(--gold-bright); word-break:break-all; }
+
 .auth-modal{ max-width:385px; text-align:left; }
 .auth-brand{ text-align:center; margin-bottom:0.4rem; }
 .auth-brand .mark-circle{
@@ -466,6 +501,11 @@ footer{
   font-size:0.74rem; font-weight:800; cursor:pointer; transition:all var(--t-fast);
 }
 .copy-phone-btn:hover{ filter:brightness(1.08); }
+.copy-inline-btn{
+  background:var(--panel-2); color:var(--gold-bright); border:1px solid var(--line); padding:0.4rem 0.8rem; border-radius:8px;
+  font-size:0.72rem; font-weight:800; cursor:pointer; transition:all var(--t-fast); flex:none;
+}
+.copy-inline-btn:hover{ border-color:var(--gold); background:var(--panel); }
 
 .history-item{ background:var(--panel); border:1px solid var(--line); padding:0.8rem; border-radius:10px; margin-bottom:0.6rem; cursor:pointer; transition:border-color var(--t-fast); }
 .history-item:hover{ border-color:var(--gold); }
@@ -505,6 +545,8 @@ footer{
   .product-item-admin{ grid-template-columns:1fr; }
   .img-preview{ margin:0 auto; }
   .btn-icon{ font-size:0.68rem; padding:0 0.65rem; height:34px; }
+  .amount-grid{ grid-template-columns:repeat(2, 1fr); }
+  .amount-chip{ font-size:0.92rem; min-height:52px; }
 }
 @media (prefers-reduced-motion: reduce){
   *{ scroll-behavior:auto !important; }
@@ -562,8 +604,8 @@ footer{
 <body>
 
 <div id="loadScreen">
-  <div class="load-mark">NM</div>
-  <div class="load-title">nminhshop</div>
+  <div class="load-mark" id="loadMark">NM</div>
+  <div class="load-title" id="loadTitle">nminhshop</div>
   <div class="load-sub">Đang chuẩn bị cửa hàng...</div>
   <div class="load-bar-track"><div class="load-bar-fill" id="loadBarFill" style="width: 9.413551%;"></div></div>
 </div>
@@ -576,9 +618,9 @@ footer{
   <div class="logo" id="shopLogo"><span class="mark">nminh</span><span class="rest">shop</span></div>
   <div class="header-actions">
     <span class="balance" id="balanceDisplay">0₫</span>
-    <button class="btn-icon" id="btnCart" aria-label="Giỏ hàng" title="Giỏ hàng">Giỏ hàng<span class="badge" id="cartBadge">0</span></button>
+    <button class="btn-icon btn-deposit-highlight" id="btnCart" aria-label="Giỏ hàng" title="Giỏ hàng">Giỏ hàng<span class="badge" id="cartBadge">0</span></button>
     <button class="btn-icon" id="btnHistory" aria-label="Lịch sử mua hàng" title="Lịch sử">Lịch sử</button>
-    <button class="btn-icon" id="btnDeposit" aria-label="Nạp tiền" title="Nạp tiền">Nạp tiền</button>
+    <button class="btn-icon btn-deposit-highlight" id="btnDeposit" aria-label="Nạp tiền" title="Nạp tiền">Nạp tiền</button>
     <button class="btn-icon" id="btnAccount" aria-label="Tài khoản" title="Tài khoản">Tài khoản</button>
     <button class="btn-icon" id="btnAdmin" aria-label="Quản trị" title="Quản trị" style="display:none;">Quản trị</button>
     <button class="btn-icon" id="btnLogout" aria-label="Thoát" title="Thoát">Thoát</button>
@@ -606,7 +648,7 @@ footer{
   <div class="filter-bar" id="filterBar"></div>
   <div id="productsContainer"></div>
 </main>
-<footer>© 2026 nminhshop — Mọi giao dịch được bảo mật.</footer>
+<footer>© 2026 <span id="footerShopName">nminhshop</span> — Mọi giao dịch được bảo mật.</footer>
 
 <nav class="bottom-nav" id="bottomNav">
   <button class="bottom-nav-item active" id="bnHome">
@@ -638,7 +680,7 @@ footer{
 </div>
 
 <div class="modal auth-modal" id="loginModal">
-  <div class="auth-brand"><div class="mark-circle">NM</div></div>
+  <div class="auth-brand"><div class="mark-circle" id="loginMarkCircle">NM</div></div>
   <h3>Chào mừng trở lại</h3>
   <p class="auth-sub">Đăng nhập để tiếp tục mua sắm</p>
   <label class="auth-field-label">Tên đăng nhập</label>
@@ -652,7 +694,7 @@ footer{
 </div>
 
 <div class="modal auth-modal" id="registerModal">
-  <div class="auth-brand"><div class="mark-circle">NM</div></div>
+  <div class="auth-brand"><div class="mark-circle" id="registerMarkCircle">NM</div></div>
   <h3>Tạo tài khoản</h3>
   <p class="auth-sub">Chỉ mất chưa đến một phút</p>
   <label class="auth-field-label">Tên đăng nhập</label>
@@ -668,14 +710,16 @@ footer{
 
 <div class="modal" id="depositModal">
   <h3>Nạp tiền</h3>
-  <select id="depositAmountSelect">
-    <option value="50000">50.000₫</option>
-    <option value="100000">100.000₫</option>
-    <option value="200000">200.000₫</option>
-    <option value="500000">500.000₫</option>
-    <option value="other">Khác</option>
-  </select>
-  <input type="number" id="customAmount" placeholder="Số tiền khác" style="display:none;" min="1000" max="50000000">
+  <p style="color:var(--ink-soft); font-size:0.85rem; margin:-0.2rem 0 0.2rem;">Chọn nhanh một mức nạp bên dưới:</p>
+  <div class="amount-grid" id="amountGrid">
+    <button type="button" class="amount-chip active" data-amount="50000">50.000₫</button>
+    <button type="button" class="amount-chip" data-amount="100000">100.000₫</button>
+    <button type="button" class="amount-chip" data-amount="200000">200.000₫</button>
+    <button type="button" class="amount-chip" data-amount="500000">500.000₫</button>
+    <button type="button" class="amount-chip" data-amount="1000000">1.000.000₫</button>
+    <button type="button" class="amount-chip other-chip" data-amount="other">✎ Nhập số tiền khác</button>
+  </div>
+  <input type="number" id="customAmount" placeholder="Nhập số tiền (₫)" style="display:none;" min="1000" max="50000000" inputmode="numeric">
   <div class="modal-buttons">
     <button class="btn-secondary" id="cancelDeposit">Hủy</button>
     <button class="btn-primary" id="generateDeposit">Tạo yêu cầu nạp</button>
@@ -688,9 +732,21 @@ footer{
     <img id="depositQrImg" class="deposit-qr-img" style="display:none;" alt="Mã QR chuyển khoản">
     <div id="depositQrPlaceholder" class="deposit-qr-placeholder">Admin chưa tải ảnh QR. Vui lòng chuyển khoản theo số tài khoản và nội dung bên dưới.</div>
   </div>
-  <p>Số tài khoản: <strong id="bankAccountDisplay">—</strong></p>
-  <p>Nội dung chuyển: <strong id="randomCodeDisplay"></strong></p>
-  <p style="color:var(--gold-bright); font-size:0.85rem; margin-top:0.4rem;">Quét mã QR hoặc chuyển khoản đúng số tiền và nội dung trên.</p>
+  <div class="deposit-info-row">
+    <div>
+      <div class="label">Số tài khoản</div>
+      <div class="value" id="bankAccountDisplay">—</div>
+    </div>
+    <button class="copy-inline-btn" id="copyBankAccount">Sao chép</button>
+  </div>
+  <div class="deposit-info-row">
+    <div>
+      <div class="label">Nội dung chuyển khoản</div>
+      <div class="value" id="randomCodeDisplay"></div>
+    </div>
+    <button class="copy-inline-btn" id="copyRandomCode">Sao chép</button>
+  </div>
+  <p style="color:var(--gold-bright); font-size:0.85rem; margin-top:0.7rem;">⚠️ Quét mã QR hoặc chuyển khoản đúng số tiền và đúng nội dung ở trên.</p>
   <div class="modal-buttons">
     <button class="btn-secondary" id="cancelDepositDetail">Hủy</button>
     <button class="btn-primary" id="btnTransferred">Đã chuyển</button>
@@ -713,7 +769,7 @@ footer{
 <div class="modal order-success-modal" id="orderSuccessModal">
   <div class="order-success-icon">✓</div>
   <h3>Đặt hàng thành công</h3>
-  <p style="text-align:center; color:var(--ink-soft); font-size:0.88rem;">Cảm ơn bạn đã mua hàng tại nminhshop.</p>
+  <p style="text-align:center; color:var(--ink-soft); font-size:0.88rem;">Cảm ơn bạn đã mua hàng tại <span class="order-success-shopname">nminhshop</span>.</p>
   <div class="order-note-box" id="orderNoteBox"></div>
   <button class="copy-phone-btn" id="copyOrderNote" style="margin-bottom:0.6rem;">Sao chép nội dung/key</button>
   <div class="order-contact-row">
@@ -870,7 +926,7 @@ footer{
 
   <div id="tabStyle" class="admin-section">
     <h4>Tên cửa hàng</h4>
-    <p class="help-text">Tên hiển thị ở góc trên bên trái trang (logo). Không ảnh hưởng đến dữ liệu sản phẩm hay tài khoản.</p>
+    <p class="help-text">Tên hiển thị ở logo, tiêu đề trang, màn hình tải, và chân trang. Đổi ở đây sẽ tự động cập nhật toàn bộ các vị trí này — không cần sửa ở đâu khác. Không ảnh hưởng đến dữ liệu sản phẩm hay tài khoản.</p>
     <input id="shopNameInput" placeholder="Tên cửa hàng" maxlength="40">
     <button class="btn-sm btn-primary" id="saveShopName" style="margin-bottom:1.2rem;">Lưu tên cửa hàng</button>
 
@@ -1016,6 +1072,7 @@ footer{
   let publicLbPeriod = 'week';
   let adminLbPeriod = 'week';
   let selectedCustomerId = null;
+  let selectedDepositAmount = '50000';
 
   function escapeHtml(str){
     return String(str).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -1083,12 +1140,40 @@ footer{
     return user ? (Number(user.balance)||0) : 0;
   }
 
+  function shopInitials(name){
+    const clean = String(name || '').trim();
+    if (!clean) return 'NM';
+    const parts = clean.split(/\s+/).filter(Boolean);
+    if (parts.length >= 2) return (parts[0][0] + parts[1][0]).toUpperCase();
+    return clean.slice(0, 2).toUpperCase();
+  }
+
   function renderShopName(){
-    const el = $('#shopLogo');
-    if (!el) return;
     const name = (STATE.settings.shopName || DEFAULT_SHOP_NAME).trim() || DEFAULT_SHOP_NAME;
-    el.innerHTML = `<span class="mark">${escapeHtml(name)}</span>`;
+    const initials = shopInitials(name);
+    // Logo in navbar
+    const logoEl = $('#shopLogo');
+    if (logoEl) logoEl.innerHTML = `<span class="mark">${escapeHtml(name)}</span>`;
+    // Page title
     document.title = name + ' — Cửa Hàng Trực Tuyến';
+    // Loading screen
+    const loadTitle = $('#loadTitle');
+    if (loadTitle) loadTitle.textContent = name;
+    const loadMark = $('#loadMark');
+    if (loadMark) loadMark.textContent = initials;
+    // Footer
+    const footerEl = $('#footerShopName');
+    if (footerEl) footerEl.textContent = name;
+    // Hero eyebrow
+    const eyebrowEl = document.querySelector('.hero .eyebrow');
+    if (eyebrowEl) eyebrowEl.textContent = name + ' · cửa hàng số';
+    // Auth modal marks
+    const loginMark = $('#loginMarkCircle');
+    if (loginMark) loginMark.textContent = initials;
+    const regMark = $('#registerMarkCircle');
+    if (regMark) regMark.textContent = initials;
+    // Order success text
+    $$('.order-success-shopname').forEach(el => { el.textContent = name; });
   }
 
   function getPeriodStart(period){
@@ -1880,6 +1965,14 @@ footer{
     const phone = STATE.settings.contactPhone || DEFAULT_PHONE;
     navigator.clipboard?.writeText(phone).then(() => showToast('Đã sao chép số!', 'success')).catch(() => showToast('Không thể sao chép.', 'warning'));
   });
+  $('#copyBankAccount').addEventListener('click', () => {
+    const val = $('#bankAccountDisplay').textContent || '';
+    navigator.clipboard?.writeText(val).then(() => showToast('Đã sao chép số tài khoản!', 'success')).catch(() => showToast('Không thể sao chép.', 'warning'));
+  });
+  $('#copyRandomCode').addEventListener('click', () => {
+    const val = $('#randomCodeDisplay').textContent || '';
+    navigator.clipboard?.writeText(val).then(() => showToast('Đã sao chép nội dung!', 'success')).catch(() => showToast('Không thể sao chép.', 'warning'));
+  });
 
   async function processCheckout(){
     if (botBlocked) return;
@@ -1971,6 +2064,12 @@ footer{
   }
   $('#btnCheckout').addEventListener('click', processCheckout);
 
+  function resetDepositAmountUI(){
+    selectedDepositAmount = '50000';
+    $$('.amount-chip').forEach(chip => chip.classList.toggle('active', chip.dataset.amount === '50000'));
+    $('#customAmount').style.display = 'none';
+    $('#customAmount').value = '';
+  }
   async function openDeposit(){
     if (botBlocked) return;
     if (!getCurrentUser()) { showToast('Vui lòng đăng nhập!', 'error'); return; }
@@ -1978,17 +2077,27 @@ footer{
     if (!allowed) return;
     $('#depositModal').classList.add('active');
     $('#overlay').classList.add('active');
-    $('#depositAmountSelect').value = '50000';
-    $('#customAmount').style.display = 'none';
-    $('#customAmount').value = '';
+    resetDepositAmountUI();
   }
   $('#btnDeposit').addEventListener('click', (e) => { e.preventDefault(); openDeposit(); });
   $('#cancelDeposit').addEventListener('click', () => {
     $('#depositModal').classList.remove('active');
     $('#overlay').classList.remove('active');
   });
-  $('#depositAmountSelect').addEventListener('change', function(){
-    $('#customAmount').style.display = this.value === 'other' ? 'block' : 'none';
+  $$('.amount-chip').forEach(chip => {
+    chip.addEventListener('click', () => {
+      $$('.amount-chip').forEach(c => c.classList.remove('active'));
+      chip.classList.add('active');
+      selectedDepositAmount = chip.dataset.amount;
+      const customInput = $('#customAmount');
+      if (selectedDepositAmount === 'other') {
+        customInput.style.display = 'block';
+        setTimeout(() => customInput.focus(), 50);
+      } else {
+        customInput.style.display = 'none';
+        customInput.value = '';
+      }
+    });
   });
   $('#generateDeposit').addEventListener('click', async () => {
     if (botBlocked) return;
@@ -1997,10 +2106,10 @@ footer{
     const user = getCurrentUser();
     if (!user) return;
     let amount;
-    if ($('#depositAmountSelect').value === 'other') {
+    if (selectedDepositAmount === 'other') {
       amount = parseInt($('#customAmount').value, 10);
     } else {
-      amount = parseInt($('#depositAmountSelect').value, 10);
+      amount = parseInt(selectedDepositAmount, 10);
     }
     if (isNaN(amount) || amount <= 0) { showToast('Số tiền không hợp lệ!', 'error'); return; }
     if (amount > 50000000) { showToast('Số tiền vượt mức cho phép!', 'error'); return; }
@@ -2169,7 +2278,7 @@ footer{
   $('#saveShopName').addEventListener('click', async () => {
     const val = sanitizeText($('#shopNameInput').value, 40);
     if (!val) { showToast('Nhập tên cửa hàng!', 'error'); return; }
-    try{ await fbSetSettings({ shopName: val }); showToast('Đã lưu tên cửa hàng!', 'success'); }
+    try{ await fbSetSettings({ shopName: val }); showToast('Đã lưu tên cửa hàng! Toàn bộ trang sẽ tự cập nhật.', 'success'); }
     catch(e){ console.error(e); showToast('Lỗi kết nối!', 'error'); }
   });
 
