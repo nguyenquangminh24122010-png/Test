@@ -1,3 +1,4 @@
+
 <html lang="vi"><head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
@@ -92,7 +93,6 @@ h1,h2,h3,.display{ font-family:'Playfair Display',serif; }
 
 #fxCanvas{ position:fixed; inset:0; pointer-events:none; z-index:2; opacity:0.45; }
 
-/* ===================== TOP NAVBAR (compact, app-style) ===================== */
 .navbar{
   display:flex; flex-wrap:wrap; justify-content:space-between; align-items:center;
   padding:0.8rem 4%; background:rgba(11,12,16,0.9); backdrop-filter:blur(14px);
@@ -108,14 +108,11 @@ h1,h2,h3,.display{ font-family:'Playfair Display',serif; }
 .logo .mark{ color:var(--gold-bright); }
 .logo .rest{ color:var(--ink); font-weight:500; }
 .nav-links{ display:none; }
-.navbar-balance-slot{
-  display:flex; align-items:center; flex:none;
-}
+.navbar-balance-slot{ display:flex; align-items:center; flex:none; }
 .header-actions{
   display:flex; align-items:center; gap:0.5rem; flex-wrap:nowrap; justify-content:flex-start;
   overflow-x:auto; scrollbar-width:none; -ms-overflow-style:none;
-  width:100%; order:3;
-  padding-top:0.15rem;
+  width:100%; order:3; padding-top:0.15rem;
 }
 .header-actions::-webkit-scrollbar{ display:none; }
 .badge{
@@ -134,10 +131,7 @@ h1,h2,h3,.display{ font-family:'Playfair Display',serif; }
   font-family:'Inter',sans-serif;
 }
 .btn-icon:hover{ color:#1a1305; background:var(--gold-bright); border-color:var(--gold-bright); transform:translateY(-2px); box-shadow:var(--shadow-md); }
-.btn-icon.btn-deposit-highlight{
-  background:linear-gradient(135deg, var(--gold-bright), var(--gold-deep));
-  color:#1a1305; border-color:transparent;
-}
+.btn-icon.btn-deposit-highlight{ background:linear-gradient(135deg, var(--gold-bright), var(--gold-deep)); color:#1a1305; border-color:transparent; }
 .btn-icon.btn-deposit-highlight:hover{ filter:brightness(1.08); }
 .balance{ font-weight:700; color:#1a1305; font-size:0.76rem; font-family:'Playfair Display',serif;
   background:linear-gradient(135deg, var(--gold-bright), var(--gold-deep)); padding:0.45rem 0.8rem; border-radius:999px; box-shadow:var(--shadow-sm); letter-spacing:0.01em;
@@ -152,7 +146,6 @@ h1,h2,h3,.display{ font-family:'Playfair Display',serif; }
 .section-title{ font-size:1.7rem; font-weight:700; color:var(--ink); margin-bottom:0.5rem; letter-spacing:-0.01em; }
 .section-sub{ color:var(--ink-soft); font-size:0.88rem; max-width:520px; margin:0 auto; }
 
-/* ===================== FILTER CHIPS ===================== */
 .filter-bar{
   display:flex; gap:0.55rem; flex-wrap:nowrap; padding:0.9rem 4% 0.3rem;
   position:relative; z-index:1; overflow-x:auto; scrollbar-width:none; -ms-overflow-style:none;
@@ -185,17 +178,10 @@ h1,h2,h3,.display{ font-family:'Playfair Display',serif; }
 .lb-amount{ font-family:'Playfair Display',serif; font-weight:800; color:var(--gold-bright); }
 .lb-discount-note{ font-size:0.72rem; color:var(--success); font-weight:700; margin-top:0.6rem; }
 
-/* ===================== PRODUCT SECTIONS (category rows, app-style) ===================== */
 #productsContainer{ position:relative; z-index:1; padding:0.6rem 0 2.2rem; max-width:1320px; margin:0 auto; }
 .category-section{ margin-bottom:1.6rem; }
-.category-section-head{
-  display:flex; align-items:center; justify-content:space-between;
-  padding:0 4%; margin-bottom:0.7rem;
-}
-.category-section-head h3{
-  font-family:'Playfair Display',serif; font-size:1.12rem; color:var(--ink);
-  display:flex; align-items:center; gap:0.5rem; font-weight:700;
-}
+.category-section-head{ display:flex; align-items:center; justify-content:space-between; padding:0 4%; margin-bottom:0.7rem; }
+.category-section-head h3{ font-family:'Playfair Display',serif; font-size:1.12rem; color:var(--ink); display:flex; align-items:center; gap:0.5rem; font-weight:700; }
 .category-section-head h3 .cat-emoji{ font-size:1.1rem; }
 .category-section-head .see-all{
   font-size:0.74rem; color:var(--gold-bright); font-weight:700; cursor:pointer;
@@ -209,9 +195,7 @@ h1,h2,h3,.display{ font-family:'Playfair Display',serif; }
   scroll-snap-type:x proximity; scrollbar-width:none; -ms-overflow-style:none;
 }
 .products-grid::-webkit-scrollbar{ display:none; }
-.products-grid.grid-mode{
-  display:grid; grid-template-columns:repeat(auto-fit,minmax(160px,1fr)); overflow-x:visible; scroll-snap-type:none;
-}
+.products-grid.grid-mode{ display:grid; grid-template-columns:repeat(auto-fit,minmax(160px,1fr)); overflow-x:visible; scroll-snap-type:none; }
 .product-card{
   background:linear-gradient(180deg, var(--card), var(--panel)); border-radius:var(--radius-card); overflow:hidden;
   box-shadow:var(--shadow-sm); transition:transform var(--t-smooth), box-shadow var(--t-smooth), border-color var(--t-smooth);
@@ -240,12 +224,8 @@ h1,h2,h3,.display{ font-family:'Playfair Display',serif; }
 .stock-tag.low{ background:rgba(240,193,75,0.16); color:var(--warning); border:1px solid rgba(240,193,75,0.4); }
 .stock-tag.out{ background:rgba(255,93,108,0.16); color:var(--danger); border:1px solid rgba(255,93,108,0.4); }
 .product-info{ padding:0.75rem 0.8rem 0.9rem; display:flex; flex-direction:column; flex:1; }
-.product-title{
-  font-family:'Playfair Display',serif; font-size:0.92rem; font-weight:700; margin-bottom:0.15rem; color:var(--ink);
-  display:-webkit-box; -webkit-line-clamp:1; -webkit-box-orient:vertical; overflow:hidden;
-}
-.product-author{ font-size:0.68rem; color:var(--gold); margin-bottom:0.4rem; font-weight:600;
-  min-height:1.1em; display:-webkit-box; -webkit-line-clamp:1; -webkit-box-orient:vertical; overflow:hidden; }
+.product-title{ font-family:'Playfair Display',serif; font-size:0.92rem; font-weight:700; margin-bottom:0.15rem; color:var(--ink); display:-webkit-box; -webkit-line-clamp:1; -webkit-box-orient:vertical; overflow:hidden; }
+.product-author{ font-size:0.68rem; color:var(--gold); margin-bottom:0.4rem; font-weight:600; min-height:1.1em; display:-webkit-box; -webkit-line-clamp:1; -webkit-box-orient:vertical; overflow:hidden; }
 .product-desc{ display:none; }
 .price{ font-family:'Playfair Display',serif; font-size:1.02rem; font-weight:800; color:var(--gold-bright); margin-bottom:0.6rem; }
 .buy-btn{
@@ -257,38 +237,23 @@ h1,h2,h3,.display{ font-family:'Playfair Display',serif; }
 .buy-btn:hover{ filter:brightness(1.08); transform:translateY(-2px); box-shadow:var(--shadow-sm); }
 .buy-btn:disabled{ background:var(--line); color:var(--ink-faint); cursor:not-allowed; transform:none; }
 
-#btnCheckout{
-  width:100%;
-  padding:1.1rem 1.5rem;
-  min-height:54px;
-  font-size:1rem;
-  border-radius:12px;
-  box-shadow:var(--shadow-md);
-}
+#btnCheckout{ width:100%; padding:1.1rem 1.5rem; min-height:54px; font-size:1rem; border-radius:12px; box-shadow:var(--shadow-md); }
 
 .empty-state{ text-align:center; padding:3rem 1.5rem; color:var(--ink-soft); font-size:1rem; }
 
-footer{
-  text-align:center; padding:1.4rem; color:var(--ink-faint); font-size:0.72rem;
-  border-top:1px solid var(--line); margin-top:0.5rem; position:relative; z-index:1;
-  letter-spacing:0.03em;
-}
+footer{ text-align:center; padding:1.4rem; color:var(--ink-faint); font-size:0.72rem; border-top:1px solid var(--line); margin-top:0.5rem; position:relative; z-index:1; letter-spacing:0.03em; }
 
-/* ===================== BOTTOM APP NAV ===================== */
 .bottom-nav{
   position:fixed; left:0; right:0; bottom:0; z-index:190;
   display:flex; justify-content:space-around; align-items:stretch;
   background:rgba(11,12,16,0.96); backdrop-filter:blur(16px);
-  border-top:1px solid var(--line);
-  height:var(--bottom-nav-h);
-  box-shadow:0 -8px 28px rgba(0,0,0,0.4);
-  padding-bottom:env(safe-area-inset-bottom, 0);
+  border-top:1px solid var(--line); height:var(--bottom-nav-h);
+  box-shadow:0 -8px 28px rgba(0,0,0,0.4); padding-bottom:env(safe-area-inset-bottom, 0);
 }
 .bottom-nav-item{
   flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center;
   gap:0.2rem; background:none; border:none; color:var(--ink-faint); font-size:0.68rem;
-  font-weight:700; cursor:pointer; position:relative; letter-spacing:0.01em;
-  transition:color var(--t-fast);
+  font-weight:700; cursor:pointer; position:relative; letter-spacing:0.01em; transition:color var(--t-fast);
 }
 .bottom-nav-item:hover, .bottom-nav-item.active{ color:var(--gold-bright); }
 .bottom-nav-item .bn-badge{
@@ -306,51 +271,31 @@ footer{
 .cart-sidebar{ overflow-y:hidden; padding-bottom:0; }
 .cart-items-scroll{ flex:1; overflow-y:auto; min-height:0; padding-right:0.2rem; }
 .cart-footer{
-  flex:none; display:flex; flex-direction:column; gap:0.4rem;
+  flex:none; display:flex; flex-direction:column; gap:0.5rem;
   padding:1rem 0 1.5rem; margin:0 -1.6rem; padding-left:1.6rem; padding-right:1.6rem;
   background:linear-gradient(180deg, transparent, var(--bg-deep) 22%);
   border-top:1px solid var(--line); box-shadow:0 -12px 24px -12px rgba(0,0,0,0.5);
 }
 .admin-sidebar{ border-left:3px solid var(--gold); width:460px; }
 .admin-sidebar.active,.cart-sidebar.active{ right:0; }
-.close-btn{
-  background:none; border:none; font-size:1.6rem; cursor:pointer; color:var(--ink-soft);
-  transition:color var(--t-fast); line-height:1; font-family:'Playfair Display',serif;
-}
+.close-btn{ background:none; border:none; font-size:1.6rem; cursor:pointer; color:var(--ink-soft); transition:color var(--t-fast); line-height:1; font-family:'Playfair Display',serif; }
 .close-btn:hover{ color:var(--gold-bright); }
-.admin-header,.cart-header{
-  display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid var(--line); padding-bottom:0.8rem;
-}
+.admin-header,.cart-header{ display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid var(--line); padding-bottom:0.8rem; }
 .admin-header h2,.cart-header h3{ font-family:'Playfair Display',serif; }
 .admin-tabs{ display:flex; gap:0.4rem; margin:0.4rem 0; flex-wrap:wrap; }
-.admin-tab{
-  padding:0.45rem 0.95rem; border-radius:999px; background:var(--panel); color:var(--ink-soft);
-  cursor:pointer; font-size:0.74rem; font-weight:700; transition:all var(--t-fast); border:1px solid var(--line);
-}
+.admin-tab{ padding:0.45rem 0.95rem; border-radius:999px; background:var(--panel); color:var(--ink-soft); cursor:pointer; font-size:0.74rem; font-weight:700; transition:all var(--t-fast); border:1px solid var(--line); }
 .admin-tab.active{ background:linear-gradient(135deg, var(--gold-bright), var(--gold-deep)); color:#1a1305; border-color:transparent; }
 .admin-section{ display:none; }
 .admin-section.active{ display:block; animation:adminFadeIn 0.25s ease; }
 @keyframes adminFadeIn{ from{ opacity:0; transform:translateY(4px);} to{ opacity:1; transform:translateY(0);} }
 .admin-section h4{ font-family:'Playfair Display',serif; margin-bottom:0.7rem; color:var(--gold-bright); font-size:1.08rem; padding-bottom:0.5rem; border-bottom:1px solid var(--line-soft); }
 .admin-section h5{ font-family:'Playfair Display',serif; font-size:0.95rem; margin:0.9rem 0 0.4rem; color:var(--ink-soft); }
-.admin-block{
-  background:var(--panel); border:1px solid var(--line); border-radius:14px; padding:1.1rem 1.1rem 1.2rem;
-  margin-bottom:1.1rem; box-shadow:var(--shadow-sm);
-}
-.admin-block-title{
-  font-family:'Playfair Display',serif; color:var(--gold-bright); font-size:0.98rem; font-weight:700;
-  margin-bottom:0.35rem; display:flex; align-items:center; gap:0.45rem;
-}
-.admin-count-pill{
-  background:var(--panel-2); color:var(--ink-soft); border:1px solid var(--line); border-radius:999px;
-  font-size:0.66rem; font-weight:800; padding:0.15rem 0.55rem; margin-left:auto;
-}
+.admin-block{ background:var(--panel); border:1px solid var(--line); border-radius:14px; padding:1.1rem 1.1rem 1.2rem; margin-bottom:1.1rem; box-shadow:var(--shadow-sm); }
+.admin-block-title{ font-family:'Playfair Display',serif; color:var(--gold-bright); font-size:0.98rem; font-weight:700; margin-bottom:0.35rem; display:flex; align-items:center; gap:0.45rem; }
+.admin-count-pill{ background:var(--panel-2); color:var(--ink-soft); border:1px solid var(--line); border-radius:999px; font-size:0.66rem; font-weight:800; padding:0.15rem 0.55rem; margin-left:auto; }
 
 .product-item-admin{
-  display:grid;
-  grid-template-columns:46px 1fr 1fr;
-  gap:0.5rem;
-  align-items:center;
+  display:grid; grid-template-columns:46px 1fr 1fr; gap:0.5rem; align-items:center;
   padding:0.9rem; background:var(--panel-2); border-radius:12px;
   margin-bottom:0.6rem; border:1px solid var(--line);
   transition:border-color var(--t-fast), box-shadow var(--t-fast);
@@ -358,8 +303,7 @@ footer{
 .product-item-admin:hover{ border-color:rgba(212,175,106,0.35); box-shadow:var(--shadow-sm); }
 .deposit-item{
   display:flex; align-items:center; padding:0.85rem 0.9rem; background:var(--panel-2); border-radius:12px;
-  margin-bottom:0.6rem; gap:0.6rem; flex-wrap:wrap; border:1px solid var(--line);
-  transition:border-color var(--t-fast);
+  margin-bottom:0.6rem; gap:0.6rem; flex-wrap:wrap; border:1px solid var(--line); transition:border-color var(--t-fast);
 }
 .deposit-item:hover{ border-color:rgba(212,175,106,0.3); }
 .product-item-admin input,.product-item-admin select,.product-item-admin textarea{
@@ -382,9 +326,7 @@ footer{
 .btn-success{ background:var(--success); color:#06251a; }
 .btn-muted{ background:var(--panel-2); color:var(--ink-soft); border:1px solid var(--line); }
 
-.toggle-row{ display:flex; align-items:center; justify-content:space-between; padding:0.85rem 1rem;
-  background:var(--panel-2); border:1px solid var(--line); border-radius:12px; margin-bottom:0.6rem;
-  transition:border-color var(--t-fast); }
+.toggle-row{ display:flex; align-items:center; justify-content:space-between; padding:0.85rem 1rem; background:var(--panel-2); border:1px solid var(--line); border-radius:12px; margin-bottom:0.6rem; transition:border-color var(--t-fast); }
 .toggle-row:hover{ border-color:rgba(212,175,106,0.3); }
 .toggle-row span{ font-weight:600; font-size:0.86rem; }
 .switch{ position:relative; display:inline-block; width:46px; height:26px; flex:none; }
@@ -396,10 +338,7 @@ footer{
 
 .help-text{ font-size:0.74rem; color:var(--ink-faint); margin-top:-0.3rem; margin-bottom:0.6rem; line-height:1.5; }
 
-.overlay{
-  position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(4,5,7,0.6);
-  z-index:150; opacity:0; visibility:hidden; transition:all var(--t-smooth); backdrop-filter:blur(3px);
-}
+.overlay{ position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(4,5,7,0.6); z-index:150; opacity:0; visibility:hidden; transition:all var(--t-smooth); backdrop-filter:blur(3px); }
 .overlay.active{ opacity:1; visibility:visible; }
 
 .modal{
@@ -407,8 +346,7 @@ footer{
   background:var(--bg-deep); border-radius:var(--radius-modal); padding:2.2rem; z-index:300;
   width:90%; max-width:430px; box-shadow:var(--shadow-lg);
   opacity:0; visibility:hidden; transition:all var(--t-smooth); text-align:center;
-  border:1px solid var(--line);
-  max-height:88vh; overflow-y:auto;
+  border:1px solid var(--line); max-height:88vh; overflow-y:auto;
 }
 .modal.active{ opacity:1; visibility:visible; transform:translate(-50%,-50%) scale(1); }
 .modal h3{ font-family:'Playfair Display',serif; font-size:1.4rem; margin-bottom:0.3rem; color:var(--gold-bright); }
@@ -420,15 +358,11 @@ footer{
 .modal-buttons{ display:flex; gap:0.8rem; justify-content:center; margin-top:1.1rem; flex-wrap:wrap; }
 .btn-primary{
   background:linear-gradient(135deg, var(--gold-bright), var(--gold-deep)); color:#1a1305; padding:0.65rem 1.55rem; border-radius:var(--radius-btn);
-  border:none; font-weight:800; cursor:pointer; transition:all var(--t-fast); font-size:0.84rem;
-  letter-spacing:0.02em;
+  border:none; font-weight:800; cursor:pointer; transition:all var(--t-fast); font-size:0.84rem; letter-spacing:0.02em;
 }
 .btn-primary:hover{ filter:brightness(1.08); transform:translateY(-2px); box-shadow:var(--shadow-sm); }
 .btn-primary:disabled{ opacity:0.5; cursor:not-allowed; transform:none; }
-.btn-secondary{
-  background:var(--panel); color:var(--ink); padding:0.65rem 1.55rem; border-radius:var(--radius-btn);
-  border:1px solid var(--line); font-weight:700; cursor:pointer; font-size:0.84rem; transition:all var(--t-fast);
-}
+.btn-secondary{ background:var(--panel); color:var(--ink); padding:0.65rem 1.55rem; border-radius:var(--radius-btn); border:1px solid var(--line); font-weight:700; cursor:pointer; font-size:0.84rem; transition:all var(--t-fast); }
 .btn-secondary:hover{ background:var(--panel-2); }
 .captcha-question{ font-family:'Playfair Display',serif; font-size:1.85rem; font-weight:700; color:var(--gold-bright); margin:1rem 0; }
 .deposit-qr-box{ display:flex; justify-content:center; margin:0.8rem 0; }
@@ -439,10 +373,7 @@ footer{
   color:var(--ink-faint); font-size:0.8rem; background:var(--panel);
 }
 
-/* ===================== DEPOSIT MODAL — quick-tap amount grid ===================== */
-.amount-grid{
-  display:grid; grid-template-columns:repeat(2, 1fr); gap:0.6rem; margin:0.8rem 0 0.2rem;
-}
+.amount-grid{ display:grid; grid-template-columns:repeat(2, 1fr); gap:0.6rem; margin:0.8rem 0 0.2rem; }
 .amount-chip{
   padding:0.85rem 0.6rem; border-radius:12px; border:1.5px solid var(--line); background:var(--panel);
   color:var(--ink); font-family:'Playfair Display',serif; font-size:1rem; font-weight:700;
@@ -450,21 +381,14 @@ footer{
   display:flex; align-items:center; justify-content:center;
 }
 .amount-chip:hover{ border-color:var(--gold); transform:translateY(-2px); }
-.amount-chip.active{
-  background:linear-gradient(135deg, var(--gold-bright), var(--gold-deep)); color:#1a1305;
-  border-color:transparent; box-shadow:var(--shadow-sm);
-}
+.amount-chip.active{ background:linear-gradient(135deg, var(--gold-bright), var(--gold-deep)); color:#1a1305; border-color:transparent; box-shadow:var(--shadow-sm); }
 .amount-chip.other-chip{ grid-column:1 / -1; font-family:'Inter',sans-serif; font-size:0.9rem; }
 #customAmount{ font-size:1.1rem; font-weight:700; text-align:center; font-family:'Playfair Display',serif; }
-.deposit-summary{
-  background:var(--panel); border:1px solid var(--line); border-radius:12px; padding:0.9rem 1rem;
-  margin:0.9rem 0 0.2rem; text-align:left; font-size:0.86rem; color:var(--ink-soft);
-}
+.deposit-summary{ background:var(--panel); border:1px solid var(--line); border-radius:12px; padding:0.9rem 1rem; margin:0.9rem 0 0.2rem; text-align:left; font-size:0.86rem; color:var(--ink-soft); }
 .deposit-summary strong{ color:var(--gold-bright); font-family:'Playfair Display',serif; font-size:1.15rem; }
 .deposit-info-row{
   display:flex; align-items:center; justify-content:space-between; gap:0.7rem;
-  background:var(--panel); border:1px solid var(--line); border-radius:10px; padding:0.85rem 1rem; margin-top:0.7rem;
-  text-align:left;
+  background:var(--panel); border:1px solid var(--line); border-radius:10px; padding:0.85rem 1rem; margin-top:0.7rem; text-align:left;
 }
 .deposit-info-row .label{ font-size:0.7rem; text-transform:uppercase; letter-spacing:0.06em; color:var(--ink-soft); font-weight:700; margin-bottom:0.25rem; }
 .deposit-info-row .value{ font-family:'Playfair Display',serif; font-size:1.15rem; font-weight:800; color:var(--gold-bright); word-break:break-all; }
@@ -490,8 +414,7 @@ footer{
   position:fixed; bottom:calc(var(--bottom-nav-h) + 1rem); left:50%; transform:translateX(-50%) translateY(20px);
   background:var(--success); color:#06251a; padding:0.8rem 1.9rem; border-radius:999px;
   z-index:400; box-shadow:var(--shadow-md); font-weight:700;
-  opacity:0; visibility:hidden; transition:all 0.3s; font-size:0.85rem;
-  max-width:88vw; text-align:center;
+  opacity:0; visibility:hidden; transition:all 0.3s; font-size:0.85rem; max-width:88vw; text-align:center;
 }
 .toast.show{ opacity:1; visibility:visible; transform:translateX(-50%) translateY(0); }
 
@@ -502,29 +425,16 @@ footer{
 .order-success-modal{ max-width:440px; text-align:left; }
 .order-success-icon{
   width:60px; height:60px; border-radius:50%; background:var(--success); color:#06251a;
-  display:flex; align-items:center; justify-content:center; font-size:1.8rem; margin:0 auto 1rem;
-  box-shadow:var(--shadow-md); font-weight:800;
+  display:flex; align-items:center; justify-content:center; font-size:1.8rem; margin:0 auto 1rem; box-shadow:var(--shadow-md); font-weight:800;
 }
 .order-success-modal h3{ text-align:center; }
-.order-note-box{
-  background:var(--panel); border:1px solid var(--line); border-radius:10px; padding:1rem 1.1rem;
-  margin:1rem 0; font-size:0.9rem; color:var(--ink); line-height:1.65; white-space:pre-wrap;
-}
-.order-contact-row{
-  display:flex; align-items:center; justify-content:space-between; gap:0.8rem;
-  background:var(--panel); border:1px solid var(--line); border-radius:10px; padding:0.8rem 1rem; margin-top:0.5rem;
-}
+.order-note-box{ background:var(--panel); border:1px solid var(--line); border-radius:10px; padding:1rem 1.1rem; margin:1rem 0; font-size:0.9rem; color:var(--ink); line-height:1.65; white-space:pre-wrap; }
+.order-contact-row{ display:flex; align-items:center; justify-content:space-between; gap:0.8rem; background:var(--panel); border:1px solid var(--line); border-radius:10px; padding:0.8rem 1rem; margin-top:0.5rem; }
 .order-contact-row .label{ font-size:0.72rem; text-transform:uppercase; letter-spacing:0.06em; color:var(--ink-soft); font-weight:700; }
 .order-contact-row .phone{ font-family:'Playfair Display',serif; font-size:1.12rem; font-weight:800; color:var(--gold-bright); }
-.copy-phone-btn{
-  background:linear-gradient(135deg, var(--gold-bright), var(--gold-deep)); color:#1a1305; border:none; padding:0.4rem 0.85rem; border-radius:6px;
-  font-size:0.74rem; font-weight:800; cursor:pointer; transition:all var(--t-fast);
-}
+.copy-phone-btn{ background:linear-gradient(135deg, var(--gold-bright), var(--gold-deep)); color:#1a1305; border:none; padding:0.4rem 0.85rem; border-radius:6px; font-size:0.74rem; font-weight:800; cursor:pointer; transition:all var(--t-fast); }
 .copy-phone-btn:hover{ filter:brightness(1.08); }
-.copy-inline-btn{
-  background:var(--panel-2); color:var(--gold-bright); border:1px solid var(--line); padding:0.4rem 0.8rem; border-radius:8px;
-  font-size:0.72rem; font-weight:800; cursor:pointer; transition:all var(--t-fast); flex:none;
-}
+.copy-inline-btn{ background:var(--panel-2); color:var(--gold-bright); border:1px solid var(--line); padding:0.4rem 0.8rem; border-radius:8px; font-size:0.72rem; font-weight:800; cursor:pointer; transition:all var(--t-fast); flex:none; }
 .copy-inline-btn:hover{ border-color:var(--gold); background:var(--panel); }
 
 .history-item{ background:var(--panel); border:1px solid var(--line); padding:0.8rem; border-radius:10px; margin-bottom:0.6rem; cursor:pointer; transition:border-color var(--t-fast); }
@@ -533,16 +443,14 @@ footer{
 
 #devtoolsWarning{
   position:fixed; inset:0; z-index:999; background:var(--bg-deep); color:var(--ink);
-  display:none; align-items:center; justify-content:center; text-align:center; padding:2rem;
-  font-family:'Playfair Display',serif; font-size:1.1rem;
+  display:none; align-items:center; justify-content:center; text-align:center; padding:2rem; font-family:'Playfair Display',serif; font-size:1.1rem;
 }
 
 .customer-search-row{ display:flex; gap:0.5rem; margin-bottom:0.9rem; }
 .customer-search-row input{ flex:1; padding:0.6rem 0.8rem; border:1px solid var(--line); border-radius:8px; background:var(--panel); color:var(--ink); font-family:'Inter',sans-serif; }
 .customer-row{
   display:flex; align-items:center; justify-content:space-between; gap:0.6rem;
-  background:var(--panel-2); border:1px solid var(--line); border-radius:12px; padding:0.75rem 0.9rem; margin-bottom:0.55rem; cursor:pointer;
-  transition:border-color var(--t-fast);
+  background:var(--panel-2); border:1px solid var(--line); border-radius:12px; padding:0.75rem 0.9rem; margin-bottom:0.55rem; cursor:pointer; transition:border-color var(--t-fast);
 }
 .customer-row:hover{ border-color:var(--gold); }
 .customer-row .cname{ font-weight:700; }
@@ -552,9 +460,33 @@ footer{
 .customer-detail-box .row:last-child{ border-bottom:none; }
 .customer-purchase-item{ background:var(--panel); border-radius:8px; padding:0.6rem 0.7rem; margin-top:0.5rem; font-size:0.8rem; }
 
-@media (max-width:900px){
-  .product-item-admin{ grid-template-columns:46px 1fr; }
+/* ===================== VOUCHER ===================== */
+.voucher-row{ display:flex; gap:0.5rem; margin-bottom:0.1rem; }
+.voucher-row input{
+  flex:1; padding:0.65rem 0.8rem; border:1.5px solid var(--line); border-radius:10px;
+  background:var(--panel); color:var(--ink); font-family:'Inter',sans-serif; font-weight:700;
+  text-transform:uppercase; letter-spacing:0.03em; font-size:0.85rem; transition:border-color var(--t-fast);
 }
+.voucher-row input:focus{ outline:none; border-color:var(--gold); }
+.voucher-row .btn-sm{ flex:none; white-space:nowrap; }
+#voucherStatus{ font-size:0.76rem; font-weight:600; min-height:1.1em; line-height:1.5; }
+#voucherStatus a{ cursor:pointer; text-decoration:underline; margin-left:0.4rem; }
+.voucher-admin-row{
+  display:grid; grid-template-columns:1.1fr 0.7fr 0.9fr auto; gap:0.5rem; align-items:center;
+  padding:0.85rem 0.9rem; background:var(--panel-2); border:1px solid var(--line); border-radius:12px;
+  margin-bottom:0.6rem; transition:border-color var(--t-fast);
+}
+.voucher-admin-row:hover{ border-color:rgba(212,175,106,0.3); }
+.voucher-admin-row input{
+  padding:0.5rem 0.6rem; border:1px solid var(--line); border-radius:8px; font-size:0.82rem; background:var(--bg);
+  font-family:'Inter',sans-serif; color:var(--ink); width:100%;
+}
+.voucher-code-cell strong{ font-family:'Playfair Display',serif; color:var(--gold-bright); letter-spacing:0.03em; }
+.voucher-code-cell .vmeta{ font-size:0.68rem; color:var(--ink-faint); margin-top:0.15rem; }
+.voucher-actions-cell{ display:flex; align-items:center; gap:0.5rem; }
+@media (max-width:900px){ .voucher-admin-row{ grid-template-columns:1fr 1fr; } }
+
+@media (max-width:900px){ .product-item-admin{ grid-template-columns:46px 1fr; } }
 @media (min-width:601px){
   .products-grid{ flex-wrap:wrap; overflow-x:visible; scroll-snap-type:none; }
   .product-card{ flex:0 0 200px; width:200px; }
@@ -568,16 +500,12 @@ footer{
   .amount-grid{ grid-template-columns:repeat(2, 1fr); }
   .amount-chip{ font-size:0.92rem; min-height:52px; }
   .admin-sidebar{ padding:1.4rem 1.1rem; }
+  .voucher-admin-row{ grid-template-columns:1fr; }
 }
-@media (prefers-reduced-motion: reduce){
-  *{ scroll-behavior:auto !important; }
-}
+@media (prefers-reduced-motion: reduce){ *{ scroll-behavior:auto !important; } }
 
-/* ===== Hiệu ứng cuộn/vuốt cho sản phẩm (giữ nguyên, áp dụng cho card ngang) ===== */
 .product-card{
-  opacity:0;
-  transform:translateY(30px) scale(0.96);
-  filter:blur(4px);
+  opacity:0; transform:translateY(30px) scale(0.96); filter:blur(4px);
   transition:
     opacity 0.6s cubic-bezier(.19,1,.22,1),
     transform 0.6s cubic-bezier(.19,1,.22,1),
@@ -586,40 +514,15 @@ footer{
     border-color var(--t-smooth);
   will-change:transform, opacity, filter;
 }
-.product-card.reveal-up{
-  opacity:1;
-  transform:translateY(0) scale(1);
-  filter:blur(0);
-}
-.product-card.reveal-hide-up{
-  opacity:0;
-  transform:translateY(-24px) scale(0.97);
-  filter:blur(3px);
-}
-.product-card.reveal-hide-down{
-  opacity:0;
-  transform:translateY(24px) scale(0.97);
-  filter:blur(3px);
-}
-.product-card:active{
-  transform:scale(0.985);
-}
-.product-card .product-img{
-  transition:transform 0.6s cubic-bezier(.19,1,.22,1);
-}
-.product-card.reveal-up:hover .product-img,
-.product-card.reveal-up:active .product-img{
-  transform:scale(1.035);
-}
-.product-card .product-img img{
-  transition:transform 0.7s cubic-bezier(.19,1,.22,1), filter 0.7s ease;
-}
-.product-card:hover .product-img img{
-  transform:scale(1.08);
-}
-@media (prefers-reduced-motion: reduce){
-  .product-card{ opacity:1 !important; transform:none !important; filter:none !important; transition:none !important; }
-}
+.product-card.reveal-up{ opacity:1; transform:translateY(0) scale(1); filter:blur(0); }
+.product-card.reveal-hide-up{ opacity:0; transform:translateY(-24px) scale(0.97); filter:blur(3px); }
+.product-card.reveal-hide-down{ opacity:0; transform:translateY(24px) scale(0.97); filter:blur(3px); }
+.product-card:active{ transform:scale(0.985); }
+.product-card .product-img{ transition:transform 0.6s cubic-bezier(.19,1,.22,1); }
+.product-card.reveal-up:hover .product-img, .product-card.reveal-up:active .product-img{ transform:scale(1.035); }
+.product-card .product-img img{ transition:transform 0.7s cubic-bezier(.19,1,.22,1), filter 0.7s ease; }
+.product-card:hover .product-img img{ transform:scale(1.08); }
+@media (prefers-reduced-motion: reduce){ .product-card{ opacity:1 !important; transform:none !important; filter:none !important; transition:none !important; } }
 </style>
 </head>
 <body>
@@ -637,9 +540,7 @@ footer{
 
 <nav class="navbar">
   <div class="logo" id="shopLogo"><span class="mark">nminh</span><span class="rest">shop</span></div>
-  <div class="navbar-balance-slot">
-    <span class="balance" id="balanceDisplay">0₫</span>
-  </div>
+  <div class="navbar-balance-slot"><span class="balance" id="balanceDisplay">0₫</span></div>
   <div class="header-actions">
     <button class="btn-icon btn-deposit-highlight" id="btnCart" aria-label="Giỏ hàng" title="Giỏ hàng">Giỏ hàng<span class="badge" id="cartBadge">0</span></button>
     <button class="btn-icon" id="btnHistory" aria-label="Lịch sử mua hàng" title="Lịch sử">Lịch sử</button>
@@ -674,22 +575,11 @@ footer{
 <footer>© 2026 <span id="footerShopName">nminhshop</span> — Mọi giao dịch được bảo mật.</footer>
 
 <nav class="bottom-nav" id="bottomNav">
-  <button class="bottom-nav-item active" id="bnHome">
-    <span class="bn-text">Trang chủ</span>
-  </button>
-  <button class="bottom-nav-item" id="bnCategories">
-    <span class="bn-text">Danh mục</span>
-  </button>
-  <button class="bottom-nav-item" id="bnCart">
-    <span class="bn-text">Giỏ hàng</span>
-    <span class="bn-badge" id="bnCartBadge">0</span>
-  </button>
-  <button class="bottom-nav-item" id="bnDeposit">
-    <span class="bn-text">Nạp tiền</span>
-  </button>
-  <button class="bottom-nav-item" id="bnAccount">
-    <span class="bn-text">Tài khoản</span>
-  </button>
+  <button class="bottom-nav-item active" id="bnHome"><span class="bn-text">Trang chủ</span></button>
+  <button class="bottom-nav-item" id="bnCategories"><span class="bn-text">Danh mục</span></button>
+  <button class="bottom-nav-item" id="bnCart"><span class="bn-text">Giỏ hàng</span><span class="bn-badge" id="bnCartBadge">0</span></button>
+  <button class="bottom-nav-item" id="bnDeposit"><span class="bn-text">Nạp tiền</span></button>
+  <button class="bottom-nav-item" id="bnAccount"><span class="bn-text">Tài khoản</span></button>
 </nav>
 
 <div class="overlay" id="overlay"></div>
@@ -756,17 +646,11 @@ footer{
     <div id="depositQrPlaceholder" class="deposit-qr-placeholder">Admin chưa tải ảnh QR. Vui lòng chuyển khoản theo số tài khoản và nội dung bên dưới.</div>
   </div>
   <div class="deposit-info-row">
-    <div>
-      <div class="label">Số tài khoản</div>
-      <div class="value" id="bankAccountDisplay">—</div>
-    </div>
+    <div><div class="label">Số tài khoản</div><div class="value" id="bankAccountDisplay">—</div></div>
     <button class="copy-inline-btn" id="copyBankAccount">Sao chép</button>
   </div>
   <div class="deposit-info-row">
-    <div>
-      <div class="label">Nội dung chuyển khoản</div>
-      <div class="value" id="randomCodeDisplay"></div>
-    </div>
+    <div><div class="label">Nội dung chuyển khoản</div><div class="value" id="randomCodeDisplay"></div></div>
     <button class="copy-inline-btn" id="copyRandomCode">Sao chép</button>
   </div>
   <p style="color:var(--gold-bright); font-size:0.85rem; margin-top:0.7rem;">⚠️ Quét mã QR hoặc chuyển khoản đúng số tiền và đúng nội dung ở trên.</p>
@@ -780,10 +664,7 @@ footer{
   <h3>Xác nhận giao dịch</h3>
   <p style="color:var(--ink-soft);">Yêu cầu nạp của bạn đã được ghi nhận và đang chờ quản trị viên duyệt.</p>
   <div class="order-contact-row" style="margin-top:1.1rem;">
-    <div>
-      <div class="label">Liên hệ hỗ trợ</div>
-      <div class="phone" id="depositContactPhone">—</div>
-    </div>
+    <div><div class="label">Liên hệ hỗ trợ</div><div class="phone" id="depositContactPhone">—</div></div>
     <button class="copy-phone-btn" id="copyDepositPhone">Sao chép</button>
   </div>
   <button class="btn-primary" id="closeZaloModal" style="margin-top:1.1rem; width:100%;">Đã hiểu</button>
@@ -796,10 +677,7 @@ footer{
   <div class="order-note-box" id="orderNoteBox"></div>
   <button class="copy-phone-btn" id="copyOrderNote" style="margin-bottom:0.6rem;">Sao chép nội dung/key</button>
   <div class="order-contact-row">
-    <div>
-      <div class="label">Liên hệ nhận hàng</div>
-      <div class="phone" id="orderContactPhone">—</div>
-    </div>
+    <div><div class="label">Liên hệ nhận hàng</div><div class="phone" id="orderContactPhone">—</div></div>
     <button class="copy-phone-btn" id="copyOrderPhone">Sao chép</button>
   </div>
   <button class="btn-primary" id="closeOrderSuccess" style="margin-top:1.2rem; width:100%;">Đã hiểu, đóng lại</button>
@@ -856,6 +734,7 @@ footer{
     <button class="admin-tab active" data-tab="tabProducts">Sản phẩm</button>
     <button class="admin-tab" data-tab="tabCategories">Danh mục</button>
     <button class="admin-tab" data-tab="tabDeposits">Yêu cầu nạp</button>
+    <button class="admin-tab" data-tab="tabVouchers">Voucher</button>
     <button class="admin-tab" data-tab="tabCustomers">Khách hàng</button>
     <button class="admin-tab" data-tab="tabLeaderboard">Top nạp</button>
     <button class="admin-tab" data-tab="tabStyle">Cài đặt</button>
@@ -904,12 +783,25 @@ footer{
     <div id="depositHistoryList"></div>
   </div>
 
+  <div id="tabVouchers" class="admin-section">
+    <h4>Mã giảm giá (Voucher)</h4>
+    <p class="help-text">Tạo mã giảm giá, đặt phần trăm giảm và số lượt tối đa được sử dụng. Mỗi khách chỉ dùng được mỗi mã 1 lần. Giảm giá voucher sẽ cộng thêm vào giảm giá Top nạp tiền (nếu có), tối đa 90%.</p>
+    <div id="adminVoucherList"></div>
+    <div class="admin-block">
+      <div class="admin-block-title">+ Thêm mã mới</div>
+      <div class="product-item-admin" style="grid-template-columns:1fr; background:transparent; border:none; padding:0; margin-bottom:0;">
+        <input placeholder="Mã voucher (vd: SALE10)" id="newVoucherCode" maxlength="20" style="text-transform:uppercase;">
+        <input placeholder="% giảm giá (1-90)" id="newVoucherPercent" type="number" min="1" max="90">
+        <input placeholder="Số lượt sử dụng tối đa" id="newVoucherMax" type="number" min="1" max="100000">
+        <button class="btn-sm btn-success" id="addVoucher">+ Thêm mã</button>
+      </div>
+    </div>
+  </div>
+
   <div id="tabCustomers" class="admin-section">
     <h4>Quản lý khách hàng</h4>
     <p class="help-text">Tìm kiếm theo tên đăng nhập để xem số dư, lịch sử mua hàng, hoặc xoá tài khoản.</p>
-    <div class="customer-search-row">
-      <input type="text" id="customerSearchInput" placeholder="Tìm theo tên đăng nhập...">
-    </div>
+    <div class="customer-search-row"><input type="text" id="customerSearchInput" placeholder="Tìm theo tên đăng nhập..."></div>
     <div id="customerList"></div>
     <div id="customerDetailBox"></div>
   </div>
@@ -917,17 +809,13 @@ footer{
   <div id="tabLeaderboard" class="admin-section">
     <div class="admin-block">
       <div class="admin-block-title">Bảng xếp hạng top nạp tiền</div>
-      <div class="toggle-row">
-        <span>Hiển thị bảng xếp hạng cho khách</span>
-        <label class="switch"><input type="checkbox" id="toggleLeaderboard"><span class="slider"></span></label>
-      </div>
+      <div class="toggle-row"><span>Hiển thị bảng xếp hạng cho khách</span><label class="switch"><input type="checkbox" id="toggleLeaderboard"><span class="slider"></span></label></div>
       <p class="help-text">Xếp hạng được tính từ các yêu cầu nạp tiền đã <strong>được duyệt</strong>, tự động loại bỏ các tài khoản đã bị xoá. Chỉ admin mới xem được ở đây; khách chỉ thấy khi bạn bật công tắc trên.</p>
       <div class="lb-tabs" style="margin-bottom:0.8rem;">
         <button class="lb-tab active admin-lb-tab" data-period="week">Tuần này</button>
         <button class="lb-tab admin-lb-tab" data-period="month">Tháng này</button>
       </div>
       <div id="adminLeaderboardContent"></div>
-
       <div style="display:flex; gap:0.6rem; margin-top:1.2rem;">
         <button class="btn-sm btn-danger" id="resetLbWeek" style="flex:1;">Reset xếp hạng tuần</button>
         <button class="btn-sm btn-danger" id="resetLbMonth" style="flex:1;">Reset xếp hạng tháng</button>
@@ -937,10 +825,7 @@ footer{
 
     <div class="admin-block">
       <div class="admin-block-title">Giảm giá cho top nạp tiền</div>
-      <div class="toggle-row">
-        <span>Bật giảm giá tự động khi thanh toán</span>
-        <label class="switch"><input type="checkbox" id="toggleLbDiscount"><span class="slider"></span></label>
-      </div>
+      <div class="toggle-row"><span>Bật giảm giá tự động khi thanh toán</span><label class="switch"><input type="checkbox" id="toggleLbDiscount"><span class="slider"></span></label></div>
       <label class="auth-field-label">Áp dụng theo bảng xếp hạng</label>
       <select id="lbDiscountPeriod" style="width:100%; padding:0.55rem 0.7rem; border:1px solid var(--line); border-radius:8px; background:var(--panel-2); color:var(--ink); font-family:'Inter',sans-serif; margin-bottom:0.7rem;">
         <option value="week">Tuần</option>
@@ -981,9 +866,7 @@ footer{
     <div class="admin-block">
       <div class="admin-block-title">Ảnh QR chuyển khoản</div>
       <p class="help-text">Tải ảnh QR ngân hàng của bạn từ máy tính lên đây — ảnh sẽ hiện cho khách khi họ tạo yêu cầu nạp tiền. Không còn ảnh mã hoá cứng nào trong mã nguồn trang nữa, mọi ảnh đều do bạn tự tải lên.</p>
-      <div class="file-input-wrap" style="margin-bottom:0.6rem;">
-        <input type="file" id="qrImageFile" accept="image/*">
-      </div>
+      <div class="file-input-wrap" style="margin-bottom:0.6rem;"><input type="file" id="qrImageFile" accept="image/*"></div>
       <div id="qrImagePreviewWrap" style="margin-bottom:0.8rem; display:none;">
         <img id="qrImagePreview" style="width:140px; border-radius:10px; border:1px solid var(--line); display:block; margin-bottom:0.5rem;" alt="Xem trước QR">
         <button class="btn-sm btn-danger" id="removeQrImage">Xoá ảnh QR</button>
@@ -1001,23 +884,14 @@ footer{
     <div class="admin-block">
       <div class="admin-block-title">Hiệu ứng rơi trên nền</div>
       <p class="help-text">Hiệu ứng nhẹ, mờ, không chắn nội dung chính.</p>
-      <div class="toggle-row">
-        <span>Tuyết rơi</span>
-        <label class="switch"><input type="checkbox" id="toggleSnow"><span class="slider"></span></label>
-      </div>
-      <div class="toggle-row">
-        <span>Hoa đào rơi</span>
-        <label class="switch"><input type="checkbox" id="toggleBlossom"><span class="slider"></span></label>
-      </div>
+      <div class="toggle-row"><span>Tuyết rơi</span><label class="switch"><input type="checkbox" id="toggleSnow"><span class="slider"></span></label></div>
+      <div class="toggle-row"><span>Hoa đào rơi</span><label class="switch"><input type="checkbox" id="toggleBlossom"><span class="slider"></span></label></div>
     </div>
 
     <div class="admin-block">
       <div class="admin-block-title">Chặn thao tác sao chép mã nguồn</div>
       <p class="help-text">Bật chuột phải/phím tắt DevTools bị chặn trên trình duyệt của khách (chỉ là rào cản làm chậm, không phải bảo mật tuyệt đối — đọc mục cảnh báo bên dưới). Cảnh báo "đang mở DevTools" chỉ áp dụng trên máy tính (desktop); trên điện thoại/máy tính bảng, hệ thống sẽ không hiện cảnh báo này để tránh báo nhầm khi bạn phóng to màn hình hoặc mở bàn phím ảo.</p>
-      <div class="toggle-row">
-        <span>Chặn chuột phải &amp; phím tắt DevTools</span>
-        <label class="switch"><input type="checkbox" id="toggleAntiCopy"><span class="slider"></span></label>
-      </div>
+      <div class="toggle-row"><span>Chặn chuột phải &amp; phím tắt DevTools</span><label class="switch"><input type="checkbox" id="toggleAntiCopy"><span class="slider"></span></label></div>
     </div>
 
     <div class="admin-block" style="border-color:rgba(255,93,108,0.35);">
@@ -1037,6 +911,11 @@ footer{
   <div class="cart-header"><h3>Giỏ hàng</h3><button class="close-btn" id="closeCart">×</button></div>
   <div id="cartItems" class="cart-items-scroll">Giỏ hàng trống.</div>
   <div class="cart-footer">
+    <div class="voucher-row">
+      <input type="text" id="voucherInput" placeholder="Mã giảm giá (nếu có)" maxlength="20">
+      <button class="btn-sm btn-primary" id="btnApplyVoucher">Áp dụng</button>
+    </div>
+    <div id="voucherStatus"></div>
     <div class="cart-total" id="cartTotal">Tổng: 0₫</div>
     <div class="cart-discount-note" id="cartDiscountNote" style="display:none;"></div>
     <button class="buy-btn" id="btnCheckout">Thanh toán</button>
@@ -1097,9 +976,7 @@ footer{
   const $ = (sel) => document.querySelector(sel);
   const $$ = (sel) => document.querySelectorAll(sel);
 
-  const CATEGORY_EMOJI = {
-    'Nổi bật':'⭐','Đồ điện tử':'💻','Phụ kiện':'🎧','Khác':'📦'
-  };
+  const CATEGORY_EMOJI = { 'Nổi bật':'⭐','Đồ điện tử':'💻','Phụ kiện':'🎧','Khác':'📦' };
   function catEmoji(name){ return CATEGORY_EMOJI[name] || '🏷️'; }
 
   const IS_TOUCH_DEVICE = ('ontouchstart' in window) || (navigator.maxTouchPoints && navigator.maxTouchPoints > 0) || (navigator.msMaxTouchPoints && navigator.msMaxTouchPoints > 0);
@@ -1109,9 +986,7 @@ footer{
     let lastTarget = null;
     document.addEventListener('touchend', (e) => {
       const now = Date.now();
-      if (now - lastTouchEnd <= 350 && e.target === lastTarget) {
-        e.preventDefault();
-      }
+      if (now - lastTouchEnd <= 350 && e.target === lastTarget) { e.preventDefault(); }
       lastTouchEnd = now;
       lastTarget = e.target;
     }, { passive:false });
@@ -1129,9 +1004,8 @@ footer{
   function sanitizeText(str, maxLen){
     return String(str || '').replace(/[\u0000-\u001F\u007F]/g, '').trim().slice(0, maxLen || 200);
   }
-  function isSafeUsername(name){
-    return /^[a-zA-Z0-9_.\-]{3,24}$/.test(name);
-  }
+  function isSafeUsername(name){ return /^[a-zA-Z0-9_.\-]{3,24}$/.test(name); }
+  function isSafeVoucherCode(code){ return /^[A-Z0-9_\-]{3,20}$/.test(code); }
   function isSafeImageDataUrl(str){
     return typeof str === 'string' && /^data:image\/(png|jpe?g|webp|gif);base64,/.test(str) && str.length < 900000;
   }
@@ -1164,6 +1038,7 @@ footer{
     categories: [],
     users: [],
     depositRequests: [],
+    vouchers: [],
     settings: {
       shopName: DEFAULT_SHOP_NAME,
       bankAccount: DEFAULT_PHONE,
@@ -1176,13 +1051,19 @@ footer{
       leaderboardResetAt: {},
       leaderboardDiscount: { enabled:false, period:'week', top1:0, top2:0, top3:0 }
     },
-    ready: { products:false, categories:false, users:false, deposits:false, settings:false }
+    ready: { products:false, categories:false, users:false, deposits:false, settings:false, vouchers:false }
   };
 
   function getCurrentUser(){ return safeParse('nminhshop_currentUser', null); }
   function setCurrentUser(u){ if (u) localStorage.setItem('nminhshop_currentUser', JSON.stringify(u)); else localStorage.removeItem('nminhshop_currentUser'); }
   function getCart(userId){ return safeParse(`nminhshop_cart_${userId}`, []); }
   function saveCartLocal(userId, cart){ localStorage.setItem(`nminhshop_cart_${userId}`, JSON.stringify(cart)); }
+  function getStoredVoucherCode(userId){ return localStorage.getItem(`nminhshop_voucher_${userId}`) || ''; }
+  function setStoredVoucherCode(userId, code){
+    if (code) localStorage.setItem(`nminhshop_voucher_${userId}`, code);
+    else localStorage.removeItem(`nminhshop_voucher_${userId}`);
+  }
+  function findVoucher(code){ return STATE.vouchers.find(v => v.code === code); }
 
   function getBalance(userId){
     const user = STATE.users.find(u => u.id === userId);
@@ -1200,36 +1081,27 @@ footer{
   function renderShopName(){
     const name = (STATE.settings.shopName || DEFAULT_SHOP_NAME).trim() || DEFAULT_SHOP_NAME;
     const initials = shopInitials(name);
-    // Logo in navbar
     const logoEl = $('#shopLogo');
     if (logoEl) logoEl.innerHTML = `<span class="mark">${escapeHtml(name)}</span>`;
-    // Page title
     document.title = name + ' — Cửa Hàng Trực Tuyến';
-    // Loading screen
     const loadTitle = $('#loadTitle');
     if (loadTitle) loadTitle.textContent = name;
     const loadMark = $('#loadMark');
     if (loadMark) loadMark.textContent = initials;
-    // Footer
     const footerEl = $('#footerShopName');
     if (footerEl) footerEl.textContent = name;
-    // Hero eyebrow
     const eyebrowEl = document.querySelector('.hero .eyebrow');
     if (eyebrowEl) eyebrowEl.textContent = name + ' · cửa hàng số';
-    // Auth modal marks
     const loginMark = $('#loginMarkCircle');
     if (loginMark) loginMark.textContent = initials;
     const regMark = $('#registerMarkCircle');
     if (regMark) regMark.textContent = initials;
-    // Order success text
     $$('.order-success-shopname').forEach(el => { el.textContent = name; });
   }
 
   function getPeriodStart(period){
     const now = new Date();
-    if (period === 'month') {
-      return new Date(now.getFullYear(), now.getMonth(), 1);
-    }
+    if (period === 'month') { return new Date(now.getFullYear(), now.getMonth(), 1); }
     const day = now.getDay();
     const diffToMonday = (day === 0 ? 6 : day - 1);
     const monday = new Date(now.getFullYear(), now.getMonth(), now.getDate() - diffToMonday);
@@ -1253,9 +1125,7 @@ footer{
       .filter(r => r.status === 'approved' && existingUsernames.has(r.username))
       .forEach(r => {
         const ts = new Date(r.processedAt || r.timestamp);
-        if (ts >= start) {
-          totals[r.username] = (totals[r.username] || 0) + Number(r.amount || 0);
-        }
+        if (ts >= start) { totals[r.username] = (totals[r.username] || 0) + Number(r.amount || 0); }
       });
     return Object.entries(totals).sort((a,b) => b[1]-a[1]).slice(0, 10);
   }
@@ -1268,6 +1138,23 @@ footer{
     if (idx === 1) return Number(cfg.top2) || 0;
     if (idx === 2) return Number(cfg.top3) || 0;
     return 0;
+  }
+  function getVoucherDiscountPercent(user){
+    if (!user) return 0;
+    const code = getStoredVoucherCode(user.id);
+    if (!code) return 0;
+    const v = findVoucher(code);
+    if (!v || !v.enabled) return 0;
+    const usedBy = v.usedBy || [];
+    if (usedBy.includes(String(user.id))) return 0;
+    if (usedBy.length >= Number(v.maxUses || 0)) return 0;
+    return Number(v.percent) || 0;
+  }
+  function getCombinedDiscountPercent(user){
+    if (!user) return 0;
+    const lb = getUserDiscountPercent(user.username);
+    const vc = getVoucherDiscountPercent(user);
+    return Math.min(90, lb + vc);
   }
 
   let fb = null;
@@ -1305,18 +1192,9 @@ footer{
       return adminKeysCache[id] || [];
     }
   }
-  async function fbSetCategory(name){
-    const f = await withFb();
-    await f.setDoc(f.doc(f.db, 'categories', name), { name });
-  }
-  async function fbDeleteCategory(name){
-    const f = await withFb();
-    await f.deleteDoc(f.doc(f.db, 'categories', name));
-  }
-  async function fbSetUser(user){
-    const f = await withFb();
-    await f.setDoc(f.doc(f.db, 'users', String(user.id)), user, { merge:true });
-  }
+  async function fbSetCategory(name){ const f = await withFb(); await f.setDoc(f.doc(f.db, 'categories', name), { name }); }
+  async function fbDeleteCategory(name){ const f = await withFb(); await f.deleteDoc(f.doc(f.db, 'categories', name)); }
+  async function fbSetUser(user){ const f = await withFb(); await f.setDoc(f.doc(f.db, 'users', String(user.id)), user, { merge:true }); }
   async function fbAddUser(user){
     const f = await withFb();
     const docRef = await f.addDoc(f.collection(f.db, 'users'), user);
@@ -1328,22 +1206,12 @@ footer{
     await f.deleteDoc(f.doc(f.db, 'users', String(id)));
     try{ await f.deleteDoc(f.doc(f.db, 'carts', String(id))); }catch(e){}
   }
-  async function fbSetSettings(partial){
-    const f = await withFb();
-    await f.setDoc(f.doc(f.db, 'config', 'settings'), partial, { merge:true });
-  }
-  async function fbAddDeposit(req){
-    const f = await withFb();
-    await f.setDoc(f.doc(f.db, 'depositRequests', String(req.id)), req);
-  }
-  async function fbUpdateDeposit(id, partial){
-    const f = await withFb();
-    await f.updateDoc(f.doc(f.db, 'depositRequests', String(id)), partial);
-  }
-  async function fbSaveCart(userId, cart){
-    const f = await withFb();
-    await f.setDoc(f.doc(f.db, 'carts', String(userId)), { items: cart });
-  }
+  async function fbSetSettings(partial){ const f = await withFb(); await f.setDoc(f.doc(f.db, 'config', 'settings'), partial, { merge:true }); }
+  async function fbAddDeposit(req){ const f = await withFb(); await f.setDoc(f.doc(f.db, 'depositRequests', String(req.id)), req); }
+  async function fbUpdateDeposit(id, partial){ const f = await withFb(); await f.updateDoc(f.doc(f.db, 'depositRequests', String(id)), partial); }
+  async function fbSetVoucher(voucher){ const f = await withFb(); await f.setDoc(f.doc(f.db, 'vouchers', voucher.code), voucher, { merge:true }); }
+  async function fbDeleteVoucher(code){ const f = await withFb(); await f.deleteDoc(f.doc(f.db, 'vouchers', code)); }
+  async function fbSaveCart(userId, cart){ const f = await withFb(); await f.setDoc(f.doc(f.db, 'carts', String(userId)), { items: cart }); }
   function listenCart(userId, cb){
     if (!fb) { fbReady.then(() => listenCart(userId, cb)); return; }
     fb.onSnapshot(fb.doc(fb.db, 'carts', String(userId)), snap => {
@@ -1472,6 +1340,14 @@ footer{
       maybeHideLoading();
     }, err => { console.error('deposits:', err); STATE.ready.deposits = true; maybeHideLoading(true); });
 
+    fb.onSnapshot(fb.collection(fb.db, 'vouchers'), snap => {
+      STATE.vouchers = snap.docs.map(d => d.data());
+      STATE.ready.vouchers = true;
+      if ($('#adminSidebar').classList.contains('active')) renderAdminVouchers();
+      renderCartSidebar();
+      maybeHideLoading();
+    }, err => { console.error('vouchers:', err); STATE.ready.vouchers = true; maybeHideLoading(true); });
+
     fb.onSnapshot(fb.doc(fb.db, 'config', 'settings'), snap => {
       if (snap.exists()) STATE.settings = Object.assign({}, STATE.settings, snap.data());
       STATE.ready.settings = true;
@@ -1492,9 +1368,7 @@ footer{
     updateFbDiag();
     if (loadingHidden) return;
     const r = STATE.ready;
-    if (r.products && r.categories && r.users && r.deposits && r.settings) {
-      finishLoading();
-    }
+    if (r.products && r.categories && r.users && r.deposits && r.settings && r.vouchers) { finishLoading(); }
   }
   function finishLoading(){
     if (loadingHidden) return;
@@ -1561,7 +1435,7 @@ footer{
 
   function productCardHtml(p){
     const stock = Number(p.stock) || 0;
-    const imgHtml = isSafeImageDataUrl(p.image) ? `<img src="${p.image}" alt="">` : escapeHtml(p.emoji || '📦');
+    const imgHtml = isSafeImageDataUrl(p.image) ? `<img src="${p.image}" alt="" loading="lazy">` : escapeHtml(p.emoji || '📦');
     return `
       <div class="product-card">
         <div class="product-img">
@@ -1580,9 +1454,6 @@ footer{
     `;
   }
 
-  /* Bố cục mới: khi xem "Tất cả", nhóm sản phẩm theo từng danh mục thành các hàng
-     cuộn ngang (giống ứng dụng cửa hàng di động). Khi bấm lọc theo 1 danh mục cụ thể,
-     hiển thị dạng lưới gọn để dễ so sánh toàn bộ sản phẩm của danh mục đó. */
   function renderProducts(){
     if (!getCurrentUser()) return;
     const container = $('#productsContainer');
@@ -1671,9 +1542,35 @@ footer{
     }
   }
 
+  function renderVoucherUI(){
+    const user = getCurrentUser();
+    const statusEl = $('#voucherStatus');
+    const input = $('#voucherInput');
+    if (!user || !statusEl || !input) return;
+    const stored = getStoredVoucherCode(user.id);
+    if (!stored) { statusEl.innerHTML = ''; return; }
+    const v = findVoucher(stored);
+    const usedBy = v ? (v.usedBy || []) : [];
+    const valid = v && v.enabled && usedBy.length < Number(v.maxUses||0) && !usedBy.includes(String(user.id));
+    if (valid) {
+      input.value = stored;
+      statusEl.innerHTML = `<span style="color:var(--success);">✓ Đã áp dụng mã "${escapeHtml(stored)}" — giảm thêm ${v.percent}%</span><a id="removeVoucherLink" style="color:var(--danger);">Xóa mã</a>`;
+    } else {
+      statusEl.innerHTML = `<span style="color:var(--danger);">Mã "${escapeHtml(stored)}" không còn hợp lệ (đã dùng, hết lượt, hoặc bị khoá).</span><a id="removeVoucherLink" style="color:var(--gold-bright);">Xóa</a>`;
+    }
+    const rl = document.getElementById('removeVoucherLink');
+    if (rl) rl.addEventListener('click', () => {
+      setStoredVoucherCode(user.id, '');
+      input.value = '';
+      renderVoucherUI();
+      renderCartSidebar();
+    });
+  }
+
   function renderCartSidebar(){
     const user = getCurrentUser();
     if (!user) return;
+    renderVoucherUI();
     const cart = getCart(user.id);
     const cartItemsDiv = $('#cartItems');
     const cartTotal = $('#cartTotal');
@@ -1696,12 +1593,17 @@ footer{
     });
     cartItemsDiv.innerHTML = html;
 
-    const discountPercent = getUserDiscountPercent(user.username);
+    const lbPercent = getUserDiscountPercent(user.username);
+    const voucherPercent = getVoucherDiscountPercent(user);
+    const discountPercent = Math.min(90, lbPercent + voucherPercent);
     if (discountPercent > 0) {
       const finalTotal = Math.round(rawTotal * (1 - discountPercent / 100));
       cartTotal.innerHTML = `<span class="cart-original-price">${rawTotal.toLocaleString('vi-VN')}₫</span><br>Tổng: ${finalTotal.toLocaleString('vi-VN')}₫`;
       discountNote.style.display = 'block';
-      discountNote.textContent = `🎉 Bạn đang trong Top nạp tiền — được giảm ${discountPercent}% khi thanh toán!`;
+      const reasons = [];
+      if (lbPercent > 0) reasons.push(`Top nạp tiền (-${lbPercent}%)`);
+      if (voucherPercent > 0) reasons.push(`Voucher (-${voucherPercent}%)`);
+      discountNote.textContent = `🎉 Đang giảm tổng ${discountPercent}% — ${reasons.join(' + ')}`;
     } else {
       cartTotal.textContent = 'Tổng: ' + rawTotal.toLocaleString('vi-VN') + '₫';
       discountNote.style.display = 'none';
@@ -1751,7 +1653,7 @@ footer{
     parts.push('SP:' + STATE.products.length);
     parts.push('DM:' + STATE.categories.length);
     parts.push('TK:' + STATE.users.length);
-    const allReady = r.products && r.categories && r.users && r.deposits && r.settings;
+    const allReady = r.products && r.categories && r.users && r.deposits && r.settings && r.vouchers;
     if (!allReady) {
       el.textContent = 'Đang kết nối máy chủ dữ liệu... (' + parts.join(' · ') + ')';
       el.style.color = 'var(--warning)';
@@ -1970,6 +1872,26 @@ footer{
     $('#overlay').classList.remove('active');
   });
 
+  $('#btnApplyVoucher').addEventListener('click', () => {
+    const user = getCurrentUser();
+    if (!user) return;
+    const raw = $('#voucherInput').value;
+    const code = sanitizeText(raw, 20).toUpperCase();
+    const statusEl = $('#voucherStatus');
+    if (!code) { statusEl.innerHTML = '<span style="color:var(--danger);">Nhập mã giảm giá!</span>'; return; }
+    const v = findVoucher(code);
+    if (!v) { statusEl.innerHTML = '<span style="color:var(--danger);">Mã không tồn tại.</span>'; return; }
+    if (!v.enabled) { statusEl.innerHTML = '<span style="color:var(--danger);">Mã này đã bị khoá.</span>'; return; }
+    const usedBy = v.usedBy || [];
+    if (usedBy.includes(String(user.id))) { statusEl.innerHTML = '<span style="color:var(--danger);">Bạn đã sử dụng mã này rồi.</span>'; return; }
+    if (usedBy.length >= Number(v.maxUses||0)) { statusEl.innerHTML = '<span style="color:var(--danger);">Mã đã hết lượt sử dụng.</span>'; return; }
+    setStoredVoucherCode(user.id, code);
+    renderVoucherUI();
+    renderCartSidebar();
+    showToast(`Đã áp dụng mã "${code}"!`, 'success');
+  });
+  $('#voucherInput').addEventListener('keydown', e => { if (e.key === 'Enter') $('#btnApplyVoucher').click(); });
+
   function buildOrderNote(cart, assignedKeysByItem){
     assignedKeysByItem = assignedKeysByItem || {};
     const defaultNote = STATE.settings.defaultOrderNote || DEFAULT_ORDER_NOTE;
@@ -2032,20 +1954,41 @@ footer{
     const cart = getCart(user.id);
     if (cart.length === 0) { showToast('Giỏ hàng trống!', 'warning'); return; }
     const rawTotal = cart.reduce((s, i) => s + i.price * i.quantity, 0);
-    const discountPercent = getUserDiscountPercent(user.username);
-    const total = Math.round(rawTotal * (1 - discountPercent / 100));
-    if (getBalance(user.id) < total) { showToast('Số dư không đủ!', 'error'); return; }
+    const lbPercent = getUserDiscountPercent(user.username);
+    const voucherCode = getStoredVoucherCode(user.id);
+    const estimatedPercent = getCombinedDiscountPercent(user);
+    const estimatedTotal = Math.round(rawTotal * (1 - estimatedPercent / 100));
+    if (getBalance(user.id) < estimatedTotal) { showToast('Số dư không đủ!', 'error'); return; }
 
     let assignedKeysByItem = {};
+    let finalDiscountPercent = 0;
+    let voucherConsumed = false;
     try{
       const f = await withFb();
       if (!f) throw new Error('Chưa kết nối được máy chủ dữ liệu.');
+      const voucherRef = voucherCode ? f.doc(f.db, 'vouchers', voucherCode) : null;
       await f.runTransaction(f.db, async (transaction) => {
         assignedKeysByItem = {};
         const userRef = f.doc(f.db, 'users', String(user.id));
         const userDoc = await transaction.get(userRef);
         if (!userDoc.exists()) throw new Error('Tài khoản không tồn tại.');
         const currentBalance = userDoc.data().balance || 0;
+
+        let voucherPercent = 0;
+        let voucherSnap = null;
+        if (voucherRef) {
+          voucherSnap = await transaction.get(voucherRef);
+          if (voucherSnap.exists()) {
+            const vd = voucherSnap.data();
+            const usedBy = vd.usedBy || [];
+            if (vd.enabled && usedBy.length < Number(vd.maxUses||0) && !usedBy.includes(String(user.id))) {
+              voucherPercent = Number(vd.percent) || 0;
+            }
+          }
+        }
+        const discountPercent = Math.min(90, lbPercent + voucherPercent);
+        finalDiscountPercent = discountPercent;
+        const total = Math.round(rawTotal * (1 - discountPercent / 100));
         if (currentBalance < total) throw new Error('Số dư không đủ.');
 
         const prodDocs = {};
@@ -2066,6 +2009,13 @@ footer{
         }
 
         transaction.update(userRef, { balance: currentBalance - total });
+
+        if (voucherPercent > 0 && voucherRef && voucherSnap && voucherSnap.exists()) {
+          const vd = voucherSnap.data();
+          const usedBy = (vd.usedBy || []).concat([String(user.id)]);
+          transaction.update(voucherRef, { usedBy });
+          voucherConsumed = true;
+        }
 
         for (const item of cart) {
           const prodDoc = prodDocs[item.id];
@@ -2094,17 +2044,19 @@ footer{
             purchasedAt: new Date().toISOString(),
             keys: assignedKeys,
             note: (prodData.note || ''),
-            discountPercentApplied: discountPercent
+            discountPercentApplied: discountPercent,
+            voucherCode: voucherPercent > 0 ? voucherCode : ''
           });
         }
       });
 
       await saveCart(user.id, []);
+      if (voucherConsumed) setStoredVoucherCode(user.id, '');
       renderCartSidebar();
       updateCartBadge();
       updateBalanceDisplay();
       $('#cartSidebar').classList.remove('active');
-      if (discountPercent > 0) showToast(`Thanh toán thành công! Đã áp dụng giảm ${discountPercent}% (Top nạp tiền).`, 'success');
+      if (finalDiscountPercent > 0) showToast(`Thanh toán thành công! Đã áp dụng giảm ${finalDiscountPercent}%.`, 'success');
       showOrderSuccess(cart, assignedKeysByItem);
     }catch(e){
       console.error(e);
@@ -2232,7 +2184,7 @@ footer{
         <div class="history-item" data-idx="${idx}">
           <strong>${escapeHtml(p.productName)}</strong> x${p.quantity}<br>
           <span style="color:var(--gold-bright);">${(p.price * p.quantity).toLocaleString('vi-VN')}₫</span>
-          ${p.discountPercentApplied ? `<span style="color:var(--success); font-size:0.72rem; margin-left:0.4rem;">(-${p.discountPercentApplied}% top nạp)</span>` : ''}
+          ${p.discountPercentApplied ? `<span style="color:var(--success); font-size:0.72rem; margin-left:0.4rem;">(-${p.discountPercentApplied}%${p.voucherCode ? ' · ' + escapeHtml(p.voucherCode) : ''})</span>` : ''}
           <div style="font-size:0.72rem; color:var(--ink-faint);">${escapeHtml(new Date(p.purchasedAt).toLocaleString('vi-VN'))}</div>
           <div class="history-detail" id="histDetail${idx}">
             <div style="font-size:0.82rem; white-space:pre-wrap;">${escapeHtml(purchaseTexts[idx])}</div>
@@ -2282,6 +2234,7 @@ footer{
     await renderAdminProducts();
     renderAdminCategories();
     renderDepositRequests();
+    renderAdminVouchers();
     renderCustomerList('');
     renderAdminLeaderboard();
     $('#shopNameInput').value = STATE.settings.shopName || DEFAULT_SHOP_NAME;
@@ -2479,9 +2432,7 @@ footer{
     }catch(e){ console.error(e); showToast('Lỗi kết nối!', 'error'); }
   });
 
-  function readImageFile(file){
-    return readImageFileGeneric(file, 650_000);
-  }
+  function readImageFile(file){ return readImageFileGeneric(file, 650_000); }
 
   function parseKeysInput(text){
     return String(text || '').split('\n').map(s => s.trim()).filter(Boolean).slice(0, 500);
@@ -2504,9 +2455,7 @@ footer{
           ${categories.map(c => `<option value="${escapeHtml(c)}" ${p.category===c?'selected':''}>${escapeHtml(c)}</option>`).join('')}
         </select>
         <input class="field-row-full" value="${escapeHtml(p.desc)}" data-field="desc" data-id="${p.id}" placeholder="Mô tả" maxlength="160">
-        <div class="file-input-wrap">
-          <input type="file" class="field-image" data-id="${p.id}" accept="image/*">
-        </div>
+        <div class="file-input-wrap"><input type="file" class="field-image" data-id="${p.id}" accept="image/*"></div>
         <label style="font-size:0.72rem; color:var(--ink-soft); grid-column:1/-1;">Danh sách key còn lại (mỗi dòng 1 key — có key thì tồn kho tự = số key). Chỉ bạn (admin) mới tải được danh sách này:</label>
         <textarea class="field-row-full" data-field="keys" data-id="${p.id}" placeholder="Để trống nếu không dùng key" rows="2">${escapeHtml(keysForProduct.join('\n'))}</textarea>
         <textarea class="field-row-full" data-field="note" data-id="${p.id}" placeholder="Nội dung riêng sau khi mua (dùng khi không có key)" maxlength="500" rows="2">${escapeHtml(p.note||'')}</textarea>
@@ -2539,9 +2488,7 @@ footer{
         try{
           if (field === 'keys') {
             await fbSetProductKeys(id, value);
-            if (value.length > 0) {
-              await fbSetProduct(Object.assign({}, prod, { stock: value.length }));
-            }
+            if (value.length > 0) { await fbSetProduct(Object.assign({}, prod, { stock: value.length })); }
             showToast('Đã cập nhật!', 'success');
             renderAdminProducts();
             return;
@@ -2587,11 +2534,8 @@ footer{
     const note = sanitizeText($('#newNote').value, 500);
     const keys = parseKeysInput($('#newKeys').value);
     if (!name || isNaN(price) || price < 0 || price > 999999999) { showToast('Nhập tên và giá hợp lệ!', 'error'); return; }
-    if (keys.length > 0) {
-      stock = keys.length;
-    } else if (isNaN(stock) || stock < 1 || stock > 100) {
-      showToast('Nhập tồn kho hợp lệ (1-100) hoặc nhập danh sách key!', 'error'); return;
-    }
+    if (keys.length > 0) { stock = keys.length; }
+    else if (isNaN(stock) || stock < 1 || stock > 100) { showToast('Nhập tồn kho hợp lệ (1-100) hoặc nhập danh sách key!', 'error'); return; }
     if (!category) { showToast('Hãy tạo danh mục trước!', 'error'); return; }
     let image = '';
     const fileInput = $('#newImageFile');
@@ -2685,6 +2629,76 @@ footer{
       </div>
     `).join('');
   }
+
+  function renderAdminVouchers(){
+    const listEl = $('#adminVoucherList');
+    if (!listEl) return;
+    const vouchers = STATE.vouchers;
+    listEl.innerHTML = vouchers.map(v => {
+      const used = (v.usedBy || []).length;
+      return `
+      <div class="voucher-admin-row">
+        <div class="voucher-code-cell">
+          <strong>${escapeHtml(v.code)}</strong>
+          <div class="vmeta">${used}/${v.maxUses} lượt đã dùng</div>
+        </div>
+        <input type="number" value="${v.percent}" min="1" max="90" data-vfield="percent" data-code="${escapeHtml(v.code)}" title="% giảm giá">
+        <input type="number" value="${v.maxUses}" min="1" max="100000" data-vfield="maxUses" data-code="${escapeHtml(v.code)}" title="Số lượt tối đa">
+        <div class="voucher-actions-cell">
+          <label class="switch" style="width:40px; height:24px;">
+            <input type="checkbox" class="voucher-toggle" data-code="${escapeHtml(v.code)}" ${v.enabled?'checked':''}>
+            <span class="slider"></span>
+          </label>
+          <button class="btn-sm btn-danger delete-voucher" data-code="${escapeHtml(v.code)}">Xóa</button>
+        </div>
+      </div>
+    `;}).join('') || '<p style="color:var(--ink-soft);">Chưa có mã giảm giá nào.</p>';
+
+    $$('[data-vfield]').forEach(input => {
+      input.addEventListener('change', async function(){
+        const code = this.dataset.code;
+        const field = this.dataset.vfield;
+        let value = parseInt(this.value, 10);
+        if (field === 'percent') {
+          if (isNaN(value) || value < 1 || value > 90) { showToast('% giảm giá phải từ 1-90!', 'error'); renderAdminVouchers(); return; }
+        } else if (field === 'maxUses') {
+          if (isNaN(value) || value < 1 || value > 100000) { showToast('Số lượt không hợp lệ!', 'error'); renderAdminVouchers(); return; }
+        }
+        try{ await fbSetVoucher({ code, [field]: value }); showToast('Đã cập nhật mã!', 'success'); }
+        catch(e){ console.error(e); showToast('Lỗi kết nối!', 'error'); renderAdminVouchers(); }
+      });
+    });
+    $$('.voucher-toggle').forEach(cb => {
+      cb.addEventListener('change', async function(){
+        const code = this.dataset.code;
+        try{ await fbSetVoucher({ code, enabled: this.checked }); showToast('Đã cập nhật!', 'success'); }
+        catch(e){ console.error(e); showToast('Lỗi kết nối!', 'error'); this.checked = !this.checked; }
+      });
+    });
+    $$('.delete-voucher').forEach(btn => {
+      btn.addEventListener('click', async function(){
+        const code = this.dataset.code;
+        if (!confirm(`Xóa mã "${code}"? Hành động này không thể hoàn tác.`)) return;
+        try{ await fbDeleteVoucher(code); showToast('Đã xóa mã.', 'info'); }
+        catch(e){ console.error(e); showToast('Lỗi kết nối!', 'error'); }
+      });
+    });
+  }
+
+  $('#addVoucher').addEventListener('click', async () => {
+    const code = sanitizeText($('#newVoucherCode').value, 20).toUpperCase();
+    const percent = parseInt($('#newVoucherPercent').value, 10);
+    const maxUses = parseInt($('#newVoucherMax').value, 10);
+    if (!code || !isSafeVoucherCode(code)) { showToast('Mã voucher chỉ gồm chữ, số, gạch (3-20 ký tự)!', 'error'); return; }
+    if (isNaN(percent) || percent < 1 || percent > 90) { showToast('% giảm giá phải từ 1-90!', 'error'); return; }
+    if (isNaN(maxUses) || maxUses < 1 || maxUses > 100000) { showToast('Số lượt sử dụng không hợp lệ!', 'error'); return; }
+    if (STATE.vouchers.some(v => v.code === code)) { showToast('Mã này đã tồn tại!', 'error'); return; }
+    try{
+      await fbSetVoucher({ code, percent, maxUses, usedBy:[], enabled:true, createdAt:new Date().toISOString() });
+      $('#newVoucherCode').value = ''; $('#newVoucherPercent').value = ''; $('#newVoucherMax').value = '';
+      showToast('Đã tạo mã giảm giá mới!', 'success');
+    }catch(e){ console.error(e); showToast('Lỗi kết nối!', 'error'); }
+  });
 
   function renderLeaderboardListHtml(list){
     if (list.length === 0) return '<p style="color:var(--ink-soft); font-size:0.85rem;">Chưa có dữ liệu nạp tiền trong khoảng thời gian này.</p>';
@@ -2822,9 +2836,7 @@ footer{
     const interval = minIntervalMs || 1200;
     const now = Date.now();
     const accesses = safeParse('nminhshop_lastIPAccess', {});
-    for (const key in accesses) {
-      if (now - accesses[key] > 20000) delete accesses[key];
-    }
+    for (const key in accesses) { if (now - accesses[key] > 20000) delete accesses[key]; }
     if (accesses[actionKey] && (now - accesses[actionKey] < interval)) {
       activateBotBlock();
       accesses[actionKey] = now;
@@ -2962,7 +2974,6 @@ footer{
     document.body.classList.remove('body-locked');
   });
 
-  /* ===================== BOTTOM NAV WIRING ===================== */
   function setBottomNavActive(id){
     $$('.bottom-nav-item').forEach(b => b.classList.remove('active'));
     const el = document.getElementById(id);
@@ -3052,10 +3063,7 @@ footer{
       p.sway += 0.02;
       p.x += p.speedX + Math.sin(p.sway) * 0.3;
       p.rotation += p.rotSpeed;
-      if (p.y > canvas.height + 20) {
-        p.y = -20;
-        p.x = Math.random() * canvas.width;
-      }
+      if (p.y > canvas.height + 20) { p.y = -20; p.x = Math.random() * canvas.width; }
       if (p.x > canvas.width + 20) p.x = -20;
       if (p.x < -20) p.x = canvas.width + 20;
       if (fxMode === 'blossom') drawBlossom(p); else drawSnowflake(p);
@@ -3105,20 +3113,15 @@ footer{
     const widthDiff = window.outerWidth - window.innerWidth;
     const heightDiff = window.outerHeight - window.innerHeight;
     const el = $('#devtoolsWarning');
-    if (widthDiff > threshold || heightDiff > threshold) {
-      if (el) el.style.display = 'flex';
-    } else if (el) {
-      el.style.display = 'none';
-    }
+    if (widthDiff > threshold || heightDiff > threshold) { if (el) el.style.display = 'flex'; }
+    else if (el) { el.style.display = 'none'; }
   }
   function applyAntiCopy(){
     const enabled = !!STATE.settings.antiCopy;
     if (enabled && !antiCopyBound) {
       document.addEventListener('contextmenu', onContextMenu);
       document.addEventListener('keydown', onKeyDown);
-      if (!IS_TOUCH_DEVICE) {
-        devtoolsPoll = setInterval(pollDevtoolsHeuristic, 1000);
-      }
+      if (!IS_TOUCH_DEVICE) { devtoolsPoll = setInterval(pollDevtoolsHeuristic, 1000); }
       if (!devtoolsWarned) {
         console.log('%cDừng lại!', 'color:#ff5d6c; font-size:32px; font-weight:bold;');
         console.log('%cĐây là tính năng dành cho trình duyệt. Việc dán mã lạ vào đây có thể khiến tài khoản của bạn bị lợi dụng.', 'font-size:14px;');
@@ -3165,7 +3168,5 @@ footer{
   boot();
 })();
 </script>
-
-
 
 </body></html>
