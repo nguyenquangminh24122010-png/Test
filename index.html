@@ -1,346 +1,977 @@
-
 <!DOCTYPE html>
 <html lang="vi">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-<title>BẮN CÁ</title>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Tùng Cheat — Key Dashboard</title>
 <style>
-*{margin:0;padding:0;box-sizing:border-box;user-select:none;}
-body{background:#0a0a2a;font-family:Arial,sans-serif;color:#fff;overflow:hidden;height:100vh;width:100vw;position:fixed;top:0;left:0;}
-.bg{position:fixed;top:0;left:0;width:100%;height:100%;background:radial-gradient(circle at 30% 40%, #0f3a6a, #020512);z-index:0;}
-canvas#gameCanvas{position:fixed;top:0;left:0;width:100%;height:100%;z-index:1;pointer-events:none;}
-.ui{position:relative;z-index:2;height:100vh;width:100vw;display:flex;flex-direction:row;padding:6px 12px;gap:10px;pointer-events:none;}
-.ui>*{pointer-events:auto;}
-.left-panel{flex:2.8;display:flex;flex-direction:column;justify-content:space-between;padding:4px 0;}
-.right-panel{flex:0.9;display:flex;flex-direction:column;justify-content:space-between;padding:4px 0;align-items:flex-end;}
-.header{display:flex;justify-content:space-between;align-items:center;padding:3px 10px;background:rgba(0,0,0,0.35);border-radius:8px;border:1px solid rgba(255,215,0,0.12);font-size:13px;}
-.header .left{color:#ffd700;}
-.header .left span{color:#fff;}
-.header .right{color:#00ffc3;}
-.info-row{display:flex;justify-content:space-between;align-items:center;padding:2px 10px;background:rgba(0,0,0,0.2);border-radius:6px;margin:1px 0;font-size:12px;}
-.info-row .label{color:#aaa;}
-.info-row .value{color:#ffd700;font-weight:bold;}
-.highlight{color:#ff4444;font-weight:bold;}
-.mid-row{display:flex;justify-content:space-between;align-items:center;padding:2px 6px;}
-.action-buttons{display:flex;flex-wrap:wrap;gap:5px;margin:2px 0;}
-.action-buttons button{background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.08);color:#fff;padding:3px 10px;border-radius:14px;font-size:10px;cursor:pointer;font-weight:bold;}
-.action-buttons .gold{background:#ffd700;color:#000;border-color:#ffd700;}
-.action-buttons .blue{background:#0088ff;color:#fff;}
-.action-buttons .pink{background:#ff44aa;color:#fff;}
-.action-buttons .green{background:#00cc66;color:#fff;}
-.cannon-area{display:flex;align-items:center;gap:6px;background:rgba(0,0,0,0.5);padding:3px 12px;border-radius:30px;border:1px solid #ffd700;}
-.cannon-area .power{font-size:20px;font-weight:bold;color:#ffd700;min-width:44px;text-align:center;}
-.cannon-area .btn-fire{width:48px;height:48px;border-radius:50%;background:linear-gradient(135deg,#ffd700,#ff8800);color:#000;border:2px solid #fff;font-size:24px;cursor:pointer;box-shadow:0 0 25px rgba(255,215,0,0.3);}
-.cannon-area .btn-fire:active{transform:scale(0.85);}
-.cannon-area .ammo{font-size:13px;color:#00ffc3;min-width:45px;}
-.cannon-area .power-btn{background:rgba(255,255,255,0.1);border:1px solid #ffd700;color:#ffd700;border-radius:50%;width:30px;height:30px;font-size:18px;cursor:pointer;}
-.red-packet{background:linear-gradient(135deg,#ff0000,#cc0000);border-radius:50%;width:60px;height:60px;display:flex;flex-direction:column;align-items:center;justify-content:center;box-shadow:0 0 35px rgba(255,0,0,0.5);animation:pulse 1.5s infinite;cursor:pointer;border:2px solid #ffd700;}
-.red-packet .text{font-size:9px;color:#fff;font-weight:bold;line-height:1.2;}
-.red-packet .text.big{font-size:14px;}
-@keyframes pulse{0%{transform:scale(1);}50%{transform:scale(1.05);}100%{transform:scale(1);}}
-.bottom-bar{display:flex;justify-content:space-around;padding:3px 0;background:rgba(0,0,0,0.4);border-radius:8px;border-top:1px solid rgba(255,215,0,0.1);}
-.bottom-bar .item{text-align:center;font-size:9px;color:#888;cursor:pointer;}
-.bottom-bar .item .icon{font-size:18px;display:block;}
-.bottom-bar .item.active{color:#ffd700;}
-.user-tag{background:rgba(0,0,0,0.4);padding:2px 10px;border-radius:6px;border:1px solid #ffd700;font-size:10px;display:inline-flex;gap:10px;}
-.user-tag .name{color:#ffd700;}
-.user-tag .score{color:#00ffc3;}
-.fish-area{position:fixed;top:0;left:0;width:100%;height:100%;z-index:0;pointer-events:none;}
-.fish{position:absolute;font-size:22px;animation:swim linear infinite;pointer-events:none;}
-@keyframes swim{0%{transform:translateX(-50px) scaleX(1);}100%{transform:translateX(calc(100vw + 50px)) scaleX(1);}}
-.fish.reverse{animation:swim-reverse linear infinite;}
-@keyframes swim-reverse{0%{transform:translateX(calc(100vw + 50px)) scaleX(-1);}100%{transform:translateX(-50px) scaleX(-1);}}
-.noti{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);background:rgba(0,0,0,0.85);padding:16px 28px;border-radius:14px;border:2px solid #ffd700;display:none;z-index:20;text-align:center;}
-.noti .title{font-size:22px;color:#ffd700;font-weight:bold;}
-.noti .sub{font-size:14px;color:#aaa;}
-.extras{display:flex;gap:8px;align-items:center;flex-wrap:wrap;}
-.extras span{font-size:11px;color:#aaa;background:rgba(0,0,0,0.3);padding:2px 8px;border-radius:4px;}
+  /* ── Tokens ────────────────────────────────────────────────── */
+  :root {
+    --bg:       #0d0f14;
+    --surface:  #161922;
+    --border:   #252a36;
+    --muted:    #3a4155;
+    --text:     #e8eaf0;
+    --sub:      #7a8099;
+    --accent:   #6c8ef5;
+    --accent2:  #a78bfa;
+    --green:    #34d399;
+    --red:      #f87171;
+    --yellow:   #fbbf24;
+    --radius:   12px;
+    --font:     'Inter', system-ui, sans-serif;
+    --mono:     'JetBrains Mono', 'Fira Code', monospace;
+  }
+
+  /* ── Reset ─────────────────────────────────────────────────── */
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { font-size: 15px; }
+  body {
+    font-family: var(--font);
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* ── Typography ────────────────────────────────────────────── */
+  h1 { font-size: 1.5rem; font-weight: 700; letter-spacing: -.02em; }
+  h2 { font-size: 1.05rem; font-weight: 600; }
+  h3 { font-size: .85rem; font-weight: 600; text-transform: uppercase; letter-spacing: .06em; color: var(--sub); }
+
+  /* ── Layout ────────────────────────────────────────────────── */
+  #login-screen {
+    flex: 1; display: flex; align-items: center; justify-content: center;
+  }
+  #app { display: none; flex-direction: column; min-height: 100vh; }
+  #app.active { display: flex; }
+
+  header {
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    padding: 0 28px;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky; top: 0; z-index: 50;
+  }
+  .logo { display: flex; align-items: center; gap: 10px; }
+  .logo-dot {
+    width: 30px; height: 30px; border-radius: 8px;
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    display: flex; align-items: center; justify-content: center;
+    font-size: .75rem; font-weight: 800; color: #fff;
+  }
+
+  nav { display: flex; gap: 4px; }
+  .nav-btn {
+    padding: 6px 14px; border-radius: 8px; font-size: .875rem;
+    font-weight: 500; cursor: pointer; border: none;
+    background: transparent; color: var(--sub);
+    transition: background .15s, color .15s;
+  }
+  .nav-btn:hover { background: var(--border); color: var(--text); }
+  .nav-btn.active { background: var(--accent); color: #fff; }
+
+  .header-right { display: flex; align-items: center; gap: 12px; }
+  .status-dot {
+    width: 8px; height: 8px; border-radius: 50%;
+    background: var(--green);
+    box-shadow: 0 0 6px var(--green);
+  }
+
+  main { flex: 1; padding: 28px; max-width: 1100px; width: 100%; margin: 0 auto; }
+
+  /* ── Cards ─────────────────────────────────────────────────── */
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 20px;
+  }
+  .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px,1fr)); gap: 14px; margin-bottom: 24px; }
+  .stat-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 16px 20px;
+  }
+  .stat-val { font-size: 2rem; font-weight: 700; font-family: var(--mono); line-height: 1; margin-bottom: 4px; }
+  .stat-label { font-size: .8rem; color: var(--sub); }
+
+  /* ── Page sections ──────────────────────────────────────────── */
+  .page { display: none; }
+  .page.active { display: block; }
+
+  /* ── Toolbar ────────────────────────────────────────────────── */
+  .toolbar {
+    display: flex; align-items: center; gap: 10px;
+    margin-bottom: 16px; flex-wrap: wrap;
+  }
+  .search-wrap { position: relative; flex: 1; min-width: 200px; }
+  .search-wrap input {
+    width: 100%; padding: 9px 14px 9px 36px;
+    background: var(--bg); border: 1px solid var(--border);
+    border-radius: 8px; color: var(--text); font-size: .875rem;
+    outline: none; transition: border-color .15s;
+  }
+  .search-wrap input:focus { border-color: var(--accent); }
+  .search-wrap .icon {
+    position: absolute; left: 11px; top: 50%; transform: translateY(-50%);
+    color: var(--sub); pointer-events: none; font-size: 14px;
+  }
+
+  /* ── Buttons ────────────────────────────────────────────────── */
+  .btn {
+    padding: 8px 16px; border-radius: 8px; font-size: .875rem;
+    font-weight: 600; cursor: pointer; border: none;
+    display: inline-flex; align-items: center; gap: 6px;
+    transition: opacity .15s, transform .1s;
+    white-space: nowrap;
+  }
+  .btn:active { transform: scale(.97); }
+  .btn-primary { background: var(--accent); color: #fff; }
+  .btn-primary:hover { opacity: .85; }
+  .btn-danger { background: var(--red); color: #fff; }
+  .btn-danger:hover { opacity: .85; }
+  .btn-ghost {
+    background: var(--border); color: var(--text);
+  }
+  .btn-ghost:hover { background: var(--muted); }
+  .btn-sm { padding: 5px 10px; font-size: .8rem; border-radius: 6px; }
+  .btn:disabled { opacity: .4; cursor: not-allowed; }
+
+  /* ── Table ──────────────────────────────────────────────────── */
+  .table-wrap { overflow-x: auto; border-radius: var(--radius); border: 1px solid var(--border); }
+  table { width: 100%; border-collapse: collapse; font-size: .875rem; }
+  thead { background: var(--bg); }
+  th {
+    text-align: left; padding: 11px 14px;
+    font-size: .75rem; font-weight: 600;
+    text-transform: uppercase; letter-spacing: .05em;
+    color: var(--sub); border-bottom: 1px solid var(--border);
+    white-space: nowrap;
+  }
+  td { padding: 12px 14px; border-bottom: 1px solid var(--border); vertical-align: middle; }
+  tr:last-child td { border-bottom: none; }
+  tr:hover td { background: rgba(108,142,245,.04); }
+  .mono { font-family: var(--mono); font-size: .8rem; letter-spacing: .03em; }
+
+  /* ── Badges ─────────────────────────────────────────────────── */
+  .badge {
+    display: inline-block; padding: 2px 8px; border-radius: 999px;
+    font-size: .72rem; font-weight: 600; letter-spacing: .02em;
+  }
+  .badge-green { background: rgba(52,211,153,.15); color: var(--green); }
+  .badge-red   { background: rgba(248,113,113,.15); color: var(--red);   }
+  .badge-yellow{ background: rgba(251,191,36,.15); color: var(--yellow); }
+  .badge-blue  { background: rgba(108,142,245,.15); color: var(--accent);}
+
+  /* ── Modal ──────────────────────────────────────────────────── */
+  .modal-overlay {
+    position: fixed; inset: 0;
+    background: rgba(0,0,0,.7); backdrop-filter: blur(4px);
+    display: none; align-items: center; justify-content: center; z-index: 200;
+    padding: 20px;
+  }
+  .modal-overlay.open { display: flex; }
+  .modal {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 16px; padding: 28px; width: 100%; max-width: 480px;
+    animation: slide-up .2s ease;
+  }
+  @keyframes slide-up { from { opacity:0; transform:translateY(16px); } }
+  .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+  .modal-close { background: none; border: none; color: var(--sub); cursor: pointer; font-size: 1.2rem; padding: 4px; }
+  .modal-close:hover { color: var(--text); }
+
+  /* ── Form elements ──────────────────────────────────────────── */
+  .form-group { margin-bottom: 16px; }
+  label { display: block; font-size: .8rem; font-weight: 600; color: var(--sub); margin-bottom: 6px; }
+  input[type="text"], input[type="number"], input[type="password"], textarea, select {
+    width: 100%; padding: 9px 12px;
+    background: var(--bg); border: 1px solid var(--border);
+    border-radius: 8px; color: var(--text); font-size: .875rem;
+    outline: none; transition: border-color .15s; font-family: var(--font);
+  }
+  input:focus, textarea:focus, select:focus { border-color: var(--accent); }
+  select option { background: var(--bg); }
+
+  /* ── Login card ─────────────────────────────────────────────── */
+  .login-card {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 20px; padding: 40px; width: 100%; max-width: 360px;
+    text-align: center;
+  }
+  .login-logo {
+    width: 60px; height: 60px; border-radius: 16px;
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    margin: 0 auto 20px; display: flex; align-items: center;
+    justify-content: center; font-size: 1.6rem; font-weight: 900; color: #fff;
+  }
+  .login-card h2 { margin-bottom: 6px; }
+  .login-card p  { color: var(--sub); font-size: .875rem; margin-bottom: 24px; }
+
+  /* ── Key output ─────────────────────────────────────────────── */
+  .key-list {
+    background: var(--bg); border: 1px solid var(--border);
+    border-radius: 8px; padding: 12px;
+    font-family: var(--mono); font-size: .8rem;
+    max-height: 200px; overflow-y: auto;
+    line-height: 1.9;
+  }
+  .key-row { display: flex; align-items: center; justify-content: space-between; }
+  .key-row:hover { color: var(--accent); cursor: pointer; }
+
+  /* ── Toast ──────────────────────────────────────────────────── */
+  #toast {
+    position: fixed; bottom: 28px; left: 50%; transform: translateX(-50%);
+    background: var(--surface); border: 1px solid var(--border);
+    color: var(--text); padding: 10px 20px; border-radius: 10px;
+    font-size: .875rem; font-weight: 500;
+    opacity: 0; pointer-events: none;
+    transition: opacity .2s; z-index: 999;
+    box-shadow: 0 8px 32px rgba(0,0,0,.4);
+  }
+  #toast.show { opacity: 1; }
+
+  /* ── Device list ────────────────────────────────────────────── */
+  .device-list { display: flex; flex-direction: column; gap: 8px; }
+  .device-item {
+    background: var(--bg); border: 1px solid var(--border);
+    border-radius: 8px; padding: 10px 14px;
+    display: flex; justify-content: space-between; align-items: center;
+  }
+  .device-name { font-size: .875rem; font-weight: 500; }
+  .device-meta { font-size: .75rem; color: var(--sub); margin-top: 2px; }
+
+  /* ── Section header ─────────────────────────────────────────── */
+  .section-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; }
+
+  /* ── Empty state ────────────────────────────────────────────── */
+  .empty {
+    text-align: center; padding: 48px 20px; color: var(--sub);
+  }
+  .empty-icon { font-size: 2rem; margin-bottom: 10px; }
+
+  /* ── Pagination ─────────────────────────────────────────────── */
+  .pagination { display: flex; gap: 6px; align-items: center; margin-top: 14px; }
+  .page-info { font-size: .8rem; color: var(--sub); flex: 1; }
+
+  /* ── Settings page ──────────────────────────────────────────── */
+  .settings-grid { display: grid; gap: 16px; }
+  .setting-row {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 14px 0; border-bottom: 1px solid var(--border);
+  }
+  .setting-row:last-child { border-bottom: none; }
+  .setting-info h4 { font-size: .9rem; font-weight: 600; }
+  .setting-info p  { font-size: .8rem; color: var(--sub); margin-top: 2px; }
+
+  /* Toggle switch */
+  .toggle { position: relative; display: inline-block; width: 40px; height: 22px; }
+  .toggle input { opacity: 0; width: 0; height: 0; }
+  .toggle-slider {
+    position: absolute; cursor: pointer; inset: 0;
+    background: var(--muted); border-radius: 22px;
+    transition: .2s;
+  }
+  .toggle-slider::before {
+    content: ''; position: absolute;
+    width: 16px; height: 16px; left: 3px; bottom: 3px;
+    background: #fff; border-radius: 50%; transition: .2s;
+  }
+  .toggle input:checked + .toggle-slider { background: var(--accent); }
+  .toggle input:checked + .toggle-slider::before { transform: translateX(18px); }
+
+  /* ── Scrollbar ──────────────────────────────────────────────── */
+  ::-webkit-scrollbar { width: 6px; height: 6px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: var(--muted); border-radius: 3px; }
 </style>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
 </head>
 <body>
-<div class="bg"></div>
-<div class="fish-area" id="fishArea"></div>
-<canvas id="gameCanvas"></canvas>
 
-<div class="ui">
-  <!-- LEFT -->
-  <div class="left-panel">
-    <div class="header">
-      <div class="left">💰 <span id="coinDisplay">123.477</span> xu</div>
-      <div class="right">🔫 <span id="bulletDisplay">1.183</span></div>
+<!-- ───────────────────────── LOGIN ───────────────────────────── -->
+<div id="login-screen">
+  <div class="login-card">
+    <div class="login-logo">TC</div>
+    <h2>Tùng Cheat</h2>
+    <p>Key Management Dashboard</p>
+    <div class="form-group">
+      <label>Mật khẩu admin</label>
+      <input type="password" id="login-password" placeholder="Nhập admin secret…" />
     </div>
-
-    <div class="info-row">
-      <span class="label">🎯 Sức bắn</span>
-      <span class="value" id="cannonPower">243</span>
-    </div>
-    <div class="info-row">
-      <span class="label">🧧 Hôm nay nhận</span>
-      <span class="value">39.142</span>
-    </div>
-
-    <div style="display:flex;justify-content:center;gap:12px;padding:2px 0;font-size:14px;">
-      <span class="highlight">🔥 QUÁ ĐỈNH!</span>
-      <span style="color:#ffd700;">Chúc mừng <span style="color:#ff4444;">【VIP】</span></span>
-    </div>
-
-    <div class="action-buttons">
-      <button class="gold">🎁 Nhiệm vụ</button>
-      <button class="blue">🏪 Cửa hàng</button>
-      <button class="pink">📖 Hướng dẫn</button>
-      <button class="green">🚀 Tăng tốc</button>
-    </div>
-
-    <div style="display:flex;justify-content:space-between;align-items:center;gap:6px;flex-wrap:wrap;">
-      <div class="user-tag">
-        <span class="name">⚔️ Chiến Binh</span>
-        <span class="score">🏆 8.301</span>
-        <span class="score">4.700</span>
-      </div>
-      <div class="extras">
-        <span>⚡ <span id="powerDisplay">3.34</span></span>
-        <span style="color:#ffd700;">+</span>
-        <span style="color:#00ffc3;" id="ammoDisplay2">1.183</span>
-      </div>
-    </div>
-
-    <div class="bottom-bar">
-      <div class="item active"><span class="icon">🏠</span>Trang chủ</div>
-      <div class="item"><span class="icon">🛒</span>Cửa hàng</div>
-      <div class="item"><span class="icon">📩</span>Hộp thư</div>
-      <div class="item"><span class="icon">👤</span>Hồ sơ</div>
-    </div>
-  </div>
-
-  <!-- RIGHT -->
-  <div class="right-panel">
-    <div class="red-packet" id="redPacket">
-      <span class="text big">🧧</span>
-      <span class="text">88 xu</span>
-    </div>
-    <div style="flex:1;"></div>
-    <div class="cannon-area">
-      <button class="power-btn" id="powerDown">−</button>
-      <span class="power" id="powerDisplay2">3.34</span>
-      <button class="power-btn" id="powerUp">+</button>
-      <button class="btn-fire" id="btnFire">🔫</button>
-      <span class="ammo" id="ammoDisplay">1.183</span>
-    </div>
-    <div style="height:4px;"></div>
+    <button class="btn btn-primary" style="width:100%" onclick="doLogin()">Đăng nhập</button>
+    <p id="login-error" style="color:var(--red);font-size:.8rem;margin-top:10px;display:none">Sai mật khẩu.</p>
   </div>
 </div>
 
-<!-- NOTI -->
-<div class="noti" id="noti">
-  <div class="title">🎯 BẮN TRÚNG!</div>
-  <div class="sub">+200 xu</div>
+<!-- ─────────────────────────── APP ───────────────────────────── -->
+<div id="app">
+  <header>
+    <div class="logo">
+      <div class="logo-dot">TC</div>
+      <span style="font-weight:700">Tùng Cheat</span>
+      <span style="color:var(--sub);font-size:.8rem">Dashboard</span>
+    </div>
+    <nav>
+      <button class="nav-btn active" onclick="showPage('overview')">Tổng quan</button>
+      <button class="nav-btn" onclick="showPage('keys')">Keys</button>
+      <button class="nav-btn" onclick="showPage('settings')">Cài đặt</button>
+    </nav>
+    <div class="header-right">
+      <div class="status-dot" title="Connected"></div>
+      <button class="btn btn-ghost btn-sm" onclick="doLogout()">Đăng xuất</button>
+    </div>
+  </header>
+
+  <main>
+    <!-- ── Overview ───────────────────────────────────────────── -->
+    <div class="page active" id="page-overview">
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-val" id="stat-total" style="color:var(--accent)">—</div>
+          <div class="stat-label">Tổng số key</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-val" id="stat-active" style="color:var(--green)">—</div>
+          <div class="stat-label">Đang hoạt động</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-val" id="stat-revoked" style="color:var(--red)">—</div>
+          <div class="stat-label">Đã thu hồi</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-val" id="stat-devices" style="color:var(--accent2)">—</div>
+          <div class="stat-label">Tổng thiết bị</div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="section-header">
+          <h2>Key mới nhất</h2>
+          <button class="btn btn-primary btn-sm" onclick="showPage('keys')">Xem tất cả →</button>
+        </div>
+        <div class="table-wrap">
+          <table id="overview-table">
+            <thead>
+              <tr>
+                <th>Key</th>
+                <th>Ghi chú</th>
+                <th>Thiết bị</th>
+                <th>Trạng thái</th>
+                <th>Tạo lúc</th>
+              </tr>
+            </thead>
+            <tbody id="overview-tbody"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── Keys ───────────────────────────────────────────────── -->
+    <div class="page" id="page-keys">
+      <div class="section-header">
+        <h2>Quản lý Keys</h2>
+        <div style="display:flex;gap:8px">
+          <button class="btn btn-ghost" onclick="loadKeys()">↻ Làm mới</button>
+          <button class="btn btn-primary" onclick="openGenerateModal()">+ Tạo key mới</button>
+        </div>
+      </div>
+
+      <div class="toolbar">
+        <div class="search-wrap">
+          <span class="icon">⌕</span>
+          <input type="text" id="search-input" placeholder="Tìm key, ghi chú…" oninput="filterKeys()" />
+        </div>
+        <select id="filter-status" onchange="filterKeys()" style="width:140px">
+          <option value="all">Tất cả</option>
+          <option value="active">Hoạt động</option>
+          <option value="revoked">Đã thu hồi</option>
+          <option value="expired">Hết hạn</option>
+        </select>
+      </div>
+
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Key</th>
+              <th>Ghi chú</th>
+              <th>Thiết bị</th>
+              <th>Hạn dùng</th>
+              <th>Trạng thái</th>
+              <th>Thao tác</th>
+            </tr>
+          </thead>
+          <tbody id="keys-tbody"></tbody>
+        </table>
+      </div>
+      <div class="pagination">
+        <span class="page-info" id="page-info">—</span>
+        <button class="btn btn-ghost btn-sm" id="btn-prev" onclick="changePage(-1)">← Trước</button>
+        <button class="btn btn-ghost btn-sm" id="btn-next" onclick="changePage(1)">Sau →</button>
+      </div>
+    </div>
+
+    <!-- ── Settings ───────────────────────────────────────────── -->
+    <div class="page" id="page-settings">
+      <div class="section-header" style="margin-bottom:20px">
+        <h2>Cài đặt hệ thống</h2>
+        <button class="btn btn-primary" onclick="saveSettings()">Lưu cài đặt</button>
+      </div>
+
+      <div class="card" style="margin-bottom:16px">
+        <h3 style="margin-bottom:16px">API & Server</h3>
+        <div class="form-group">
+          <label>Firebase Function URL (validateKey endpoint)</label>
+          <input type="text" id="set-api-url" placeholder="https://us-central1-PROJECT.cloudfunctions.net/validateKey" />
+        </div>
+        <div class="form-group">
+          <label>Admin Secret (dùng để tạo key qua API)</label>
+          <input type="password" id="set-admin-secret" placeholder="••••••••" />
+        </div>
+        <button class="btn btn-ghost" onclick="testConnection()">Test kết nối</button>
+      </div>
+
+      <div class="card" style="margin-bottom:16px">
+        <h3 style="margin-bottom:16px">Chế độ bảo trì</h3>
+        <div class="setting-row">
+          <div class="setting-info">
+            <h4>Bật bảo trì</h4>
+            <p>Tất cả key sẽ trả về thông báo bảo trì khi app kết nối</p>
+          </div>
+          <label class="toggle">
+            <input type="checkbox" id="set-maintenance" onchange="toggleMaintenance(this)">
+            <span class="toggle-slider"></span>
+          </label>
+        </div>
+        <div class="form-group" style="margin-top:12px">
+          <label>Tiêu đề thông báo bảo trì</label>
+          <input type="text" id="set-maintenance-title" placeholder="Đang bảo trì" />
+        </div>
+        <div class="form-group">
+          <label>Nội dung thông báo</label>
+          <textarea id="set-maintenance-msg" rows="3" placeholder="App đang bảo trì, vui lòng thử lại sau..."></textarea>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3 style="margin-bottom:12px">Hướng dẫn tích hợp vào app (Swift)</h3>
+        <p style="font-size:.8rem;color:var(--sub);margin-bottom:12px">Thêm đoạn code này vào Swift app để gọi API key validation:</p>
+        <div class="key-list" style="max-height:none;user-select:all">
+// LicenseManager.swift
+import Foundation
+
+struct LicenseManager {
+    static let apiURL = "https://us-central1-nminhiosvn.cloudfunctions.net/validateKey"
+    
+    static func validate(key: String, deviceId: String, completion: @escaping (Result&lt;LicenseInfo, LicenseError&gt;) -> Void) {
+        guard let url = URL(string: apiURL) else { return }
+        var req = URLRequest(url: url)
+        req.httpMethod = "POST"
+        req.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        
+        let body: [String: Any] = [
+            "key": key,
+            "deviceId": deviceId,
+            "deviceName": UIDevice.current.name
+        ]
+        req.httpBody = try? JSONSerialization.data(withJSONObject: body)
+        
+        URLSession.shared.dataTask(with: req) { data, _, _ in
+            guard let data = data,
+                  let json = try? JSONSerialization.jsonObject(with: data) as? [String: Any],
+                  let status = json["status"] as? String else {
+                completion(.failure(.network)); return
+            }
+            if status == "ok" {
+                let info = LicenseInfo(
+                    keyLabel: json["keyLabel"] as? String ?? key,
+                    note: json["note"] as? String ?? "",
+                    remainingDays: json["remainingDays"] as? Int,
+                    remainingHours: json["remainingHours"] as? Int
+                )
+                completion(.success(info))
+            } else {
+                let code = json["code"] as? String ?? "unknown"
+                completion(.failure(LicenseError(rawCode: code)))
+            }
+        }.resume()
+    }
+}
+
+struct LicenseInfo {
+    let keyLabel: String
+    let note: String
+    let remainingDays: Int?
+    let remainingHours: Int?
+}
+
+enum LicenseError: Error {
+    case network, notFound, expired, revoked, deviceLimitReached, deviceMismatch, maintenance(String)
+    init(rawCode: String) {
+        switch rawCode {
+        case "not_found":            self = .notFound
+        case "expired":              self = .expired
+        case "revoked":              self = .revoked
+        case "device_limit_reached": self = .deviceLimitReached
+        case "device_mismatch":      self = .deviceMismatch
+        case "maintenance":          self = .maintenance("Under Maintenance")
+        default:                     self = .network
+        }
+    }
+}
+        </div>
+      </div>
+    </div>
+  </main>
 </div>
 
-<script>
-// ===== CANVAS BẮN =====
-var canvas = document.getElementById('gameCanvas');
-var ctx = canvas.getContext('2d');
-canvas.width = window.innerWidth;
-canvas.height = window.innerHeight;
+<!-- ── Modal: Tạo key ──────────────────────────────────────────── -->
+<div class="modal-overlay" id="modal-generate">
+  <div class="modal">
+    <div class="modal-header">
+      <h2>Tạo key mới</h2>
+      <button class="modal-close" onclick="closeModal('modal-generate')">✕</button>
+    </div>
+    <div class="form-group">
+      <label>Số lượng key</label>
+      <input type="number" id="gen-count" value="1" min="1" max="100" />
+    </div>
+    <div class="form-group">
+      <label>Hạn dùng (ngày) — để trống = không giới hạn</label>
+      <input type="number" id="gen-days" placeholder="Ví dụ: 30" min="1" />
+    </div>
+    <div class="form-group">
+      <label>Giới hạn thiết bị</label>
+      <select id="gen-device-limit">
+        <option value="1">1 thiết bị</option>
+        <option value="2">2 thiết bị</option>
+        <option value="3">3 thiết bị</option>
+        <option value="5">5 thiết bị</option>
+        <option value="999">Không giới hạn</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label>Ghi chú (tên người dùng, đơn hàng…)</label>
+      <input type="text" id="gen-note" placeholder="VD: Khách VIP, Đơn #123" />
+    </div>
+    <button class="btn btn-primary" style="width:100%;margin-top:4px" id="btn-gen" onclick="generateKeys()">Tạo key</button>
+    
+    <div id="gen-result" style="display:none;margin-top:16px">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+        <h3>Key đã tạo</h3>
+        <button class="btn btn-ghost btn-sm" onclick="copyAllKeys()">📋 Sao chép tất cả</button>
+      </div>
+      <div class="key-list" id="gen-key-list"></div>
+    </div>
+  </div>
+</div>
 
-// ===== BONG BÓNG =====
-var bubbles = [];
-for(var i=0;i<25;i++){
-  bubbles.push({x:Math.random()*canvas.width, y:Math.random()*canvas.height, r:2+Math.random()*8, dx:(Math.random()-0.5)*0.3, dy:0.2+Math.random()*0.5});
-}
+<!-- ── Modal: Chi tiết key ─────────────────────────────────────── -->
+<div class="modal-overlay" id="modal-detail">
+  <div class="modal">
+    <div class="modal-header">
+      <h2>Chi tiết Key</h2>
+      <button class="modal-close" onclick="closeModal('modal-detail')">✕</button>
+    </div>
+    <div style="margin-bottom:16px">
+      <label>Key</label>
+      <div class="mono" style="color:var(--accent);font-size:1rem;margin-top:4px" id="detail-key"></div>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px">
+      <div><label>Trạng thái</label><div id="detail-status" style="margin-top:4px"></div></div>
+      <div><label>Hạn dùng</label><div id="detail-expiry" style="margin-top:4px;font-size:.875rem"></div></div>
+      <div><label>Thiết bị</label><div id="detail-devices" style="margin-top:4px;font-size:.875rem"></div></div>
+      <div><label>Ghi chú</label><div id="detail-note" style="margin-top:4px;font-size:.875rem"></div></div>
+    </div>
+    <div style="margin-bottom:16px">
+      <label style="margin-bottom:8px;display:block">Thiết bị đã đăng ký</label>
+      <div class="device-list" id="detail-device-list"></div>
+    </div>
+    <div style="display:flex;gap:8px">
+      <button class="btn btn-ghost" style="flex:1" onclick="closeModal('modal-detail')">Đóng</button>
+      <button class="btn btn-danger" style="flex:1" id="btn-revoke-detail" onclick="revokeCurrentKey()">Thu hồi key</button>
+    </div>
+  </div>
+</div>
 
-// ===== TIA BẮN =====
-var bullets = [];
-var explosions = [];
+<div id="toast">✓ Đã sao chép!</div>
 
-// ===== CÁ =====
-var fishEmojis = ['🐟','🐠','🐡','🦈','🐙','🐬','🐳'];
-var fishArea = document.getElementById('fishArea');
-for(var i=0;i<14;i++){
-  var fish=document.createElement('div');
-  fish.className='fish' + (Math.random()>0.5?' reverse':'');
-  fish.textContent=fishEmojis[Math.floor(Math.random()*fishEmojis.length)];
-  fish.style.top=(5+Math.random()*80)+'%';
-  fish.style.fontSize=(18+Math.random()*24)+'px';
-  fish.style.animationDuration=(14+Math.random()*22)+'s';
-  fish.style.animationDelay=(Math.random()*15)+'s';
-  fishArea.appendChild(fish);
-}
+<script type="module">
+// ── Firebase SDK ──────────────────────────────────────────────────────────────
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import {
+  getFirestore, collection, getDocs, doc, getDoc,
+  updateDoc, setDoc, serverTimestamp, query, orderBy, limit
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
-// ===== BIẾN =====
-var power = 3.34;
-var ammo = 1183;
-var coin = 123477;
-var autoFire = false;
-var autoInterval = null;
+// ─── CONFIG: thay các giá trị này bằng Firebase project của bạn ──────────────
+const firebaseConfig = {
+  apiKey:            "AIzaSyBc1_ucxYST-r_z5k3lcWTfp71BGF4QfL4",
+  authDomain:        "nminhiosvn.firebaseapp.com",
+  projectId:         "nminhiosvn",
+  storageBucket:     "nminhiosvn.firebasestorage.app",
+  messagingSenderId: "1071559079203",
+  appId:             "1:1071559079203:web:2691625a66ea1052e20896"
+};
 
-function updateUI(){
-  document.getElementById('coinDisplay').textContent = coin.toLocaleString();
-  document.getElementById('bulletDisplay').textContent = ammo.toLocaleString();
-  document.getElementById('ammoDisplay').textContent = ammo.toLocaleString();
-  document.getElementById('ammoDisplay2').textContent = ammo.toLocaleString();
-  document.getElementById('powerDisplay').textContent = power.toFixed(2);
-  document.getElementById('powerDisplay2').textContent = power.toFixed(2);
-}
+const app = initializeApp(firebaseConfig);
+const db  = getFirestore(app);
 
-// ===== BẮN =====
-function fire(){
-  if(ammo <= 0){ alert('💀 Hết đạn!'); return; }
-  ammo--;
-  
-  // TIA BẮN TỪ PHÁO (BÊN PHẢI) BAY SANG TRÁI
-  var startX = canvas.width - 80;
-  var startY = canvas.height * 0.55;
-  var endX = 20 + Math.random() * (canvas.width * 0.6);
-  var endY = 20 + Math.random() * (canvas.height * 0.8);
-  bullets.push({x:startX, y:startY, targetX:endX, targetY:endY, progress:0, speed:0.08 + Math.random()*0.04});
-  
-  // TỶ LỆ TRÚNG 70%
-  var hit = Math.random() < 0.70;
-  
-  var earned = 0;
-  var noti = document.getElementById('noti');
-  if(hit){
-    earned = Math.floor(Math.random() * 300) + 50;
-    coin += earned;
-    noti.querySelector('.title').textContent = '🎯 BẮN TRÚNG!';
-    noti.querySelector('.sub').textContent = '+' + earned + ' xu';
-    noti.style.borderColor = '#ffd700';
-    // HIỆU ỨNG NỔ TẠI ĐIỂM ĐÍCH
-    explosions.push({x:endX, y:endY, radius:5, maxRadius:40 + Math.random()*30, progress:0, life:1});
-  } else {
-    noti.querySelector('.title').textContent = '💨 BẮN TRƯỢT!';
-    noti.querySelector('.sub').textContent = '-1 đạn';
-    noti.style.borderColor = '#ff4444';
+// ─── State ────────────────────────────────────────────────────────────────────
+let allKeys = [];
+let filteredKeys = [];
+let currentPage = 1;
+const PAGE_SIZE = 20;
+let currentDetailKey = null;
+let adminPassword = "";
+
+// ─── Login ────────────────────────────────────────────────────────────────────
+window.doLogin = async function() {
+  const pw = document.getElementById("login-password").value;
+  if (!pw) return;
+  // Verify against config doc
+  try {
+    const cfg = await getDoc(doc(db, "config", "global"));
+    const secret = cfg.exists() ? cfg.data().adminSecret : null;
+    if (!secret || pw !== secret) throw new Error("wrong");
+    adminPassword = pw;
+    document.getElementById("login-screen").style.display = "none";
+    document.getElementById("app").classList.add("active");
+    loadOverview();
+    loadSettings();
+  } catch {
+    document.getElementById("login-error").style.display = "block";
   }
-  noti.style.display = 'block';
-  setTimeout(function(){ noti.style.display = 'none'; }, 700);
-  
-  updateUI();
-  // TĂNG/GIẢM SỨC BẮN NGẪU NHIÊN
-  power = Math.max(0.5, Math.min(10, power + (Math.random()-0.5)*0.2));
-  power = Math.round(power*100)/100;
-  updateUI();
+};
+
+document.getElementById("login-password").addEventListener("keydown", e => {
+  if (e.key === "Enter") window.doLogin();
+});
+
+window.doLogout = function() {
+  location.reload();
+};
+
+// ─── Navigation ───────────────────────────────────────────────────────────────
+window.showPage = function(name) {
+  document.querySelectorAll(".page").forEach(p => p.classList.remove("active"));
+  document.getElementById(`page-${name}`).classList.add("active");
+  document.querySelectorAll(".nav-btn").forEach(b => b.classList.remove("active"));
+  document.querySelector(`.nav-btn[onclick*="${name}"]`).classList.add("active");
+  if (name === "keys") loadKeys();
+  if (name === "overview") loadOverview();
+};
+
+// ─── Overview ─────────────────────────────────────────────────────────────────
+async function loadOverview() {
+  const snap = await getDocs(collection(db, "keys"));
+  const keys = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+  const now = new Date();
+
+  const active  = keys.filter(k => !k.revoked && !(k.expiresAt && k.expiresAt.toDate() < now)).length;
+  const revoked = keys.filter(k => k.revoked).length;
+  const devices = keys.reduce((acc, k) => acc + Object.keys(k.devices || {}).length, 0);
+
+  document.getElementById("stat-total").textContent   = keys.length;
+  document.getElementById("stat-active").textContent  = active;
+  document.getElementById("stat-revoked").textContent = revoked;
+  document.getElementById("stat-devices").textContent = devices;
+
+  const tbody = document.getElementById("overview-tbody");
+  const recent = keys.slice(0, 10);
+  tbody.innerHTML = recent.length ? recent.map(k => keyRow(k, true)).join("") : emptyRow(5);
 }
 
-// ===== VẼ =====
-function draw(){
-  ctx.clearRect(0,0,canvas.width,canvas.height);
-  
-  // BONG BÓNG
-  ctx.fillStyle='rgba(0,255,200,0.06)';
-  for(var i=0;i<bubbles.length;i++){
-    var b=bubbles[i];
-    b.x+=b.dx; b.y-=b.dy;
-    if(b.y<0){b.y=canvas.height; b.x=Math.random()*canvas.width;}
-    if(b.x<0||b.x>canvas.width)b.dx=-b.dx;
-    ctx.beginPath(); ctx.arc(b.x,b.y,b.r,0,Math.PI*2); ctx.fill();
+// ─── Keys list ────────────────────────────────────────────────────────────────
+window.loadKeys = async function() {
+  document.getElementById("keys-tbody").innerHTML = `<tr><td colspan="6" style="text-align:center;color:var(--sub);padding:32px">Đang tải…</td></tr>`;
+  const snap = await getDocs(query(collection(db, "keys"), orderBy("createdAt", "desc")));
+  allKeys = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+  filterKeys();
+};
+
+window.filterKeys = function() {
+  const q = document.getElementById("search-input").value.toLowerCase();
+  const s = document.getElementById("filter-status").value;
+  const now = new Date();
+
+  filteredKeys = allKeys.filter(k => {
+    const match = k.id.toLowerCase().includes(q) || (k.note || "").toLowerCase().includes(q);
+    const expired = k.expiresAt && k.expiresAt.toDate() < now;
+    const statusMatch =
+      s === "all" ? true :
+      s === "active"  ? !k.revoked && !expired :
+      s === "revoked" ? k.revoked :
+      s === "expired" ? expired : true;
+    return match && statusMatch;
+  });
+  currentPage = 1;
+  renderKeys();
+};
+
+function renderKeys() {
+  const start = (currentPage - 1) * PAGE_SIZE;
+  const page  = filteredKeys.slice(start, start + PAGE_SIZE);
+  const tbody = document.getElementById("keys-tbody");
+  tbody.innerHTML = page.length ? page.map(k => keyRow(k, false)).join("") : emptyRow(6);
+  document.getElementById("page-info").textContent =
+    `${start + 1}–${Math.min(start + PAGE_SIZE, filteredKeys.length)} / ${filteredKeys.length} keys`;
+  document.getElementById("btn-prev").disabled = currentPage <= 1;
+  document.getElementById("btn-next").disabled = start + PAGE_SIZE >= filteredKeys.length;
+}
+
+window.changePage = function(dir) {
+  currentPage += dir;
+  renderKeys();
+};
+
+function keyRow(k, minimal) {
+  const now = new Date();
+  const expired = k.expiresAt && k.expiresAt.toDate() < now;
+  const deviceCount = Object.keys(k.devices || {}).length;
+
+  let badge = k.revoked ? '<span class="badge badge-red">Thu hồi</span>'
+            : expired   ? '<span class="badge badge-yellow">Hết hạn</span>'
+            :              '<span class="badge badge-green">Hoạt động</span>';
+
+  const expiryStr = k.expiresAt
+    ? k.expiresAt.toDate().toLocaleDateString("vi-VN")
+    : "Không hạn";
+
+  const createdStr = k.createdAt
+    ? k.createdAt.toDate().toLocaleDateString("vi-VN")
+    : "—";
+
+  if (minimal) {
+    return `<tr>
+      <td class="mono">${k.id}</td>
+      <td style="color:var(--sub)">${k.note || "—"}</td>
+      <td>${deviceCount}/${k.deviceLimit || 1}</td>
+      <td>${badge}</td>
+      <td style="color:var(--sub)">${createdStr}</td>
+    </tr>`;
   }
-  
-  // TIA BẮN
-  for(var i=bullets.length-1; i>=0; i--){
-    var b = bullets[i];
-    b.progress += b.speed;
-    if(b.progress >= 1){
-      bullets.splice(i,1);
-      continue;
+
+  return `<tr>
+    <td class="mono" style="cursor:pointer;color:var(--accent)" onclick="openDetail('${k.id}')">${k.id}</td>
+    <td style="color:var(--sub);max-width:160px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${k.note || "—"}</td>
+    <td>${deviceCount} / ${k.deviceLimit || 1}</td>
+    <td style="color:var(--sub)">${expiryStr}</td>
+    <td>${badge}</td>
+    <td>
+      <div style="display:flex;gap:6px">
+        <button class="btn btn-ghost btn-sm" onclick="openDetail('${k.id}')">Chi tiết</button>
+        ${!k.revoked ? `<button class="btn btn-danger btn-sm" onclick="revokeKey('${k.id}')">Thu hồi</button>` : ""}
+      </div>
+    </td>
+  </tr>`;
+}
+
+function emptyRow(cols) {
+  return `<tr><td colspan="${cols}">
+    <div class="empty"><div class="empty-icon">🔑</div><p>Không có key nào.</p></div>
+  </td></tr>`;
+}
+
+// ─── Detail modal ─────────────────────────────────────────────────────────────
+window.openDetail = async function(keyId) {
+  const snap = await getDoc(doc(db, "keys", keyId));
+  if (!snap.exists()) return;
+  const k = snap.data();
+  currentDetailKey = keyId;
+
+  const now = new Date();
+  const expired = k.expiresAt && k.expiresAt.toDate() < now;
+
+  document.getElementById("detail-key").textContent = keyId;
+
+  document.getElementById("detail-status").innerHTML = k.revoked
+    ? '<span class="badge badge-red">Đã thu hồi</span>'
+    : expired ? '<span class="badge badge-yellow">Hết hạn</span>'
+    : '<span class="badge badge-green">Đang hoạt động</span>';
+
+  document.getElementById("detail-expiry").textContent = k.expiresAt
+    ? k.expiresAt.toDate().toLocaleDateString("vi-VN")
+    : "Không giới hạn";
+
+  const devices = k.devices || {};
+  document.getElementById("detail-devices").textContent =
+    `${Object.keys(devices).length} / ${k.deviceLimit || 1} thiết bị`;
+
+  document.getElementById("detail-note").textContent = k.note || "—";
+
+  document.getElementById("btn-revoke-detail").style.display = k.revoked ? "none" : "";
+
+  const deviceListEl = document.getElementById("detail-device-list");
+  const deviceEntries = Object.entries(devices);
+  deviceListEl.innerHTML = deviceEntries.length
+    ? deviceEntries.map(([id, d]) => `
+        <div class="device-item">
+          <div>
+            <div class="device-name">📱 ${d.name || "Unknown"}</div>
+            <div class="device-meta">${id.slice(0,16)}… · Lần cuối: ${d.lastSeen ? new Date(d.lastSeen).toLocaleDateString("vi-VN") : "—"}</div>
+          </div>
+        </div>`)
+      .join("")
+    : "<p style='color:var(--sub);font-size:.8rem'>Chưa có thiết bị nào.</p>";
+
+  openModal("modal-detail");
+};
+
+window.revokeCurrentKey = function() {
+  if (currentDetailKey) revokeKey(currentDetailKey);
+};
+
+window.revokeKey = async function(keyId) {
+  if (!confirm(`Thu hồi key ${keyId}? Thiết bị dùng key này sẽ bị từ chối.`)) return;
+  await updateDoc(doc(db, "keys", keyId), { revoked: true });
+  showToast("✓ Đã thu hồi key");
+  closeModal("modal-detail");
+  loadKeys();
+  loadOverview();
+};
+
+// ─── Generate keys ────────────────────────────────────────────────────────────
+window.openGenerateModal = function() {
+  document.getElementById("gen-result").style.display = "none";
+  openModal("modal-generate");
+};
+
+window.generateKeys = async function() {
+  const count       = parseInt(document.getElementById("gen-count").value) || 1;
+  const daysVal     = document.getElementById("gen-days").value;
+  const deviceLimit = parseInt(document.getElementById("gen-device-limit").value);
+  const note        = document.getElementById("gen-note").value.trim();
+  const btn         = document.getElementById("btn-gen");
+
+  btn.disabled = true;
+  btn.textContent = "Đang tạo…";
+
+  const generated = [];
+  const batch = [];
+
+  for (let i = 0; i < Math.min(count, 100); i++) {
+    const key = genKeyString();
+    const data = {
+      createdAt: serverTimestamp(),
+      deviceLimit,
+      note,
+      revoked: false,
+      devices: {}
+    };
+    if (daysVal) {
+      const exp = new Date();
+      exp.setDate(exp.getDate() + parseInt(daysVal));
+      data.expiresAt = exp;
     }
-    var x = b.x + (b.targetX - b.x) * b.progress;
-    var y = b.y + (b.targetY - b.y) * b.progress;
-    // VẼ TIA SÁNG
-    var grad = ctx.createRadialGradient(x, y, 2, x, y, 20);
-    grad.addColorStop(0, 'rgba(255,255,200,0.9)');
-    grad.addColorStop(0.3, 'rgba(255,200,100,0.6)');
-    grad.addColorStop(1, 'rgba(255,200,100,0)');
-    ctx.fillStyle = grad;
-    ctx.beginPath();
-    ctx.arc(x, y, 20, 0, Math.PI*2);
-    ctx.fill();
-    // VẼ ĐƯỜNG ĐẠN
-    ctx.strokeStyle = 'rgba(255,255,200,0.5)';
-    ctx.lineWidth = 3;
-    ctx.shadowColor = '#ffd700';
-    ctx.shadowBlur = 20;
-    ctx.beginPath();
-    ctx.moveTo(b.x + (b.targetX - b.x) * (b.progress - 0.02), b.y + (b.targetY - b.y) * (b.progress - 0.02));
-    ctx.lineTo(x, y);
-    ctx.stroke();
-    ctx.shadowBlur = 0;
+    batch.push(setDoc(doc(db, "keys", key), data));
+    generated.push(key);
   }
-  
-  // VỤ NỔ
-  for(var i=explosions.length-1; i>=0; i--){
-    var e = explosions[i];
-    e.progress += 0.05;
-    e.life -= 0.02;
-    if(e.life <= 0){ explosions.splice(i,1); continue; }
-    var r = e.radius + (e.maxRadius - e.radius) * e.progress;
-    var alpha = e.life * 0.8;
-    // VÒNG NỔ
-    for(var j=0; j<8; j++){
-      var angle = (j/8)*Math.PI*2 + e.progress*2;
-      var dx = Math.cos(angle) * r * (0.6 + Math.random()*0.4);
-      var dy = Math.sin(angle) * r * (0.6 + Math.random()*0.4);
-      var grad = ctx.createRadialGradient(e.x+dx, e.y+dy, 1, e.x+dx, e.y+dy, 15);
-      grad.addColorStop(0, 'rgba(255,200,50,'+alpha+')');
-      grad.addColorStop(1, 'rgba(255,100,0,0)');
-      ctx.fillStyle = grad;
-      ctx.beginPath();
-      ctx.arc(e.x+dx, e.y+dy, 15*e.life, 0, Math.PI*2);
-      ctx.fill();
-    }
-  }
-  
-  requestAnimationFrame(draw);
+
+  await Promise.all(batch);
+  btn.disabled = false;
+  btn.textContent = "Tạo key";
+
+  // Show results
+  window._lastGeneratedKeys = generated;
+  const listEl = document.getElementById("gen-key-list");
+  listEl.innerHTML = generated.map(k =>
+    `<div class="key-row" onclick="copyText('${k}')">${k} <span style="color:var(--sub)">📋</span></div>`
+  ).join("");
+  document.getElementById("gen-result").style.display = "block";
+
+  loadOverview();
+  if (document.getElementById("page-keys").classList.contains("active")) loadKeys();
+};
+
+window.copyAllKeys = function() {
+  const keys = (window._lastGeneratedKeys || []).join("\n");
+  navigator.clipboard.writeText(keys);
+  showToast("✓ Đã sao chép " + (window._lastGeneratedKeys||[]).length + " key");
+};
+
+function genKeyString() {
+  const c = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
+  const s = () => Array.from({length:4}, () => c[Math.floor(Math.random()*c.length)]).join("");
+  return `${s()}-${s()}-${s()}-${s()}`;
 }
-draw();
 
-// ===== SỰ KIỆN =====
-document.getElementById('btnFire').addEventListener('click', fire);
+// ─── Settings ─────────────────────────────────────────────────────────────────
+async function loadSettings() {
+  const cfg = await getDoc(doc(db, "config", "global"));
+  if (!cfg.exists()) return;
+  const d = cfg.data();
+  document.getElementById("set-admin-secret").value        = d.adminSecret || "";
+  document.getElementById("set-maintenance").checked       = !!d.maintenance;
+  document.getElementById("set-maintenance-title").value   = d.maintenanceTitle || "";
+  document.getElementById("set-maintenance-msg").value     = d.maintenanceMessage || "";
+  const fnUrl = localStorage.getItem("tc_fn_url") || "";
+  document.getElementById("set-api-url").value = fnUrl;
+}
 
-document.getElementById('powerUp').addEventListener('click', function(){
-  power = Math.min(10, power + 0.3); power = Math.round(power*100)/100; updateUI();
+window.saveSettings = async function() {
+  const secret = document.getElementById("set-admin-secret").value;
+  const maintenance = document.getElementById("set-maintenance").checked;
+  const title = document.getElementById("set-maintenance-title").value;
+  const msg   = document.getElementById("set-maintenance-msg").value;
+  const fnUrl = document.getElementById("set-api-url").value;
+
+  await setDoc(doc(db, "config", "global"), {
+    adminSecret: secret,
+    maintenance,
+    maintenanceTitle: title,
+    maintenanceMessage: msg
+  }, { merge: true });
+
+  localStorage.setItem("tc_fn_url", fnUrl);
+  showToast("✓ Đã lưu cài đặt");
+};
+
+window.toggleMaintenance = async function(el) {
+  await setDoc(doc(db, "config", "global"), { maintenance: el.checked }, { merge: true });
+  showToast(el.checked ? "⚠ Đã bật chế độ bảo trì" : "✓ Đã tắt bảo trì");
+};
+
+window.testConnection = async function() {
+  const url = document.getElementById("set-api-url").value;
+  if (!url) return showToast("⚠ Chưa nhập URL");
+  try {
+    const r = await fetch(url, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ key: "TEST", deviceId: "dashboard-test" }) });
+    const j = await r.json();
+    showToast(j.status === "error" && j.code === "not_found" ? "✓ Server phản hồi OK" : "✓ Kết nối thành công");
+  } catch { showToast("✗ Không thể kết nối server"); }
+};
+
+// ─── Helpers ──────────────────────────────────────────────────────────────────
+window.openModal  = (id) => document.getElementById(id).classList.add("open");
+window.closeModal = (id) => document.getElementById(id).classList.remove("open");
+
+document.querySelectorAll(".modal-overlay").forEach(m => {
+  m.addEventListener("click", e => { if (e.target === m) m.classList.remove("open"); });
 });
-document.getElementById('powerDown').addEventListener('click', function(){
-  power = Math.max(0.5, power - 0.3); power = Math.round(power*100)/100; updateUI();
-});
 
-document.getElementById('redPacket').addEventListener('click', function(){
-  var bonus = Math.floor(Math.random() * 500) + 100;
-  coin += bonus; updateUI();
-  var noti=document.getElementById('noti');
-  noti.style.display='block';
-  noti.querySelector('.title').textContent = '🧧 NHẬN LÌ XÌ!';
-  noti.querySelector('.sub').textContent = '+' + bonus + ' xu';
-  noti.style.borderColor = '#ff4444';
-  setTimeout(function(){ noti.style.display='none'; }, 1200);
-});
+window.copyText = function(t) {
+  navigator.clipboard.writeText(t);
+  showToast("✓ Đã sao chép!");
+};
 
-document.querySelector('.action-buttons .green').addEventListener('click', function(){
-  autoFire = !autoFire;
-  this.style.background = autoFire ? '#ffd700' : '#00cc66';
-  this.style.color = autoFire ? '#000' : '#fff';
-  if(autoFire){
-    autoInterval = setInterval(function(){
-      if(!autoFire){ clearInterval(autoInterval); return; }
-      fire();
-    }, 300);
-  } else { clearInterval(autoInterval); }
-});
-
-document.addEventListener('keydown', function(e){
-  if(e.key === 'ArrowUp'){ power = Math.min(10, power + 0.3); power=Math.round(power*100)/100; updateUI(); }
-  if(e.key === 'ArrowDown'){ power = Math.max(0.5, power - 0.3); power=Math.round(power*100)/100; updateUI(); }
-  if(e.key === ' '){ e.preventDefault(); fire(); }
-});
-
-window.addEventListener('resize', function(){
-  canvas.width = window.innerWidth;
-  canvas.height = window.innerHeight;
-});
-
-updateUI();
+let toastTimer;
+function showToast(msg) {
+  const el = document.getElementById("toast");
+  el.textContent = msg;
+  el.classList.add("show");
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => el.classList.remove("show"), 2500);
+}
+window.showToast = showToast;
 </script>
 </body>
 </html>
