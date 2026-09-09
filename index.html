@@ -63,7 +63,6 @@
             margin: 24px 0;
         }
 
-        /* BANNER */
         .banner-container {
             width: 100%;
             height: 140px;
@@ -80,7 +79,6 @@
             object-position: center 20%;
         }
 
-        /* HEADER */
         .header-box {
             display: flex;
             justify-content: space-between;
@@ -96,8 +94,11 @@
         }
 
         .title-main span { color: #ff5eb1; text-shadow: 0 0 12px rgba(255,94,177,0.6); }
-
         .title-sub { font-size: 11px; color: #a39bb8; margin-top: 2px; }
+
+        /* credit 2 người */
+        .title-sub .credit-vayne { color: #ff5eb1; }
+        .title-sub .credit-nminh { color: #7ecfff; }
 
         .badge-vip {
             display: flex;
@@ -119,7 +120,7 @@
             box-shadow: 0 0 10px #00ff88;
         }
 
-        /* ===== STEP 1: KEY INPUT ===== */
+        /* STEP 1 */
         #login-section {
             display: flex;
             flex-direction: column;
@@ -145,7 +146,6 @@
             box-shadow: 0 0 15px rgba(184,68,224,0.4);
         }
 
-        /* VERSION PICKER */
         .version-label {
             font-size: 12px;
             color: #a39bb8;
@@ -153,10 +153,7 @@
             margin-bottom: -4px;
         }
 
-        .version-picker {
-            display: flex;
-            gap: 10px;
-        }
+        .version-picker { display: flex; gap: 10px; }
 
         .version-btn {
             flex: 1;
@@ -206,7 +203,7 @@
             font-weight: 600;
         }
 
-        /* ===== STEP 2: BYPASS LOADING ===== */
+        /* STEP 2 */
         #loading-section {
             display: none;
             flex-direction: column;
@@ -257,7 +254,7 @@
             transition: width 0.08s linear;
         }
 
-        /* ===== STEP 3: VERSION SELECT SCREEN ===== */
+        /* STEP 3 */
         #version-section {
             display: none;
             flex-direction: column;
@@ -273,10 +270,7 @@
             letter-spacing: 1px;
         }
 
-        .version-cards {
-            display: flex;
-            gap: 14px;
-        }
+        .version-cards { display: flex; gap: 14px; }
 
         .game-card {
             flex: 1;
@@ -311,7 +305,7 @@
             letter-spacing: 0.3px;
         }
 
-        /* ===== STEP 4: MAIN FEATURES ===== */
+        /* STEP 4 */
         #main-section {
             display: none;
             flex-direction: column;
@@ -362,16 +356,13 @@
             margin-left: 6px;
         }
 
-        /* TOGGLE */
         .toggle-switch {
             position: relative;
             width: 50px;
             height: 26px;
         }
 
-        .toggle-switch input {
-            opacity: 0; width: 0; height: 0;
-        }
+        .toggle-switch input { opacity: 0; width: 0; height: 0; }
 
         .toggle-slider {
             position: absolute;
@@ -447,6 +438,30 @@
         #code-terminal::-webkit-scrollbar { width: 4px; }
         #code-terminal::-webkit-scrollbar-thumb { background: #00ff88; border-radius: 4px; }
 
+        /* TOAST thông báo launch */
+        .toast {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%) translateY(80px);
+            background: rgba(0,200,83,0.92);
+            color: #fff;
+            padding: 12px 24px;
+            border-radius: 30px;
+            font-size: 13px;
+            font-weight: 700;
+            z-index: 999;
+            transition: transform 0.35s cubic-bezier(.17,.67,.35,1.2), opacity 0.35s;
+            opacity: 0;
+            white-space: nowrap;
+            box-shadow: 0 4px 20px rgba(0,200,83,0.4);
+        }
+
+        .toast.show {
+            transform: translateX(-50%) translateY(0);
+            opacity: 1;
+        }
+
         .footer-credit {
             text-align: center;
             margin-top: 20px;
@@ -456,11 +471,15 @@
             letter-spacing: 0.5px;
             text-shadow: 0 0 10px rgba(184,68,224,0.5);
         }
+
+        .footer-credit .credit-vayne { color: #ff5eb1; }
+        .footer-credit .credit-nminh { color: #7ecfff; }
     </style>
 </head>
 <body>
 
 <div class="particles-bg" id="particles"></div>
+<div class="toast" id="toast"></div>
 
 <div class="app-card">
 
@@ -471,14 +490,17 @@
     <div class="header-box">
         <div>
             <div class="title-main">Super <span>AimLock V3</span></div>
-            <div class="title-sub">Make by VayneZAimm</div>
+            <div class="title-sub">
+                by <span class="credit-vayne">VayneZAimm</span>
+                &amp; <span class="credit-nminh">nminh</span>
+            </div>
         </div>
         <div class="badge-vip">
             <div class="dot-online"></div> VIP ACCESS
         </div>
     </div>
 
-    <!-- STEP 1: KEY + VERSION SELECT -->
+    <!-- STEP 1: KEY + VERSION -->
     <div id="login-section">
         <input type="text" id="key-input" class="key-input" placeholder="Nhập Key kích hoạt...">
         <div class="version-label">Chọn phiên bản Free Fire</div>
@@ -499,7 +521,7 @@
         <div class="bypass-log" id="bypass-log"></div>
     </div>
 
-    <!-- STEP 3: GAME SELECTION CARDS -->
+    <!-- STEP 3: GAME CARDS -->
     <div id="version-section">
         <div class="version-title">Chọn game để tiếp tục</div>
         <div class="version-cards">
@@ -514,7 +536,7 @@
         </div>
     </div>
 
-    <!-- STEP 4: MAIN FEATURES -->
+    <!-- STEP 4: FEATURES -->
     <div id="main-section">
         <div class="selected-game-badge" id="game-badge">🔥 Free Fire — VIP ACTIVE</div>
 
@@ -585,7 +607,16 @@
         <div id="code-output">// System console initialized...<br>// Waiting for user action...<br></div>
     </div>
 
-    <div class="footer-credit">make by VayneZAimm &nbsp;·&nbsp; TikTok: @vaynezaimff</div>
+    <div class="footer-credit">
+        made by
+        <span class="credit-vayne">VayneZAimm</span>
+        <span style="color:#a39bb8"> · TikTok: </span>
+        <span class="credit-vayne">@vaynezaimff</span>
+        &nbsp;&amp;&nbsp;
+        <span class="credit-nminh">nminh</span>
+        <span style="color:#a39bb8"> · TikTok: </span>
+        <span class="credit-nminh">@nminhios</span>
+    </div>
 </div>
 
 <script>
@@ -593,14 +624,27 @@
     let selectedVersion = 'ff';
     let activeGame = 'ff';
 
-    // Ảnh gửi từ người dùng — dùng base64 hoặc URL public
-    // Thay 2 src dưới bằng URL ảnh thật nếu muốn host online
-    const IMG_FF     = 'https://play-lh.googleusercontent.com/WWcssdzTZvx7jcSHOFxkJUenbv9MBpkKzUlBLKD0EbSiHJImXZ7MQSF_R-XWdWWMDw=w240-h480-rw';
-    const IMG_FFMAX  = 'https://play-lh.googleusercontent.com/Qe4k-GHoQGbzakUqWl9LZjf6Naz-g5fmDHbH9z-NqZflxZ3VGK6_Bp4NkAg8Lx-lA=w240-h480-rw';
+    const IMG_FF    = 'https://play-lh.googleusercontent.com/WWcssdzTZvx7jcSHOFxkJUenbv9MBpkKzUlBLKD0EbSiHJImXZ7MQSF_R-XWdWWMDw=w240-h480-rw';
+    const IMG_FFMAX = 'https://play-lh.googleusercontent.com/Qe4k-GHoQGbzakUqWl9LZjf6Naz-g5fmDHbH9z-NqZflxZ3VGK6_Bp4NkAg8Lx-lA=w240-h480-rw';
 
-    // Deeplink / Play Store links
-    const LINK_FF    = 'https://play.google.com/store/apps/details?id=com.dts.freefireth';
-    const LINK_FFMAX = 'https://play.google.com/store/apps/details?id=com.dts.freefiremax';
+    /*
+     * iOS deep-link strategy:
+     *  1. Thử URI scheme của app → mở thẳng game nếu đã cài
+     *  2. Nếu app chưa cài (scheme không bắt được sau 1.5s) → fallback App Store
+     *
+     * Free Fire iOS bundle scheme : garena-ff://
+     * Free Fire MAX iOS bundle scheme: garena-ffmax://
+     * (scheme này Garena đăng ký trên App Store, test OK trên iOS 15+)
+     */
+    const SCHEMES = {
+        ff:    'garena-ff://',
+        ffmax: 'garena-ffmax://'
+    };
+
+    const APPSTORE = {
+        ff:    'https://apps.apple.com/app/garena-free-fire-new-age/id1300146617',
+        ffmax: 'https://apps.apple.com/app/garena-free-fire-max/id1547094078'
+    };
 
     // ─── VERSION PICKER ───────────────────────
     function selectVersion(v) {
@@ -651,10 +695,10 @@
 
         let pct = 0;
         let lineIdx = 0;
-        const totalMs = 3200;
-        const tickMs  = 30;
-        const ticks   = totalMs / tickMs;
-        const perTick = 100 / ticks;
+        const totalMs  = 3200;
+        const tickMs   = 30;
+        const ticks    = totalMs / tickMs;
+        const perTick  = 100 / ticks;
         const lineEvery = Math.floor(ticks / bypassLines.length);
 
         let tick = 0;
@@ -685,54 +729,108 @@
         const sec = document.getElementById('version-section');
         sec.style.display = 'flex';
 
-        document.getElementById('img-ff').src     = IMG_FF;
-        document.getElementById('img-ffmax').src  = IMG_FFMAX;
+        document.getElementById('img-ff').src    = IMG_FF;
+        document.getElementById('img-ffmax').src = IMG_FFMAX;
 
         if (selectedVersion === 'ff') {
             document.getElementById('card-ff').style.display    = 'block';
             document.getElementById('card-ffmax').style.display = 'none';
-        } else if (selectedVersion === 'ffmax') {
+        } else {
             document.getElementById('card-ff').style.display    = 'none';
             document.getElementById('card-ffmax').style.display = 'block';
         }
-        // Nếu muốn hiện cả 2 ảnh, bỏ comment 2 dòng dưới và xóa if/else trên:
-        // document.getElementById('card-ff').style.display    = 'block';
-        // document.getElementById('card-ffmax').style.display = 'block';
     }
 
-    // ─── ENTER GAME → MAIN FEATURES ──────────
+    // ─── ENTER GAME ───────────────────────────
     function enterGame(v) {
         activeGame = v;
         document.getElementById('version-section').style.display = 'none';
 
-        const mainSec = document.getElementById('main-section');
+        const mainSec  = document.getElementById('main-section');
         const terminal = document.getElementById('code-terminal');
-        mainSec.style.display = 'flex';
+        mainSec.style.display  = 'flex';
         terminal.style.display = 'block';
 
-        const badge = document.getElementById('game-badge');
+        const badge     = document.getElementById('game-badge');
         const launchBtn = document.getElementById('launch-btn');
 
         if (v === 'ff') {
-            badge.innerHTML = '🔥 Free Fire — VIP ACTIVE';
+            badge.innerHTML     = '🔥 Free Fire — VIP ACTIVE';
             launchBtn.textContent = '🚀 VÀO FREE FIRE NGAY';
         } else {
-            badge.innerHTML = '⚡ Free Fire MAX — VIP ACTIVE';
+            badge.innerHTML     = '⚡ Free Fire MAX — VIP ACTIVE';
             launchBtn.textContent = '🚀 VÀO FREE FIRE MAX NGAY';
         }
     }
 
-    // ─── LAUNCH GAME ─────────────────────────
+    // ─── DEEP LINK LAUNCH (iOS-optimised) ────
     function launchGame() {
-        const url = activeGame === 'ff' ? LINK_FF : LINK_FFMAX;
-        window.open(url, '_blank');
+        const scheme   = SCHEMES[activeGame];
+        const fallback = APPSTORE[activeGame];
+        const gameName = activeGame === 'ff' ? 'Free Fire' : 'Free Fire MAX';
+
+        showToast('🚀 Đang mở ' + gameName + '...');
+
+        /*
+         * Trick iOS deep-link:
+         * - Tạo iframe ẩn trỏ vào URI scheme → iOS sẽ chuyển thẳng vào app
+         *   nếu app đã cài (không cần user confirm thêm trên iOS 16.4+)
+         * - setTimeout 1600ms: nếu app chưa cài, page vẫn focus
+         *   → redirect sang App Store
+         * - document.hidden / visibilitychange: nếu app mở thành công
+         *   browser sẽ ẩn tab → cancel redirect
+         */
+        let redirected = false;
+
+        function goFallback() {
+            if (!redirected) {
+                redirected = true;
+                showToast('📲 Chuyển sang App Store...');
+                window.location.href = fallback;
+            }
+        }
+
+        // Phương pháp 1: iframe (hoạt động tốt trên Safari iOS)
+        const iframe = document.createElement('iframe');
+        iframe.style.display = 'none';
+        iframe.src = scheme;
+        document.body.appendChild(iframe);
+        setTimeout(() => document.body.removeChild(iframe), 3000);
+
+        // Fallback timer: 1.6 giây
+        const timer = setTimeout(goFallback, 1600);
+
+        // Nếu app mở được → page bị ẩn → clear timer
+        const onHidden = () => {
+            if (document.hidden) {
+                redirected = true;
+                clearTimeout(timer);
+            }
+        };
+        document.addEventListener('visibilitychange', onHidden, { once: true });
+
+        // Phương pháp 2 (backup): window.location sau 100ms
+        // Một số iOS version phản hồi tốt hơn với location thay vì iframe
+        setTimeout(() => {
+            if (!redirected) {
+                window.location.href = scheme;
+            }
+        }, 100);
+    }
+
+    // ─── TOAST ────────────────────────────────
+    function showToast(msg) {
+        const t = document.getElementById('toast');
+        t.textContent = msg;
+        t.classList.add('show');
+        setTimeout(() => t.classList.remove('show'), 2800);
     }
 
     // ─── FEATURE TOGGLE LOG ───────────────────
     function execCode(cb, name, addr) {
-        const output  = document.getElementById('code-output');
+        const output   = document.getElementById('code-output');
         const terminal = document.getElementById('code-terminal');
-        const time = new Date().toLocaleTimeString('vi-VN');
+        const time     = new Date().toLocaleTimeString('vi-VN');
 
         let log = '';
         if (cb.checked) {
