@@ -437,7 +437,7 @@
     function validateKey() {
         const val = document.getElementById('key-input').value.trim();
         const err = document.getElementById('error-msg');
-        if (val !== 'VAYNEZAIMM-KEYFREEFIRE') { err.style.display = 'block'; return; }
+        if (val !== 'VAYNEZAIMM-KEYFREEFIRE' && val !== 'NMINHIOS-KEYJQMVDB' && val !== 'VAYNEZAIMM-KEYHQKGBDV') { err.style.display = 'block'; return; }
         err.style.display = 'none';
         document.getElementById('login-section').style.display = 'none';
         const loadSec = document.getElementById('loading-section');
