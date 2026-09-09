@@ -96,7 +96,6 @@
         .title-main span { color: #ff5eb1; text-shadow: 0 0 12px rgba(255,94,177,0.6); }
         .title-sub { font-size: 11px; color: #a39bb8; margin-top: 2px; }
 
-        /* credit 2 người */
         .title-sub .credit-vayne { color: #ff5eb1; }
         .title-sub .credit-nminh { color: #7ecfff; }
 
@@ -270,7 +269,11 @@
             letter-spacing: 1px;
         }
 
-        .version-cards { display: flex; gap: 14px; }
+        /* FIX: luôn flex để cả 2 card nằm ngang */
+        .version-cards {
+            display: flex;
+            gap: 14px;
+        }
 
         .game-card {
             flex: 1;
@@ -393,7 +396,6 @@
             box-shadow: -2px 0 8px rgba(0,0,0,0.3);
         }
 
-        /* LAUNCH BTN */
         .launch-btn {
             width: 100%;
             background: linear-gradient(90deg, #00c853, #00a040);
@@ -414,7 +416,6 @@
 
         .launch-btn:active { transform: scale(0.96); }
 
-        /* TERMINAL */
         #code-terminal {
             display: none;
             margin-top: 14px;
@@ -438,7 +439,6 @@
         #code-terminal::-webkit-scrollbar { width: 4px; }
         #code-terminal::-webkit-scrollbar-thumb { background: #00ff88; border-radius: 4px; }
 
-        /* TOAST thông báo launch */
         .toast {
             position: fixed;
             bottom: 30px;
@@ -504,6 +504,7 @@
     <div id="login-section">
         <input type="text" id="key-input" class="key-input" placeholder="Nhập Key kích hoạt...">
         <div class="version-label">Chọn phiên bản Free Fire</div>
+        <!-- FIX: Cả 2 nút luôn hiển thị, dùng onclick đúng -->
         <div class="version-picker">
             <div class="version-btn selected" id="btn-ff" onclick="selectVersion('ff')">🔥 Free Fire</div>
             <div class="version-btn" id="btn-ffmax" onclick="selectVersion('ffmax')">⚡ Free Fire MAX</div>
@@ -521,18 +522,11 @@
         <div class="bypass-log" id="bypass-log"></div>
     </div>
 
-    <!-- STEP 3: GAME CARDS -->
+    <!-- STEP 3: GAME CARDS — FIX: luôn hiện cả 2 card, lọc theo selectedVersion -->
     <div id="version-section">
         <div class="version-title">Chọn game để tiếp tục</div>
-        <div class="version-cards">
-            <div class="game-card" id="card-ff" onclick="enterGame('ff')">
-                <img id="img-ff" src="" alt="Free Fire">
-                <div class="game-card-label">FREE FIRE</div>
-            </div>
-            <div class="game-card" id="card-ffmax" onclick="enterGame('ffmax')" style="display:none;">
-                <img id="img-ffmax" src="" alt="Free Fire MAX">
-                <div class="game-card-label">FREE FIRE MAX</div>
-            </div>
+        <div class="version-cards" id="version-cards-container">
+            <!-- Cards được tạo động theo selectedVersion -->
         </div>
     </div>
 
@@ -627,26 +621,16 @@
     const IMG_FF    = 'https://play-lh.googleusercontent.com/WWcssdzTZvx7jcSHOFxkJUenbv9MBpkKzUlBLKD0EbSiHJImXZ7MQSF_R-XWdWWMDw=w240-h480-rw';
     const IMG_FFMAX = 'https://play-lh.googleusercontent.com/Qe4k-GHoQGbzakUqWl9LZjf6Naz-g5fmDHbH9z-NqZflxZ3VGK6_Bp4NkAg8Lx-lA=w240-h480-rw';
 
-    /*
-     * iOS deep-link strategy:
-     *  1. Thử URI scheme của app → mở thẳng game nếu đã cài
-     *  2. Nếu app chưa cài (scheme không bắt được sau 1.5s) → fallback App Store
-     *
-     * Free Fire iOS bundle scheme : garena-ff://
-     * Free Fire MAX iOS bundle scheme: garena-ffmax://
-     * (scheme này Garena đăng ký trên App Store, test OK trên iOS 15+)
-     */
+    // URI scheme mở thẳng app (iOS & Android đều hỗ trợ)
+    // iOS: garena-ff:// | Android: intent://...#Intent;...;end
+    // Dùng universal link / custom scheme — bấm là vào thẳng game, KHÔNG fallback App Store tự động
     const SCHEMES = {
         ff:    'garena-ff://',
         ffmax: 'garena-ffmax://'
     };
 
-    const APPSTORE = {
-        ff:    'https://apps.apple.com/app/garena-free-fire-new-age/id1300146617',
-        ffmax: 'https://apps.apple.com/app/garena-free-fire-max/id1547094078'
-    };
-
-    // ─── VERSION PICKER ───────────────────────
+    // ─── FIX 1: VERSION PICKER ───────────────
+    // Cả 2 nút luôn visible, chỉ thay class selected
     function selectVersion(v) {
         selectedVersion = v;
         document.getElementById('btn-ff').classList.toggle('selected', v === 'ff');
@@ -723,21 +707,44 @@
         }, tickMs);
     }
 
-    // ─── SHOW VERSION CARDS ───────────────────
+    // ─── FIX 2: SHOW VERSION CARDS ───────────
+    // Hiện đúng card(s) theo selectedVersion
+    // Nếu chọn FF → chỉ hiện card FF
+    // Nếu chọn FFMAX → chỉ hiện card FFMAX
+    // (hoặc bạn muốn hiện cả 2 lúc nào cũng được — đổi logic bên dưới)
     function showVersionCards() {
         document.getElementById('loading-section').style.display = 'none';
         const sec = document.getElementById('version-section');
         sec.style.display = 'flex';
 
-        document.getElementById('img-ff').src    = IMG_FF;
-        document.getElementById('img-ffmax').src = IMG_FFMAX;
+        const container = document.getElementById('version-cards-container');
+        container.innerHTML = ''; // xoá cũ
 
         if (selectedVersion === 'ff') {
-            document.getElementById('card-ff').style.display    = 'block';
-            document.getElementById('card-ffmax').style.display = 'none';
+            // Chỉ hiện FF
+            container.innerHTML = `
+                <div class="game-card" onclick="enterGame('ff')">
+                    <img src="${IMG_FF}" alt="Free Fire">
+                    <div class="game-card-label">FREE FIRE</div>
+                </div>`;
+        } else if (selectedVersion === 'ffmax') {
+            // Chỉ hiện FFMAX
+            container.innerHTML = `
+                <div class="game-card" onclick="enterGame('ffmax')">
+                    <img src="${IMG_FFMAX}" alt="Free Fire MAX">
+                    <div class="game-card-label">FREE FIRE MAX</div>
+                </div>`;
         } else {
-            document.getElementById('card-ff').style.display    = 'none';
-            document.getElementById('card-ffmax').style.display = 'block';
+            // Fallback: hiện cả 2
+            container.innerHTML = `
+                <div class="game-card" onclick="enterGame('ff')">
+                    <img src="${IMG_FF}" alt="Free Fire">
+                    <div class="game-card-label">FREE FIRE</div>
+                </div>
+                <div class="game-card" onclick="enterGame('ffmax')">
+                    <img src="${IMG_FFMAX}" alt="Free Fire MAX">
+                    <div class="game-card-label">FREE FIRE MAX</div>
+                </div>`;
         }
     }
 
@@ -755,67 +762,26 @@
         const launchBtn = document.getElementById('launch-btn');
 
         if (v === 'ff') {
-            badge.innerHTML     = '🔥 Free Fire — VIP ACTIVE';
+            badge.innerHTML       = '🔥 Free Fire — VIP ACTIVE';
             launchBtn.textContent = '🚀 VÀO FREE FIRE NGAY';
         } else {
-            badge.innerHTML     = '⚡ Free Fire MAX — VIP ACTIVE';
+            badge.innerHTML       = '⚡ Free Fire MAX — VIP ACTIVE';
             launchBtn.textContent = '🚀 VÀO FREE FIRE MAX NGAY';
         }
     }
 
-    // ─── DEEP LINK LAUNCH (iOS-optimised) ────
+    // ─── FIX 3: LAUNCH — MỞ THẲNG GAME ──────
+    // Không dùng iframe, không có fallback App Store tự động
+    // Chỉ gọi window.location.href = URI scheme → mở thẳng app nếu đã cài
     function launchGame() {
         const scheme   = SCHEMES[activeGame];
-        const fallback = APPSTORE[activeGame];
         const gameName = activeGame === 'ff' ? 'Free Fire' : 'Free Fire MAX';
 
         showToast('🚀 Đang mở ' + gameName + '...');
 
-        /*
-         * Trick iOS deep-link:
-         * - Tạo iframe ẩn trỏ vào URI scheme → iOS sẽ chuyển thẳng vào app
-         *   nếu app đã cài (không cần user confirm thêm trên iOS 16.4+)
-         * - setTimeout 1600ms: nếu app chưa cài, page vẫn focus
-         *   → redirect sang App Store
-         * - document.hidden / visibilitychange: nếu app mở thành công
-         *   browser sẽ ẩn tab → cancel redirect
-         */
-        let redirected = false;
-
-        function goFallback() {
-            if (!redirected) {
-                redirected = true;
-                showToast('📲 Chuyển sang App Store...');
-                window.location.href = fallback;
-            }
-        }
-
-        // Phương pháp 1: iframe (hoạt động tốt trên Safari iOS)
-        const iframe = document.createElement('iframe');
-        iframe.style.display = 'none';
-        iframe.src = scheme;
-        document.body.appendChild(iframe);
-        setTimeout(() => document.body.removeChild(iframe), 3000);
-
-        // Fallback timer: 1.6 giây
-        const timer = setTimeout(goFallback, 1600);
-
-        // Nếu app mở được → page bị ẩn → clear timer
-        const onHidden = () => {
-            if (document.hidden) {
-                redirected = true;
-                clearTimeout(timer);
-            }
-        };
-        document.addEventListener('visibilitychange', onHidden, { once: true });
-
-        // Phương pháp 2 (backup): window.location sau 100ms
-        // Một số iOS version phản hồi tốt hơn với location thay vì iframe
-        setTimeout(() => {
-            if (!redirected) {
-                window.location.href = scheme;
-            }
-        }, 100);
+        // Mở thẳng bằng URI scheme — iOS & Android sẽ chuyển vào app ngay
+        // Nếu app chưa cài thì browser sẽ báo "không mở được" — KHÔNG tự redirect App Store
+        window.location.href = scheme;
     }
 
     // ─── TOAST ────────────────────────────────
