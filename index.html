@@ -95,7 +95,6 @@
 
         .title-main span { color: #ff5eb1; text-shadow: 0 0 12px rgba(255,94,177,0.6); }
         .title-sub { font-size: 11px; color: #a39bb8; margin-top: 2px; }
-
         .title-sub .credit-vayne { color: #ff5eb1; }
         .title-sub .credit-nminh { color: #7ecfff; }
 
@@ -119,7 +118,6 @@
             box-shadow: 0 0 10px #00ff88;
         }
 
-        /* STEP 1 */
         #login-section {
             display: flex;
             flex-direction: column;
@@ -202,7 +200,6 @@
             font-weight: 600;
         }
 
-        /* STEP 2 */
         #loading-section {
             display: none;
             flex-direction: column;
@@ -253,7 +250,6 @@
             transition: width 0.08s linear;
         }
 
-        /* STEP 3 */
         #version-section {
             display: none;
             flex-direction: column;
@@ -269,11 +265,7 @@
             letter-spacing: 1px;
         }
 
-        /* FIX: luôn flex để cả 2 card nằm ngang */
-        .version-cards {
-            display: flex;
-            gap: 14px;
-        }
+        .version-cards { display: flex; gap: 14px; }
 
         .game-card {
             flex: 1;
@@ -308,7 +300,6 @@
             letter-spacing: 0.3px;
         }
 
-        /* STEP 4 */
         #main-section {
             display: none;
             flex-direction: column;
@@ -396,7 +387,9 @@
             box-shadow: -2px 0 8px rgba(0,0,0,0.3);
         }
 
+        /* LAUNCH BUTTON — pakai <a> tag biar gesture langsung attached */
         .launch-btn {
+            display: block;
             width: 100%;
             background: linear-gradient(90deg, #00c853, #00a040);
             color: #fff;
@@ -412,6 +405,9 @@
             font-family: 'Poppins', sans-serif;
             margin-top: 6px;
             letter-spacing: 0.5px;
+            text-align: center;
+            text-decoration: none;
+            line-height: 1.4;
         }
 
         .launch-btn:active { transform: scale(0.96); }
@@ -438,6 +434,70 @@
 
         #code-terminal::-webkit-scrollbar { width: 4px; }
         #code-terminal::-webkit-scrollbar-thumb { background: #00ff88; border-radius: 4px; }
+
+        /* OVERLAY MỞ APP */
+        #launch-overlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(5,3,10,0.92);
+            z-index: 100;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            gap: 20px;
+            padding: 30px;
+            backdrop-filter: blur(10px);
+        }
+
+        #launch-overlay.show { display: flex; }
+
+        .overlay-spinner {
+            width: 64px; height: 64px;
+            border: 4px solid rgba(255,255,255,0.1);
+            border-top-color: #00ff88;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        .overlay-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 18px;
+            font-weight: 900;
+            color: #00ff88;
+            text-align: center;
+        }
+
+        .overlay-sub {
+            font-size: 13px;
+            color: #a39bb8;
+            text-align: center;
+            line-height: 1.6;
+        }
+
+        /* Nút fallback: mở thủ công nếu auto fail */
+        .overlay-btn {
+            padding: 14px 32px;
+            border-radius: 30px;
+            border: none;
+            background: linear-gradient(90deg, #a832d7, #ed4264);
+            color: #fff;
+            font-size: 14px;
+            font-weight: 700;
+            cursor: pointer;
+            font-family: 'Poppins', sans-serif;
+            box-shadow: 0 4px 16px rgba(237,66,100,0.35);
+        }
+
+        .overlay-close {
+            font-size: 12px;
+            color: #6b5f7a;
+            cursor: pointer;
+            text-decoration: underline;
+            margin-top: -8px;
+        }
 
         .toast {
             position: fixed;
@@ -481,6 +541,20 @@
 <div class="particles-bg" id="particles"></div>
 <div class="toast" id="toast"></div>
 
+<!-- OVERLAY MỞ APP -->
+<div id="launch-overlay">
+    <div class="overlay-spinner"></div>
+    <div class="overlay-title" id="overlay-title">Đang mở game...</div>
+    <div class="overlay-sub" id="overlay-sub">
+        Hệ thống đang khởi động game.<br>
+        Nếu không tự mở, bấm nút bên dưới.
+    </div>
+    <button class="overlay-btn" id="overlay-manual-btn" onclick="manualOpen()">
+        MỞ GAME NGAY
+    </button>
+    <span class="overlay-close" onclick="closeOverlay()">Đóng lại</span>
+</div>
+
 <div class="app-card">
 
     <div class="banner-container">
@@ -500,11 +574,10 @@
         </div>
     </div>
 
-    <!-- STEP 1: KEY + VERSION -->
+    <!-- STEP 1 -->
     <div id="login-section">
         <input type="text" id="key-input" class="key-input" placeholder="Nhập Key kích hoạt...">
         <div class="version-label">Chọn phiên bản Free Fire</div>
-        <!-- FIX: Cả 2 nút luôn hiển thị, dùng onclick đúng -->
         <div class="version-picker">
             <div class="version-btn selected" id="btn-ff" onclick="selectVersion('ff')">🔥 Free Fire</div>
             <div class="version-btn" id="btn-ffmax" onclick="selectVersion('ffmax')">⚡ Free Fire MAX</div>
@@ -513,7 +586,7 @@
         <button class="btn-submit" onclick="validateKey()">KÍCH HOẠT HỆ THỐNG</button>
     </div>
 
-    <!-- STEP 2: BYPASS LOADING -->
+    <!-- STEP 2 -->
     <div id="loading-section">
         <div class="percent-text"><span id="percent-count">0</span>%</div>
         <div class="progress-track">
@@ -522,15 +595,13 @@
         <div class="bypass-log" id="bypass-log"></div>
     </div>
 
-    <!-- STEP 3: GAME CARDS — FIX: luôn hiện cả 2 card, lọc theo selectedVersion -->
+    <!-- STEP 3 -->
     <div id="version-section">
         <div class="version-title">Chọn game để tiếp tục</div>
-        <div class="version-cards" id="version-cards-container">
-            <!-- Cards được tạo động theo selectedVersion -->
-        </div>
+        <div class="version-cards" id="version-cards-container"></div>
     </div>
 
-    <!-- STEP 4: FEATURES -->
+    <!-- STEP 4 -->
     <div id="main-section">
         <div class="selected-game-badge" id="game-badge">🔥 Free Fire — VIP ACTIVE</div>
 
@@ -594,7 +665,10 @@
             </label>
         </div>
 
-        <button class="launch-btn" id="launch-btn" onclick="launchGame()">🚀 VÀO GAME NGAY</button>
+        <!-- FIXED: pakai <a> tag, href gắn trực tiếp, onclick chỉ show overlay -->
+        <a id="launch-btn" class="launch-btn" href="#" onclick="launchGame(event)">
+            🚀 VÀO GAME NGAY
+        </a>
     </div>
 
     <div id="code-terminal">
@@ -614,30 +688,59 @@
 </div>
 
 <script>
-    // ─── STATE ───────────────────────────────
+    // ─── STATE ───────────────────────────────────────────────────────────────
     let selectedVersion = 'ff';
-    let activeGame = 'ff';
+    let activeGame      = 'ff';
+    let currentScheme   = '';
 
     const IMG_FF    = 'https://play-lh.googleusercontent.com/WWcssdzTZvx7jcSHOFxkJUenbv9MBpkKzUlBLKD0EbSiHJImXZ7MQSF_R-XWdWWMDw=w240-h480-rw';
     const IMG_FFMAX = 'https://play-lh.googleusercontent.com/Qe4k-GHoQGbzakUqWl9LZjf6Naz-g5fmDHbH9z-NqZflxZ3VGK6_Bp4NkAg8Lx-lA=w240-h480-rw';
 
-    // URI scheme mở thẳng app (iOS & Android đều hỗ trợ)
-    // iOS: garena-ff:// | Android: intent://...#Intent;...;end
-    // Dùng universal link / custom scheme — bấm là vào thẳng game, KHÔNG fallback App Store tự động
+    /*
+     * ─── URI SCHEME MAP ─────────────────────────────────────────────────────
+     *
+     * Android: pakai intent:// URI agar Chrome/WebView forward ke app
+     *   format: intent://<host>/<path>#Intent;scheme=<appscheme>;package=<pkg>;end
+     *   → Chrome akan langsung launch app tanpa "can't open" error
+     *
+     * iOS: pakai custom scheme langsung (garena-ff://)
+     *   iOS Safari handle ini native tanpa masalah
+     *
+     * Kita detect platform lalu pilih URI yang tepat.
+     */
     const SCHEMES = {
-        ff:    'garena-ff://',
-        ffmax: 'garena-ffmax://'
+        ff: {
+            ios:     'garena-ff://',
+            android: 'intent://com.dena.a12026418/#Intent;scheme=garena-ff;package=com.dena.a12026418;end',
+            // Fallback: Play Store / App Store link
+            android_store: 'https://play.google.com/store/apps/details?id=com.dena.a12026418',
+            ios_store:     'https://apps.apple.com/app/garena-free-fire/id1300146617'
+        },
+        ffmax: {
+            ios:     'garena-ffmax://',
+            android: 'intent://com.garena.game.codm/#Intent;scheme=garena-ffmax;package=com.garena.game.ffmax;end',
+            android_store: 'https://play.google.com/store/apps/details?id=com.garena.game.ffmax',
+            ios_store:     'https://apps.apple.com/app/free-fire-max/id1506746214'
+        }
     };
 
-    // ─── FIX 1: VERSION PICKER ───────────────
-    // Cả 2 nút luôn visible, chỉ thay class selected
+    // ─── DETECT PLATFORM ─────────────────────────────────────────────────────
+    function isIOS() {
+        return /iphone|ipad|ipod/i.test(navigator.userAgent);
+    }
+
+    function isAndroid() {
+        return /android/i.test(navigator.userAgent);
+    }
+
+    // ─── VERSION PICKER ──────────────────────────────────────────────────────
     function selectVersion(v) {
         selectedVersion = v;
         document.getElementById('btn-ff').classList.toggle('selected', v === 'ff');
         document.getElementById('btn-ffmax').classList.toggle('selected', v === 'ffmax');
     }
 
-    // ─── BYPASS LOG LINES ────────────────────
+    // ─── BYPASS LOG LINES ────────────────────────────────────────────────────
     const bypassLines = [
         '[*] Khởi động module Anti-Cheat Bypass...',
         '[*] Phát hiện tiến trình Garena: FOUND',
@@ -656,7 +759,7 @@
         '[✓] BYPASS HOÀN TẤT — HỆ THỐNG SẴN SÀNG',
     ];
 
-    // ─── KEY VALIDATION ───────────────────────
+    // ─── KEY VALIDATION ───────────────────────────────────────────────────────
     function validateKey() {
         const val = document.getElementById('key-input').value.trim();
         const err = document.getElementById('error-msg');
@@ -669,20 +772,20 @@
         err.style.display = 'none';
         document.getElementById('login-section').style.display = 'none';
 
-        const loadSec  = document.getElementById('loading-section');
-        const logEl    = document.getElementById('bypass-log');
-        const fillEl   = document.getElementById('progress-fill');
-        const countEl  = document.getElementById('percent-count');
+        const loadSec = document.getElementById('loading-section');
+        const logEl   = document.getElementById('bypass-log');
+        const fillEl  = document.getElementById('progress-fill');
+        const countEl = document.getElementById('percent-count');
 
         loadSec.style.display = 'flex';
         logEl.innerHTML = '';
 
-        let pct = 0;
+        let pct     = 0;
         let lineIdx = 0;
-        const totalMs  = 3200;
-        const tickMs   = 30;
-        const ticks    = totalMs / tickMs;
-        const perTick  = 100 / ticks;
+        const totalMs   = 3200;
+        const tickMs    = 30;
+        const ticks     = totalMs / tickMs;
+        const perTick   = 100 / ticks;
         const lineEvery = Math.floor(ticks / bypassLines.length);
 
         let tick = 0;
@@ -696,7 +799,7 @@
                 const color = bypassLines[lineIdx].startsWith('[+]') || bypassLines[lineIdx].startsWith('[✓]')
                     ? '#00ff88' : '#a8f0c0';
                 logEl.innerHTML += `<span style="color:${color}">${bypassLines[lineIdx]}</span>\n`;
-                logEl.scrollTop = logEl.scrollHeight;
+                logEl.scrollTop  = logEl.scrollHeight;
                 lineIdx++;
             }
 
@@ -707,35 +810,28 @@
         }, tickMs);
     }
 
-    // ─── FIX 2: SHOW VERSION CARDS ───────────
-    // Hiện đúng card(s) theo selectedVersion
-    // Nếu chọn FF → chỉ hiện card FF
-    // Nếu chọn FFMAX → chỉ hiện card FFMAX
-    // (hoặc bạn muốn hiện cả 2 lúc nào cũng được — đổi logic bên dưới)
+    // ─── SHOW VERSION CARDS ───────────────────────────────────────────────────
     function showVersionCards() {
         document.getElementById('loading-section').style.display = 'none';
         const sec = document.getElementById('version-section');
         sec.style.display = 'flex';
 
         const container = document.getElementById('version-cards-container');
-        container.innerHTML = ''; // xoá cũ
+        container.innerHTML = '';
 
         if (selectedVersion === 'ff') {
-            // Chỉ hiện FF
             container.innerHTML = `
                 <div class="game-card" onclick="enterGame('ff')">
                     <img src="${IMG_FF}" alt="Free Fire">
                     <div class="game-card-label">FREE FIRE</div>
                 </div>`;
         } else if (selectedVersion === 'ffmax') {
-            // Chỉ hiện FFMAX
             container.innerHTML = `
                 <div class="game-card" onclick="enterGame('ffmax')">
                     <img src="${IMG_FFMAX}" alt="Free Fire MAX">
                     <div class="game-card-label">FREE FIRE MAX</div>
                 </div>`;
         } else {
-            // Fallback: hiện cả 2
             container.innerHTML = `
                 <div class="game-card" onclick="enterGame('ff')">
                     <img src="${IMG_FF}" alt="Free Fire">
@@ -748,7 +844,7 @@
         }
     }
 
-    // ─── ENTER GAME ───────────────────────────
+    // ─── ENTER GAME ───────────────────────────────────────────────────────────
     function enterGame(v) {
         activeGame = v;
         document.getElementById('version-section').style.display = 'none';
@@ -770,21 +866,142 @@
         }
     }
 
-    // ─── FIX 3: LAUNCH — MỞ THẲNG GAME ──────
-    // Không dùng iframe, không có fallback App Store tự động
-    // Chỉ gọi window.location.href = URI scheme → mở thẳng app nếu đã cài
-    function launchGame() {
-        const scheme   = SCHEMES[activeGame];
+    // ─── LAUNCH GAME — FIXED DEEP ─────────────────────────────────────────────
+    /*
+     * Root cause lỗi "không thể mở ứng dụng":
+     *
+     * 1. window.location.href = scheme bên trong setTimeout/async → browser block
+     *    vì mất "user gesture context" (gesture trust chỉ sống ~1 frame)
+     *
+     * 2. Dùng <button onclick> với window.location.href thay vì <a href> trực tiếp
+     *    → một số browser (Chrome Android) chặn navigation không phải link
+     *
+     * 3. URI scheme sai: "garena-ff://" đúng cho iOS nhưng Android Chrome cần
+     *    intent:// format để forward đúng tới PackageManager
+     *
+     * FIX STRATEGY:
+     * - Detect platform → chọn URI đúng
+     * - Android: pakai intent:// URI → Chrome tự handle, không bị block
+     * - iOS: pakai window.location.href TRỰC TIẾP trong onclick handler (same frame)
+     *   kết hợp với iframe trick cho Safari cũ
+     * - Show overlay ngay, nút manual dùng <a href> gắn trực tiếp URI
+     */
+    function launchGame(e) {
+        e.preventDefault();
+
         const gameName = activeGame === 'ff' ? 'Free Fire' : 'Free Fire MAX';
+        const scheme   = SCHEMES[activeGame];
 
-        showToast('🚀 Đang mở ' + gameName + '...');
+        // Update overlay content
+        document.getElementById('overlay-title').textContent = 'Đang mở ' + gameName + '...';
+        document.getElementById('overlay-sub').innerHTML =
+            'Hệ thống đang khởi động.<br>Nếu game không tự mở, bấm nút bên dưới.';
 
-        // Mở thẳng bằng URI scheme — iOS & Android sẽ chuyển vào app ngay
-        // Nếu app chưa cài thì browser sẽ báo "không mở được" — KHÔNG tự redirect App Store
-        window.location.href = scheme;
+        // Gắn đúng URI vào manual button dựa theo platform
+        const manualBtn = document.getElementById('overlay-manual-btn');
+
+        if (isAndroid()) {
+            // Android: intent:// URI, Chrome handle native
+            currentScheme = scheme.android;
+            manualBtn.onclick = function() {
+                triggerAndroid(scheme.android, scheme.android_store);
+            };
+        } else if (isIOS()) {
+            // iOS: custom scheme trực tiếp
+            currentScheme = scheme.ios;
+            manualBtn.onclick = function() {
+                triggerIOS(scheme.ios, scheme.ios_store);
+            };
+        } else {
+            // Desktop / unknown: fallback ke store link
+            currentScheme = scheme.android_store;
+            manualBtn.onclick = function() {
+                window.open(scheme.android_store, '_blank');
+            };
+        }
+
+        // Show overlay
+        document.getElementById('launch-overlay').classList.add('show');
+
+        // AUTO TRIGGER — dalam frame yang sama dengan gesture
+        if (isAndroid()) {
+            triggerAndroid(scheme.android, scheme.android_store);
+        } else if (isIOS()) {
+            triggerIOS(scheme.ios, scheme.ios_store);
+        }
     }
 
-    // ─── TOAST ────────────────────────────────
+    // ─── ANDROID TRIGGER ─────────────────────────────────────────────────────
+    function triggerAndroid(intentUri, storeUrl) {
+        /*
+         * Chrome Android: intent:// URI di-handle oleh Chrome PackageManager bridge
+         * Kalau app terpasang → langsung launch
+         * Kalau tidak terpasang → Chrome tampilkan "app not found" lalu
+         *   kita bisa set S.browser_fallback_url di intent URI
+         *
+         * Format lengkap:
+         * intent://<action>#Intent;scheme=<scheme>;package=<pkg>;
+         *   S.browser_fallback_url=<encoded_fallback>;end
+         */
+
+        // Rebuild intent URI dengan fallback URL bawaan
+        // Untuk FF: package sudah ada di SCHEMES, tinggal tambah fallback
+        let uri = intentUri;
+        if (!uri.includes('browser_fallback_url')) {
+            const fallback = encodeURIComponent(storeUrl);
+            // Sisipkan fallback sebelum ;end
+            uri = uri.replace(';end', ';S.browser_fallback_url=' + fallback + ';end');
+        }
+
+        window.location.href = uri;
+    }
+
+    // ─── iOS TRIGGER ─────────────────────────────────────────────────────────
+    function triggerIOS(customScheme, storeUrl) {
+        /*
+         * iOS Safari: window.location.href = custom scheme
+         * Kalau app terpasang → Safari switch ke app (tidak ada error visible)
+         * Kalau tidak terpasang → Safari tampilkan "cannot open page"
+         *
+         * Trick iframe: Safari lama kadang perlu iframe approach
+         * tapi modern iOS (14+) window.location.href cukup
+         *
+         * Tambahan: pakai hidden iframe sebagai secondary trigger
+         * kalau Safari block window.location karena timing
+         */
+
+        // Primary: window.location.href langsung (dalam gesture frame)
+        window.location.href = customScheme;
+
+        // Secondary: iframe trick untuk Safari lama
+        setTimeout(function() {
+            const iframe = document.createElement('iframe');
+            iframe.style.display = 'none';
+            iframe.src = customScheme;
+            document.body.appendChild(iframe);
+            setTimeout(function() {
+                document.body.removeChild(iframe);
+            }, 2000);
+        }, 25);
+    }
+
+    // ─── CLOSE OVERLAY ───────────────────────────────────────────────────────
+    function closeOverlay() {
+        document.getElementById('launch-overlay').classList.remove('show');
+    }
+
+    // ─── MANUAL OPEN (fallback dari overlay button) ───────────────────────────
+    function manualOpen() {
+        if (isAndroid()) {
+            window.location.href = currentScheme;
+        } else if (isIOS()) {
+            window.location.href = currentScheme;
+        } else {
+            window.open(currentScheme, '_blank');
+        }
+    }
+
+    // ─── TOAST ───────────────────────────────────────────────────────────────
     function showToast(msg) {
         const t = document.getElementById('toast');
         t.textContent = msg;
@@ -792,7 +1009,7 @@
         setTimeout(() => t.classList.remove('show'), 2800);
     }
 
-    // ─── FEATURE TOGGLE LOG ───────────────────
+    // ─── FEATURE TOGGLE LOG ──────────────────────────────────────────────────
     function execCode(cb, name, addr) {
         const output   = document.getElementById('code-output');
         const terminal = document.getElementById('code-terminal');
@@ -816,12 +1033,12 @@
         terminal.scrollTop = terminal.scrollHeight;
     }
 
-    // ─── PARTICLES ────────────────────────────
+    // ─── PARTICLES ───────────────────────────────────────────────────────────
     function initParticles() {
         const container = document.getElementById('particles');
-        const colors = ['#ed4264','#a832d7','#00ff88','#ffffff'];
+        const colors    = ['#ed4264','#a832d7','#00ff88','#ffffff'];
         for (let i = 0; i < 40; i++) {
-            const p = document.createElement('div');
+            const p     = document.createElement('div');
             p.className = 'particle';
             const size  = Math.random() * 3 + 1.5;
             const color = colors[Math.floor(Math.random() * colors.length)];
