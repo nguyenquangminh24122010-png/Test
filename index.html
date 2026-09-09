@@ -338,11 +338,11 @@
             ios_web:         'https://apps.apple.com/app/garena-free-fire/id1300146617',
         },
         ffmax: {
-            // Free Fire MAX — package: com.garena.game.codm
-            android_market:  'market://details?id=com.garena.game.codm',
-            android_web:     'https://play.google.com/store/apps/details?id=com.garena.game.codm',
-            ios_itms:        'itms-apps://itunes.apple.com/app/id1492670244',
-            ios_web:         'https://apps.apple.com/app/free-fire-max/id1492670244',
+            // Free Fire MAX — VN: APK từ ffmax.garena.com (không có trên Play Store VN)
+            android_market:  'https://ffmax.garena.com/vn/',
+            android_web:     'https://ffmax.garena.com/vn/',
+            ios_itms:        'itms-apps://itunes.apple.com/app/id1480516829',
+            ios_web:         'https://apps.apple.com/vn/app/free-fire-max/id1480516829',
         }
     };
 
@@ -356,19 +356,25 @@
 
         if (isAndroid()) {
             /*
-             * Cố mở market:// trước (mở Play Store app native)
-             * Nếu thất bại (rất hiếm), fallback sang https Play Store link
+             * FF: market:// → mở Play Store native
+             * FF MAX: https://ffmax.garena.com/vn/ → trang APK chính thức Garena VN
+             *   (FF MAX không có trên Play Store VN, Garena distribute APK trực tiếp)
              */
-            try {
-                window.location.href = urls.android_market;
-                // Sau 1.5s nếu page vẫn visible (market:// bị block) → open web
-                setTimeout(function() {
-                    if (!document.hidden) {
-                        window.open(urls.android_web, '_blank');
-                    }
-                }, 1500);
-            } catch(err) {
-                window.open(urls.android_web, '_blank');
+            const isMarket = urls.android_market.startsWith('market://');
+            if (isMarket) {
+                try {
+                    window.location.href = urls.android_market;
+                    setTimeout(function() {
+                        if (!document.hidden) {
+                            window.open(urls.android_web, '_blank');
+                        }
+                    }, 1500);
+                } catch(err) {
+                    window.open(urls.android_web, '_blank');
+                }
+            } else {
+                // FFMAX: link https trực tiếp
+                window.open(urls.android_market, '_blank');
             }
 
         } else if (isIOS()) {
