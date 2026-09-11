@@ -5,809 +5,1139 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
 <title>Super AimLock V4</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Syne+Mono&family=Bebas+Neue&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;700&family=Orbitron:wght@700;800;900&display=swap" rel="stylesheet">
 <style>
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;user-select:none}
 
 :root{
-  --bg:#060410;
-  --card:#0d0a1e;
-  --card2:#120e26;
-  --border:rgba(120,80,255,0.18);
-  --accent:#7c3aed;
-  --accent2:#e040fb;
-  --gold:#f5c518;
-  --green:#00e5a0;
-  --red:#ff3d71;
-  --text:#e8e2ff;
-  --muted:#6b6490;
-  --r:20px;
+  --bg:#03010a;
+  --card-bg:rgba(8,4,20,0.97);
+  --border:rgba(139,92,246,0.15);
+  --border-bright:rgba(139,92,246,0.45);
+  --purple:#8b5cf6;
+  --purple-dim:rgba(139,92,246,0.12);
+  --pink:#d946ef;
+  --cyan:#06b6d4;
+  --green:#10b981;
+  --red:#f43f5e;
+  --gold:#fbbf24;
+  --text:#f1eeff;
+  --text-dim:#7c6fa8;
+  --text-muted:#3d3460;
+  --mono:'JetBrains Mono',monospace;
+  --sans:'Inter',sans-serif;
+  --display:'Orbitron',sans-serif;
+  --r:22px;
+  --r-sm:14px;
+  --glow-purple:0 0 40px rgba(139,92,246,0.25);
+  --glow-pink:0 0 30px rgba(217,70,239,0.2);
 }
+
+html{scroll-behavior:smooth}
 
 body{
   background:var(--bg);
   color:var(--text);
-  font-family:'Space Grotesk',sans-serif;
+  font-family:var(--sans);
   min-height:100vh;
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  padding:0 0 40px;
+  display:flex;flex-direction:column;align-items:center;
+  padding:0 0 60px;
   overflow-x:hidden;
   position:relative;
 }
 
-/* ── NOISE OVERLAY ── */
-body::before{
-  content:'';
-  position:fixed;inset:0;
-  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E");
-  background-size:200px;
-  pointer-events:none;z-index:0;opacity:.6;
+/* ─── ANIMATED BACKGROUND ─── */
+.bg-canvas{
+  position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden;
+}
+.bg-orb{
+  position:absolute;border-radius:50%;filter:blur(100px);
+  animation:orbFloat linear infinite;
+  will-change:transform;
+}
+.bg-orb-1{
+  width:500px;height:500px;
+  background:radial-gradient(circle,rgba(139,92,246,0.22) 0%,transparent 70%);
+  top:-100px;left:-150px;
+  animation-duration:25s;animation-direction:alternate;
+}
+.bg-orb-2{
+  width:380px;height:380px;
+  background:radial-gradient(circle,rgba(217,70,239,0.18) 0%,transparent 70%);
+  bottom:-80px;right:-120px;
+  animation-duration:20s;animation-direction:alternate-reverse;
+}
+.bg-orb-3{
+  width:260px;height:260px;
+  background:radial-gradient(circle,rgba(6,182,212,0.12) 0%,transparent 70%);
+  top:45%;left:55%;
+  animation-duration:30s;
+}
+@keyframes orbFloat{
+  0%{transform:translate(0,0) scale(1)}
+  33%{transform:translate(40px,-20px) scale(1.05)}
+  66%{transform:translate(-20px,30px) scale(0.97)}
+  100%{transform:translate(20px,10px) scale(1.03)}
 }
 
-/* ── AMBIENT BLOBS ── */
-.blob{position:fixed;border-radius:50%;filter:blur(80px);pointer-events:none;z-index:0;opacity:.28}
-.blob-a{width:420px;height:420px;background:radial-gradient(circle,#7c3aed,transparent 70%);top:-120px;left:-100px;animation:drift 18s ease-in-out infinite alternate}
-.blob-b{width:320px;height:320px;background:radial-gradient(circle,#e040fb,transparent 70%);bottom:-80px;right:-80px;animation:drift 14s ease-in-out infinite alternate-reverse}
-.blob-c{width:200px;height:200px;background:radial-gradient(circle,#00e5a0,transparent 70%);top:50%;left:50%;transform:translate(-50%,-50%);animation:drift 22s ease-in-out infinite alternate}
-@keyframes drift{0%{transform:translate(0,0) scale(1)}100%{transform:translate(30px,20px) scale(1.07)}}
-
-/* ── SCANLINE ── */
-.scanline{
-  position:fixed;top:0;left:0;width:100%;height:100%;
-  background:repeating-linear-gradient(to bottom,transparent 0px,transparent 2px,rgba(0,0,0,0.04) 2px,rgba(0,0,0,0.04) 4px);
-  pointer-events:none;z-index:0;
+/* grain overlay */
+.bg-grain{
+  position:fixed;inset:0;z-index:0;pointer-events:none;opacity:0.04;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size:256px;
 }
 
-/* ── CARD ── */
-.app-card{
-  width:94%;max-width:420px;
-  background:linear-gradient(145deg,rgba(20,12,40,.92),rgba(10,6,22,.96));
-  border:1px solid var(--border);
-  border-radius:28px;
-  padding:0 0 24px;
-  box-shadow:0 30px 60px rgba(0,0,0,.8),0 0 0 1px rgba(255,255,255,.04),inset 0 1px 0 rgba(255,255,255,.06);
+/* ─── MAIN CARD ─── */
+.card{
+  width:92%;max-width:400px;
   position:relative;z-index:1;
-  margin-top:24px;
+  margin-top:28px;
+  border-radius:28px;
   overflow:hidden;
+  background:var(--card-bg);
+  border:1px solid var(--border);
+  box-shadow:
+    0 0 0 1px rgba(255,255,255,0.03) inset,
+    0 40px 80px rgba(0,0,0,0.8),
+    0 0 80px rgba(139,92,246,0.06);
 }
 
-/* ── HERO BANNER ── */
+/* edge glow ring on card */
+.card::before{
+  content:'';
+  position:absolute;inset:-1px;
+  border-radius:29px;
+  background:linear-gradient(135deg,rgba(139,92,246,0.3),transparent 40%,transparent 60%,rgba(217,70,239,0.2));
+  z-index:0;pointer-events:none;
+}
+
+/* ─── HERO ─── */
 .hero{
-  width:100%;height:160px;
-  background:linear-gradient(135deg,#0a0618 0%,#1a0a35 50%,#0c0a28 100%);
-  position:relative;overflow:hidden;
+  position:relative;
+  height:200px;
+  overflow:hidden;
   display:flex;align-items:center;justify-content:center;
-  margin-bottom:0;
 }
-.hero-grid{
-  position:absolute;inset:0;
-  background-image:linear-gradient(rgba(120,60,255,.12) 1px,transparent 1px),linear-gradient(90deg,rgba(120,60,255,.12) 1px,transparent 1px);
-  background-size:32px 32px;
-  animation:gridScroll 20s linear infinite;
-}
-@keyframes gridScroll{0%{background-position:0 0}100%{background-position:0 32px}}
-.hero-glow{
-  position:absolute;
-  width:280px;height:280px;
-  background:radial-gradient(circle,rgba(124,58,237,.45) 0%,transparent 70%);
-  top:50%;left:50%;transform:translate(-50%,-55%);
-}
-.hero-content{text-align:center;position:relative;z-index:2}
-.hero-label{font-size:10px;letter-spacing:4px;color:var(--accent2);opacity:.7;margin-bottom:6px;font-family:'Syne Mono',monospace}
-.hero-title{font-family:'Bebas Neue',sans-serif;font-size:48px;letter-spacing:2px;line-height:1;
-  background:linear-gradient(90deg,#fff 0%,#c4b5fd 50%,#e040fb 100%);
-  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
-  filter:drop-shadow(0 0 20px rgba(180,100,255,.4));
-}
-.hero-sub{font-size:10px;color:var(--muted);margin-top:4px;font-family:'Syne Mono',monospace;letter-spacing:2px}
 
-/* ── STATUS BAR ── */
+/* animated mesh grid */
+.hero-mesh{
+  position:absolute;inset:0;
+  background-image:
+    linear-gradient(rgba(139,92,246,0.08) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(139,92,246,0.08) 1px,transparent 1px);
+  background-size:28px 28px;
+  animation:meshScroll 16s linear infinite;
+  transform-origin:center;
+}
+@keyframes meshScroll{
+  0%{background-position:0 0}
+  100%{background-position:0 28px}
+}
+
+/* hero gradient backdrop */
+.hero-grad{
+  position:absolute;inset:0;
+  background:
+    radial-gradient(ellipse 70% 80% at 50% 40%, rgba(139,92,246,0.25) 0%, transparent 70%),
+    linear-gradient(180deg,#0a0520 0%,#030112 100%);
+}
+
+/* scanning beam */
+.hero-beam{
+  position:absolute;
+  top:0;left:0;right:0;
+  height:2px;
+  background:linear-gradient(90deg,transparent,rgba(139,92,246,0.8),rgba(217,70,239,0.8),transparent);
+  box-shadow:0 0 20px rgba(139,92,246,0.8),0 4px 20px rgba(139,92,246,0.4);
+  animation:beamScan 4s ease-in-out infinite;
+}
+@keyframes beamScan{
+  0%{top:0%;opacity:1}
+  70%{opacity:1}
+  100%{top:100%;opacity:0}
+}
+
+/* hero circles — concentric pulsing rings */
+.hero-rings{
+  position:absolute;
+  top:50%;left:50%;
+  transform:translate(-50%,-55%);
+  pointer-events:none;
+}
+.hero-ring{
+  position:absolute;border-radius:50%;
+  border:1px solid rgba(139,92,246,0.2);
+  transform:translate(-50%,-50%);
+  top:0;left:0;
+}
+.hero-ring:nth-child(1){width:80px;height:80px;animation:ringPulse 3s ease-out infinite}
+.hero-ring:nth-child(2){width:130px;height:130px;animation:ringPulse 3s ease-out infinite 0.5s}
+.hero-ring:nth-child(3){width:180px;height:180px;animation:ringPulse 3s ease-out infinite 1s}
+.hero-ring:nth-child(4){width:240px;height:240px;animation:ringPulse 3s ease-out infinite 1.5s}
+@keyframes ringPulse{
+  0%{opacity:0.6;transform:translate(-50%,-50%) scale(1)}
+  100%{opacity:0;transform:translate(-50%,-50%) scale(1.3)}
+}
+
+/* crosshair icon */
+.hero-crosshair{
+  position:absolute;
+  width:36px;height:36px;
+  top:50%;left:50%;
+  transform:translate(-50%,-50%) rotate(0deg);
+  animation:crossSpin 12s linear infinite;
+  opacity:0.7;
+}
+.hero-crosshair::before,.hero-crosshair::after{
+  content:'';position:absolute;background:var(--purple);
+  border-radius:2px;
+}
+.hero-crosshair::before{width:2px;height:100%;left:50%;transform:translateX(-50%)}
+.hero-crosshair::after{width:100%;height:2px;top:50%;transform:translateY(-50%)}
+@keyframes crossSpin{0%{transform:translate(-50%,-50%) rotate(0deg)}100%{transform:translate(-50%,-50%) rotate(360deg)}}
+
+.hero-content{
+  position:relative;z-index:2;text-align:center;
+  animation:heroFadeIn 0.8s cubic-bezier(0.16,1,0.3,1) both;
+}
+@keyframes heroFadeIn{
+  from{opacity:0;transform:translateY(10px) scale(0.97)}
+  to{opacity:1;transform:translateY(0) scale(1)}
+}
+.hero-eyebrow{
+  font-family:var(--mono);font-size:9px;letter-spacing:3px;
+  color:var(--purple);opacity:0.8;margin-bottom:8px;
+  text-transform:uppercase;
+}
+.hero-title{
+  font-family:var(--display);
+  font-size:40px;font-weight:900;
+  letter-spacing:1px;line-height:0.95;
+  color:#fff;
+  text-shadow:0 0 40px rgba(139,92,246,0.6),0 0 80px rgba(217,70,239,0.3);
+  position:relative;
+}
+/* animated underline glow */
+.hero-title::after{
+  content:'';
+  display:block;
+  width:60%;height:2px;
+  margin:8px auto 0;
+  background:linear-gradient(90deg,transparent,var(--purple),var(--pink),transparent);
+  animation:titleLineGlow 2s ease-in-out infinite alternate;
+}
+@keyframes titleLineGlow{
+  from{opacity:0.4;width:40%}
+  to{opacity:1;width:70%}
+}
+.hero-sub{
+  font-family:var(--mono);font-size:9px;color:var(--text-dim);
+  margin-top:10px;letter-spacing:2px;
+}
+
+/* ─── STATUS BAR ─── */
 .status-bar{
   display:flex;align-items:center;justify-content:space-between;
-  padding:10px 20px;
-  background:rgba(0,0,0,.3);
-  border-top:1px solid rgba(255,255,255,.04);
-  border-bottom:1px solid rgba(255,255,255,.04);
-  margin-bottom:22px;
+  padding:9px 18px;
+  background:rgba(0,0,0,0.4);
+  border-top:1px solid rgba(255,255,255,0.03);
+  border-bottom:1px solid rgba(255,255,255,0.04);
 }
-.status-dot{width:6px;height:6px;border-radius:50%;background:var(--green);box-shadow:0 0 8px var(--green);animation:pulse 2s ease-in-out infinite}
-@keyframes pulse{0%,100%{opacity:1;box-shadow:0 0 8px var(--green)}50%{opacity:.4;box-shadow:0 0 3px var(--green)}}
-.status-text{font-size:10px;color:var(--green);font-family:'Syne Mono',monospace;letter-spacing:1px}
-.status-badge{font-size:9px;color:var(--gold);border:1px solid rgba(245,197,24,.3);padding:3px 10px;border-radius:20px;font-weight:700;letter-spacing:1px;background:rgba(245,197,24,.06)}
+.status-left{display:flex;align-items:center;gap:7px}
+.status-dot{
+  width:6px;height:6px;border-radius:50%;
+  background:var(--green);
+  box-shadow:0 0 6px var(--green),0 0 12px rgba(16,185,129,0.5);
+  animation:dotPulse 2.5s ease-in-out infinite;
+  flex-shrink:0;
+}
+@keyframes dotPulse{
+  0%,100%{opacity:1;box-shadow:0 0 6px var(--green),0 0 12px rgba(16,185,129,0.5)}
+  50%{opacity:0.4;box-shadow:0 0 2px var(--green)}
+}
+.status-text{font-family:var(--mono);font-size:9px;color:var(--green);letter-spacing:1.5px}
+.status-ping{
+  font-family:var(--mono);font-size:9px;color:var(--text-dim);
+  border-left:1px solid rgba(255,255,255,0.08);padding-left:8px;margin-left:4px;
+}
+.status-badge{
+  font-family:var(--mono);font-size:9px;font-weight:700;
+  color:var(--gold);
+  border:1px solid rgba(251,191,36,0.25);
+  background:rgba(251,191,36,0.06);
+  padding:3px 10px;border-radius:20px;letter-spacing:1px;
+}
 
-/* ── SECTION PADDING ── */
-.section-pad{padding:0 18px}
+/* ─── SECTION PADDING ─── */
+.pad{padding:0 16px}
 
-/* ── INPUT AREA ── */
-.key-wrap{position:relative;margin-bottom:14px}
-.key-icon{position:absolute;left:16px;top:50%;transform:translateY(-50%);font-size:16px;opacity:.5}
+/* ─── SECTION TRANSITIONS ─── */
+.section{display:none;flex-direction:column;gap:12px}
+.section.active{
+  display:flex;
+  animation:sectionIn 0.4s cubic-bezier(0.16,1,0.3,1) both;
+}
+@keyframes sectionIn{
+  from{opacity:0;transform:translateY(12px)}
+  to{opacity:1;transform:translateY(0)}
+}
+
+/* ─── LOGIN SECTION ─── */
+#sec-login{display:flex;flex-direction:column;gap:12px;padding:20px 16px 0}
+
+.input-wrap{position:relative}
+.input-icon{
+  position:absolute;left:14px;top:50%;transform:translateY(-50%);
+  font-size:15px;opacity:0.4;pointer-events:none;
+  transition:opacity 0.2s;
+}
+.input-wrap:focus-within .input-icon{opacity:0.8}
 .key-input{
-  width:100%;padding:14px 16px 14px 44px;
-  background:rgba(0,0,0,.4);
-  border:1px solid rgba(255,255,255,.08);
-  border-radius:14px;
-  color:#fff;font-size:14px;font-family:'Space Grotesk',sans-serif;
-  outline:none;transition:.25s;
-  caret-color:var(--accent2);
+  width:100%;padding:14px 14px 14px 42px;
+  background:rgba(0,0,0,0.5);
+  border:1px solid rgba(255,255,255,0.07);
+  border-radius:var(--r-sm);
+  color:#fff;font-size:13px;font-family:var(--mono);
+  outline:none;transition:border-color 0.2s,box-shadow 0.2s;
+  caret-color:var(--purple);
 }
-.key-input:focus{border-color:rgba(124,58,237,.6);box-shadow:0 0 0 3px rgba(124,58,237,.12),0 0 20px rgba(124,58,237,.15)}
-.key-input::placeholder{color:var(--muted)}
+.key-input:focus{
+  border-color:rgba(139,92,246,0.55);
+  box-shadow:0 0 0 3px rgba(139,92,246,0.1),0 0 24px rgba(139,92,246,0.12);
+}
+.key-input::placeholder{color:var(--text-muted);font-family:var(--mono)}
 
-/* ── VERSION PICKER ── */
-.vpick-label{font-size:10px;color:var(--muted);letter-spacing:2px;text-transform:uppercase;margin-bottom:10px;font-family:'Syne Mono',monospace}
-.vpick{display:flex;gap:10px;margin-bottom:16px}
+/* version picker */
+.pick-label{font-family:var(--mono);font-size:9px;color:var(--text-dim);letter-spacing:2px;margin-bottom:-4px}
+.vpick{display:grid;grid-template-columns:1fr 1fr;gap:8px}
 .vbtn{
-  flex:1;padding:11px 8px;
-  border-radius:12px;
-  border:1px solid rgba(255,255,255,.08);
-  background:rgba(255,255,255,.03);
-  color:var(--muted);font-size:12px;font-weight:600;
-  cursor:pointer;text-align:center;transition:.22s;
-  font-family:'Space Grotesk',sans-serif;
+  padding:11px 8px;border-radius:var(--r-sm);
+  border:1px solid rgba(255,255,255,0.06);
+  background:rgba(255,255,255,0.02);
+  color:var(--text-dim);font-size:12px;font-weight:600;
+  cursor:pointer;text-align:center;
+  font-family:var(--sans);
+  transition:all 0.2s;
 }
-.vbtn.selected{
-  border-color:rgba(124,58,237,.5);
-  color:#fff;background:rgba(124,58,237,.15);
-  box-shadow:0 0 14px rgba(124,58,237,.2),inset 0 1px 0 rgba(255,255,255,.06);
+.vbtn:active{transform:scale(0.97)}
+.vbtn.sel{
+  border-color:rgba(139,92,246,0.5);
+  background:rgba(139,92,246,0.12);
+  color:#fff;
+  box-shadow:0 0 16px rgba(139,92,246,0.15),0 1px 0 rgba(255,255,255,0.06) inset;
 }
 
-/* ── SUBMIT BTN ── */
+/* error */
+.err{
+  font-family:var(--mono);font-size:11px;color:var(--red);
+  text-align:center;display:none;letter-spacing:1px;
+  animation:errShake 0.35s ease;
+}
+@keyframes errShake{
+  0%,100%{transform:translateX(0)}20%,60%{transform:translateX(-5px)}40%,80%{transform:translateX(5px)}
+}
+
+/* submit button */
 .btn-submit{
-  width:100%;
-  background:linear-gradient(90deg,#7c3aed,#e040fb);
-  color:#fff;border:none;
-  padding:15px;font-size:14px;font-weight:700;
-  border-radius:14px;cursor:pointer;
-  letter-spacing:1px;text-transform:uppercase;
-  box-shadow:0 8px 24px rgba(124,58,237,.35),0 0 0 1px rgba(255,255,255,.06) inset;
-  transition:.18s;font-family:'Space Grotesk',sans-serif;
+  width:100%;border:none;cursor:pointer;
+  padding:15px;border-radius:var(--r-sm);
+  font-size:13px;font-weight:700;letter-spacing:1px;
+  text-transform:uppercase;font-family:var(--sans);color:#fff;
   position:relative;overflow:hidden;
+  background:linear-gradient(90deg,#7c3aed,#a855f7,#d946ef);
+  background-size:200% 100%;background-position:0% 50%;
+  box-shadow:0 6px 24px rgba(139,92,246,0.35),0 1px 0 rgba(255,255,255,0.1) inset;
+  transition:background-position 0.4s,transform 0.15s,box-shadow 0.2s;
 }
-.btn-submit::before{content:'';position:absolute;inset:0;background:linear-gradient(90deg,transparent,rgba(255,255,255,.08),transparent);transform:translateX(-100%);transition:transform .5s}
-.btn-submit:hover::before{transform:translateX(100%)}
-.btn-submit:active{transform:scale(.97)}
+.btn-submit:hover{background-position:100% 50%;box-shadow:0 8px 30px rgba(139,92,246,0.5)}
+.btn-submit:active{transform:scale(0.97)}
+.btn-submit::after{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(90deg,transparent 0%,rgba(255,255,255,0.12) 50%,transparent 100%);
+  transform:translateX(-100%);
+  transition:transform 0.6s;
+}
+.btn-submit:hover::after{transform:translateX(100%)}
 
-.error-msg{color:var(--red);font-size:12px;text-align:center;display:none;font-family:'Syne Mono',monospace;margin-top:-6px;margin-bottom:8px;letter-spacing:1px}
-
-/* ── BYPASS / LOADING ── */
-#loading-section{display:none;flex-direction:column;gap:16px}
-
-.bypass-header{display:flex;align-items:center;gap:10px;margin-bottom:4px}
-.bypass-dot-row{display:flex;gap:6px}
-.bypass-dot{width:10px;height:10px;border-radius:50%}
-.bypass-dot:nth-child(1){background:#ff5f57}
-.bypass-dot:nth-child(2){background:#febc2e}
-.bypass-dot:nth-child(3){background:#28c840}
-.bypass-title-bar{font-size:11px;color:var(--muted);font-family:'Syne Mono',monospace;flex:1;text-align:center}
+/* ─── BYPASS SECTION ─── */
+#sec-bypass{display:none;flex-direction:column;gap:14px;padding:20px 16px 0}
 
 .bypass-terminal{
-  background:#050309;
-  border-radius:14px;
-  border:1px solid rgba(0,229,160,.15);
+  background:#020008;
+  border-radius:var(--r-sm);
+  border:1px solid rgba(16,185,129,0.12);
   overflow:hidden;
-  box-shadow:0 0 30px rgba(0,229,160,.05),inset 0 0 20px rgba(0,0,0,.3);
 }
-.bypass-term-bar{
-  display:flex;align-items:center;gap:8px;
-  padding:9px 14px;
-  background:rgba(255,255,255,.03);
-  border-bottom:1px solid rgba(255,255,255,.04);
-}
-.bypass-log{
-  padding:12px 14px;
-  height:160px;overflow-y:auto;
-  font-family:'Syne Mono',monospace;font-size:10.5px;
-  color:var(--green);line-height:1.8;
-}
-.bypass-log::-webkit-scrollbar{width:3px}
-.bypass-log::-webkit-scrollbar-thumb{background:rgba(0,229,160,.3);border-radius:2px}
-
-.bypass-stat{display:flex;align-items:center;gap:14px}
-.bypass-pct{
-  font-family:'Bebas Neue',sans-serif;font-size:44px;
-  background:linear-gradient(90deg,var(--accent),var(--accent2));
-  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
-  min-width:80px;
-}
-.bypass-bar-wrap{flex:1}
-.bypass-bar-label{font-size:9px;color:var(--muted);font-family:'Syne Mono',monospace;letter-spacing:1px;margin-bottom:6px}
-.bypass-bar-track{height:4px;background:rgba(255,255,255,.06);border-radius:4px;overflow:hidden;margin-bottom:8px}
-.bypass-bar-fill{height:100%;width:0%;background:linear-gradient(90deg,var(--accent),var(--accent2));border-radius:4px;transition:width .06s linear;box-shadow:0 0 8px rgba(224,64,251,.4)}
-.bypass-step-text{font-size:9px;color:var(--muted);font-family:'Syne Mono',monospace;height:14px;overflow:hidden}
-
-/* ── GAME SELECT ── */
-#version-section{display:none;flex-direction:column;gap:14px}
-.vs-label{font-size:10px;color:var(--muted);letter-spacing:3px;text-align:center;font-family:'Syne Mono',monospace;text-transform:uppercase}
-.game-cards{display:flex;gap:12px}
-.game-card{
-  flex:1;border-radius:16px;overflow:hidden;
-  border:1px solid rgba(255,255,255,.08);
-  cursor:pointer;transition:.25s;
-  background:rgba(255,255,255,.02);
-}
-.game-card:active{transform:scale(.97);border-color:var(--accent2);box-shadow:0 0 20px rgba(224,64,251,.3)}
-.game-card img{width:100%;height:180px;object-fit:cover;object-position:center top;display:block}
-.game-card-name{padding:9px;text-align:center;font-size:11px;font-weight:700;letter-spacing:1px;color:var(--text);background:rgba(0,0,0,.5)}
-
-/* ── MAIN PANEL ── */
-#main-section{display:none;flex-direction:column;gap:8px}
-
-.game-tag{
-  display:flex;align-items:center;justify-content:space-between;
-  padding:10px 16px;
-  background:rgba(124,58,237,.1);
-  border:1px solid rgba(124,58,237,.2);
-  border-radius:12px;margin-bottom:4px;
-}
-.game-tag-name{font-size:13px;font-weight:600;color:#fff}
-.game-tag-status{display:flex;align-items:center;gap:6px;font-size:10px;color:var(--green);font-family:'Syne Mono',monospace}
-
-/* ── FEATURE ROW ── */
-.feat{
-  display:flex;align-items:center;justify-content:space-between;
-  background:rgba(255,255,255,.025);
-  border:1px solid rgba(255,255,255,.05);
-  border-radius:12px;padding:12px 14px;
-  transition:.2s;
-}
-.feat:hover{background:rgba(255,255,255,.04);border-color:rgba(124,58,237,.25)}
-.feat-left{flex:1;min-width:0;margin-right:12px}
-.feat-name{font-size:13px;font-weight:600;color:var(--text);display:flex;align-items:center;gap:6px}
-.feat-badge{font-size:9px;background:rgba(224,64,251,.15);color:var(--accent2);padding:2px 7px;border-radius:20px;border:1px solid rgba(224,64,251,.2);font-weight:700}
-
-/* slider row — shown when toggled on */
-.slider-row{
-  display:none;align-items:center;gap:8px;
-  margin-top:8px;
-}
-.slider-row.visible{display:flex}
-.feat-slider{
-  flex:1;
-  -webkit-appearance:none;appearance:none;
-  height:3px;
-  background:rgba(255,255,255,.1);
-  border-radius:3px;outline:none;cursor:pointer;
-}
-.feat-slider::-webkit-slider-thumb{
-  -webkit-appearance:none;
-  width:14px;height:14px;
-  border-radius:50%;
-  background:linear-gradient(135deg,var(--accent),var(--accent2));
-  box-shadow:0 0 8px rgba(224,64,251,.5);
-  cursor:pointer;
-}
-.feat-slider-val{
-  font-family:'Syne Mono',monospace;
-  font-size:11px;color:var(--accent2);
-  min-width:36px;text-align:right;font-weight:700;
-}
-
-/* ── TOGGLE ── */
-.tog{position:relative;width:44px;height:24px;flex-shrink:0}
-.tog input{opacity:0;width:0;height:0}
-.tog-slider{
-  position:absolute;inset:0;
-  background:rgba(255,255,255,.1);
-  border-radius:24px;cursor:pointer;transition:.25s;
-  border:1px solid rgba(255,255,255,.08);
-}
-.tog-slider::before{
-  content:'';position:absolute;
-  width:18px;height:18px;
-  left:2px;bottom:2px;
-  background:#4a4265;
-  border-radius:50%;transition:.25s;
-}
-input:checked + .tog-slider{background:linear-gradient(90deg,var(--accent),var(--accent2));border-color:transparent}
-input:checked + .tog-slider::before{transform:translateX(20px);background:#fff;box-shadow:-2px 0 8px rgba(0,0,0,.3)}
-
-/* ── DIVIDER ── */
-.sect-label{font-size:9px;color:var(--muted);letter-spacing:2px;font-family:'Syne Mono',monospace;text-transform:uppercase;margin:6px 0 4px;opacity:.7}
-
-/* ── LAUNCH ── */
-.launch-wrap{display:flex;flex-direction:column;gap:8px;margin-top:8px}
-.launch-primary{
-  display:block;width:100%;
-  background:linear-gradient(90deg,#16a34a,#22c55e);
-  color:#fff;border:none;
-  padding:14px;font-size:13px;font-weight:700;
-  border-radius:14px;cursor:pointer;
-  text-align:center;text-decoration:none;
-  letter-spacing:.5px;text-transform:uppercase;
-  box-shadow:0 6px 20px rgba(34,197,94,.25);
-  transition:.18s;font-family:'Space Grotesk',sans-serif;
-}
-.launch-primary:active{transform:scale(.97)}
-.launch-secondary{
-  display:block;width:100%;
-  background:transparent;
-  color:var(--muted);
-  border:1px solid rgba(255,255,255,.07);
-  padding:10px;font-size:12px;font-weight:600;
-  border-radius:12px;cursor:pointer;
-  text-align:center;text-decoration:none;
-  font-family:'Space Grotesk',sans-serif;transition:.18s;
-}
-.launch-secondary:active{background:rgba(255,255,255,.04)}
-
-/* ── CONSOLE ── */
-#code-terminal{
-  display:none;margin-top:12px;
-  background:#030108;
-  border:1px solid rgba(0,229,160,.12);
-  border-radius:14px;overflow:hidden;
-}
-.term-bar{
-  display:flex;align-items:center;gap:7px;
-  padding:8px 12px;
-  background:rgba(255,255,255,.02);
-  border-bottom:1px solid rgba(255,255,255,.04);
+.term-titlebar{
+  display:flex;align-items:center;
+  padding:8px 12px;gap:8px;
+  background:rgba(255,255,255,0.02);
+  border-bottom:1px solid rgba(255,255,255,0.04);
 }
 .term-dots{display:flex;gap:5px}
 .tdot{width:9px;height:9px;border-radius:50%}
-.term-title{font-size:9px;color:var(--muted);font-family:'Syne Mono',monospace;flex:1;text-align:center;letter-spacing:1px}
-.term-body{padding:10px 12px;height:100px;overflow-y:auto;font-family:'Syne Mono',monospace;font-size:10.5px;color:var(--green);line-height:1.7}
-.term-body::-webkit-scrollbar{width:3px}
-.term-body::-webkit-scrollbar-thumb{background:rgba(0,229,160,.2);border-radius:2px}
+.tdot:nth-child(1){background:#ff5f57}
+.tdot:nth-child(2){background:#febc2e}
+.tdot:nth-child(3){background:#28c840}
+.term-title-text{font-family:var(--mono);font-size:9px;color:var(--text-dim);flex:1;text-align:center;letter-spacing:1px}
+.term-cursor{
+  display:inline-block;width:6px;height:10px;
+  background:var(--green);
+  animation:cursorBlink 1s step-end infinite;
+  vertical-align:middle;margin-left:2px;border-radius:1px;
+}
+@keyframes cursorBlink{0%,100%{opacity:1}50%{opacity:0}}
+.bypass-log{
+  padding:12px;height:148px;overflow-y:auto;
+  font-family:var(--mono);font-size:10px;line-height:1.9;
+  color:var(--green);white-space:pre-wrap;word-break:break-all;
+}
+.bypass-log::-webkit-scrollbar{width:3px}
+.bypass-log::-webkit-scrollbar-track{background:transparent}
+.bypass-log::-webkit-scrollbar-thumb{background:rgba(16,185,129,0.3);border-radius:2px}
 
-/* ── GUIDE OVERLAY ── */
+/* progress block */
+.bypass-progress-block{
+  background:rgba(0,0,0,0.3);
+  border:1px solid rgba(255,255,255,0.05);
+  border-radius:var(--r-sm);
+  padding:14px;
+  display:flex;align-items:center;gap:14px;
+}
+.bypass-pct{
+  font-family:var(--display);font-size:48px;font-weight:900;line-height:1;
+  background:linear-gradient(135deg,var(--purple),var(--pink));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+  min-width:90px;text-align:center;
+  filter:drop-shadow(0 0 10px rgba(139,92,246,0.4));
+}
+.bypass-right{flex:1;display:flex;flex-direction:column;gap:7px}
+.bypass-label{font-family:var(--mono);font-size:9px;color:var(--text-dim);letter-spacing:1.5px}
+.progress-track{
+  height:3px;background:rgba(255,255,255,0.06);
+  border-radius:3px;overflow:hidden;position:relative;
+}
+.progress-fill{
+  height:100%;width:0%;
+  background:linear-gradient(90deg,var(--purple),var(--pink));
+  border-radius:3px;
+  box-shadow:0 0 10px rgba(139,92,246,0.6);
+  transition:width 0.08s linear;
+  position:relative;
+}
+/* shimmer on fill */
+.progress-fill::after{
+  content:'';position:absolute;right:0;top:0;
+  width:20px;height:100%;
+  background:linear-gradient(90deg,transparent,rgba(255,255,255,0.6),transparent);
+  animation:progressShimmer 0.8s ease infinite;
+}
+@keyframes progressShimmer{0%{opacity:0}50%{opacity:1}100%{opacity:0}}
+.bypass-step-txt{font-family:var(--mono);font-size:9px;color:var(--text-dim);letter-spacing:0.5px;height:13px;overflow:hidden}
+
+/* ─── GAME SELECT ─── */
+#sec-games{display:none;flex-direction:column;gap:12px;padding:20px 16px 0}
+.gs-label{font-family:var(--mono);font-size:9px;color:var(--text-dim);letter-spacing:3px;text-align:center}
+.game-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.game-card{
+  border-radius:16px;overflow:hidden;
+  border:1px solid rgba(255,255,255,0.07);
+  background:rgba(255,255,255,0.02);
+  cursor:pointer;
+  transition:transform 0.22s cubic-bezier(0.34,1.56,0.64,1),border-color 0.2s,box-shadow 0.2s;
+  position:relative;
+}
+.game-card::before{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(135deg,rgba(139,92,246,0.15),transparent 60%);
+  opacity:0;transition:opacity 0.2s;z-index:1;
+}
+.game-card:active{transform:scale(0.95);border-color:var(--purple);box-shadow:0 0 20px rgba(139,92,246,0.3)}
+.game-card:active::before{opacity:1}
+.game-card img{width:100%;height:170px;object-fit:cover;object-position:center top;display:block}
+.game-card-name{
+  padding:9px;text-align:center;
+  font-size:10px;font-weight:700;letter-spacing:1.5px;
+  color:var(--text);background:rgba(0,0,0,0.6);
+  font-family:var(--mono);position:relative;z-index:2;
+}
+
+/* ─── MAIN SECTION ─── */
+#sec-main{display:none;flex-direction:column;gap:6px;padding:20px 16px 0}
+
+.game-tag{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:10px 14px;
+  background:rgba(139,92,246,0.07);
+  border:1px solid rgba(139,92,246,0.18);
+  border-radius:var(--r-sm);margin-bottom:2px;
+}
+.game-tag-name{font-size:13px;font-weight:700;color:#fff}
+.game-tag-right{display:flex;align-items:center;gap:6px;font-family:var(--mono);font-size:9px;color:var(--green)}
+
+.sect-divider{
+  font-family:var(--mono);font-size:9px;color:var(--text-muted);
+  letter-spacing:2px;text-transform:uppercase;
+  margin:6px 0 2px;
+  display:flex;align-items:center;gap:8px;
+}
+.sect-divider::after{content:'';flex:1;height:1px;background:rgba(255,255,255,0.05)}
+
+/* feature row */
+.feat{
+  display:flex;align-items:center;justify-content:space-between;
+  background:rgba(255,255,255,0.02);
+  border:1px solid rgba(255,255,255,0.05);
+  border-radius:12px;padding:11px 13px;
+  transition:background 0.2s,border-color 0.2s,box-shadow 0.2s;
+  cursor:default;
+}
+.feat.on{
+  background:rgba(139,92,246,0.06);
+  border-color:rgba(139,92,246,0.2);
+  box-shadow:0 0 16px rgba(139,92,246,0.08);
+}
+.feat-left{flex:1;min-width:0;margin-right:12px}
+.feat-name{
+  font-size:12px;font-weight:600;color:var(--text);
+  display:flex;align-items:center;gap:6px;
+}
+.badge{
+  font-size:8px;padding:2px 6px;border-radius:20px;font-weight:700;
+  background:rgba(217,70,239,0.12);color:var(--pink);
+  border:1px solid rgba(217,70,239,0.2);
+  font-family:var(--mono);letter-spacing:0.5px;
+}
+.badge.new{background:rgba(6,182,212,0.1);color:var(--cyan);border-color:rgba(6,182,212,0.2)}
+.badge.core{background:rgba(251,191,36,0.1);color:var(--gold);border-color:rgba(251,191,36,0.2)}
+
+/* slider */
+.slider-row{
+  display:none;align-items:center;gap:8px;
+  margin-top:9px;padding-top:9px;
+  border-top:1px solid rgba(255,255,255,0.05);
+}
+.slider-row.open{display:flex}
+input[type=range]{
+  flex:1;-webkit-appearance:none;appearance:none;
+  height:3px;background:rgba(255,255,255,0.08);
+  border-radius:3px;outline:none;cursor:pointer;
+}
+input[type=range]::-webkit-slider-thumb{
+  -webkit-appearance:none;
+  width:13px;height:13px;border-radius:50%;
+  background:linear-gradient(135deg,var(--purple),var(--pink));
+  box-shadow:0 0 8px rgba(217,70,239,0.5);cursor:pointer;
+}
+.slider-val{
+  font-family:var(--mono);font-size:10px;font-weight:700;
+  color:var(--pink);min-width:34px;text-align:right;
+}
+
+/* toggle */
+.tog{position:relative;width:42px;height:22px;flex-shrink:0}
+.tog input{opacity:0;width:0;height:0;position:absolute}
+.tog-track{
+  position:absolute;inset:0;cursor:pointer;
+  background:rgba(255,255,255,0.08);
+  border-radius:22px;border:1px solid rgba(255,255,255,0.08);
+  transition:background 0.25s,border-color 0.25s,box-shadow 0.25s;
+}
+.tog-track::before{
+  content:'';position:absolute;
+  width:16px;height:16px;left:2px;top:2px;
+  background:#3d3460;border-radius:50%;
+  transition:transform 0.28s cubic-bezier(0.34,1.56,0.64,1),background 0.25s;
+}
+.tog input:checked + .tog-track{
+  background:linear-gradient(90deg,var(--purple),var(--pink));
+  border-color:transparent;
+  box-shadow:0 0 14px rgba(139,92,246,0.4);
+}
+.tog input:checked + .tog-track::before{
+  transform:translateX(20px);
+  background:#fff;
+  box-shadow:-2px 0 6px rgba(0,0,0,0.3);
+}
+
+/* launch buttons */
+.launch-wrap{display:flex;flex-direction:column;gap:7px;margin-top:8px}
+.btn-launch{
+  display:block;width:100%;text-align:center;text-decoration:none;
+  border:none;cursor:pointer;font-family:var(--sans);
+  border-radius:var(--r-sm);font-weight:700;
+  transition:transform 0.15s,box-shadow 0.2s,opacity 0.2s;
+}
+.btn-launch:active{transform:scale(0.97)}
+.btn-primary{
+  padding:14px;font-size:13px;color:#fff;letter-spacing:0.5px;text-transform:uppercase;
+  background:linear-gradient(90deg,#15803d,#16a34a,#22c55e);
+  background-size:200% 100%;background-position:0% 50%;
+  box-shadow:0 6px 20px rgba(22,163,74,0.3),0 1px 0 rgba(255,255,255,0.1) inset;
+  transition:background-position 0.4s,transform 0.15s;
+  position:relative;overflow:hidden;
+}
+.btn-primary::after{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(90deg,transparent,rgba(255,255,255,0.1),transparent);
+  transform:translateX(-100%);transition:transform 0.5s;
+}
+.btn-primary:hover::after{transform:translateX(100%)}
+.btn-secondary{
+  padding:10px;font-size:11px;color:var(--text-dim);
+  background:rgba(255,255,255,0.02);
+  border:1px solid rgba(255,255,255,0.06);
+  letter-spacing:0.5px;
+}
+.btn-secondary:hover{background:rgba(255,255,255,0.04);color:var(--text)}
+
+/* ─── CONSOLE ─── */
+.console-wrap{
+  display:none;margin:10px 0 0;
+  border-radius:var(--r-sm);
+  background:#020008;
+  border:1px solid rgba(16,185,129,0.1);
+  overflow:hidden;
+}
+.console-wrap.visible{display:block}
+.console-body{
+  padding:10px 12px;height:90px;overflow-y:auto;
+  font-family:var(--mono);font-size:10px;line-height:1.7;color:var(--green);
+}
+.console-body::-webkit-scrollbar{width:3px}
+.console-body::-webkit-scrollbar-thumb{background:rgba(16,185,129,0.2);border-radius:2px}
+
+/* ─── GUIDE OVERLAY ─── */
 #guide-overlay{
-  display:none;position:fixed;inset:0;
-  background:rgba(5,3,10,.95);z-index:100;
-  justify-content:center;align-items:center;padding:20px;
-  backdrop-filter:blur(16px);
+  display:none;position:fixed;inset:0;z-index:100;
+  background:rgba(3,1,10,0.9);
+  backdrop-filter:blur(20px);
+  align-items:center;justify-content:center;padding:20px;
 }
-#guide-overlay.show{display:flex}
+#guide-overlay.open{display:flex}
 .guide-box{
-  background:linear-gradient(145deg,rgba(18,10,36,.98),rgba(8,4,18,.98));
-  border:1px solid rgba(120,80,255,.25);
-  border-radius:24px;padding:24px 20px;
-  max-width:340px;width:100%;
+  background:linear-gradient(145deg,rgba(14,8,30,0.99),rgba(6,3,14,0.99));
+  border:1px solid rgba(139,92,246,0.2);
+  border-radius:22px;padding:22px 18px;
+  max-width:320px;width:100%;
   display:flex;flex-direction:column;gap:14px;
+  animation:guideIn 0.35s cubic-bezier(0.16,1,0.3,1) both;
 }
-.guide-title{font-family:'Bebas Neue',sans-serif;font-size:22px;letter-spacing:1px;text-align:center;color:#fff}
-.guide-step{display:flex;gap:12px;align-items:flex-start}
+@keyframes guideIn{
+  from{opacity:0;transform:scale(0.9) translateY(20px)}
+  to{opacity:1;transform:scale(1) translateY(0)}
+}
+.guide-title{
+  font-family:var(--display);font-size:20px;text-align:center;color:#fff;letter-spacing:1px;
+}
+.guide-step{display:flex;gap:11px;align-items:flex-start}
 .guide-num{
-  width:26px;height:26px;flex-shrink:0;
-  background:linear-gradient(135deg,var(--accent),var(--accent2));
+  width:24px;height:24px;flex-shrink:0;
+  background:linear-gradient(135deg,var(--purple),var(--pink));
   border-radius:50%;display:flex;align-items:center;justify-content:center;
-  font-size:12px;font-weight:700;color:#fff;
+  font-size:11px;font-weight:700;color:#fff;margin-top:2px;
 }
-.guide-text{font-size:12px;color:#c4b5e8;line-height:1.6;padding-top:3px}
-.guide-text b{color:#fff}
-.guide-close{
-  width:100%;background:linear-gradient(90deg,var(--accent),var(--accent2));
-  color:#fff;border:none;padding:12px;font-size:13px;font-weight:700;
-  border-radius:14px;cursor:pointer;font-family:'Space Grotesk',sans-serif;
-  margin-top:4px;
+.guide-txt{font-size:12px;color:#b8a8d8;line-height:1.65;padding-top:3px}
+.guide-txt b{color:#fff}
+.btn-close-guide{
+  width:100%;background:linear-gradient(90deg,var(--purple),var(--pink));
+  color:#fff;border:none;padding:12px;font-size:12px;font-weight:700;
+  border-radius:12px;cursor:pointer;font-family:var(--sans);margin-top:2px;
+  transition:opacity 0.2s,transform 0.15s;
 }
+.btn-close-guide:active{transform:scale(0.97)}
 
-/* ── TOAST ── */
+/* ─── TOAST ─── */
 .toast{
   position:fixed;bottom:28px;left:50%;
-  transform:translateX(-50%) translateY(70px);
-  background:rgba(10,6,22,.95);
-  border:1px solid rgba(0,229,160,.3);
-  color:var(--green);padding:10px 22px;
-  border-radius:30px;font-size:12px;font-weight:700;
-  z-index:999;transition:transform .3s cubic-bezier(.17,.67,.35,1.2),opacity .3s;
-  opacity:0;white-space:nowrap;font-family:'Syne Mono',monospace;letter-spacing:1px;
-  box-shadow:0 4px 20px rgba(0,0,0,.5);
+  transform:translateX(-50%) translateY(60px);
+  background:rgba(8,4,20,0.96);
+  border:1px solid rgba(16,185,129,0.3);
+  color:var(--green);padding:9px 20px;
+  border-radius:30px;font-family:var(--mono);font-size:11px;font-weight:700;
+  z-index:999;
+  opacity:0;white-space:nowrap;letter-spacing:1px;
+  box-shadow:0 4px 20px rgba(0,0,0,0.6),0 0 20px rgba(16,185,129,0.1);
+  transition:transform 0.3s cubic-bezier(0.34,1.56,0.64,1),opacity 0.3s;
+  pointer-events:none;
 }
 .toast.show{transform:translateX(-50%) translateY(0);opacity:1}
 
-/* ── FOOTER ── */
-.footer{text-align:center;margin-top:18px;font-size:11px;color:var(--muted);font-family:'Syne Mono',monospace;letter-spacing:.5px}
-.footer .c1{color:#e040fb}
-.footer .c2{color:#7ecfff}
+/* ─── FOOTER ─── */
+.footer{
+  text-align:center;margin-top:16px;
+  font-family:var(--mono);font-size:10px;color:var(--text-muted);letter-spacing:0.5px;
+  padding:0 16px;
+}
+.fc1{color:var(--pink)}
+.fc2{color:var(--cyan)}
+
+/* ─── PARTICLE TRAIL ─── */
+.particle{
+  position:fixed;pointer-events:none;z-index:200;
+  width:4px;height:4px;border-radius:50%;
+  background:var(--purple);
+  animation:particleFade 0.6s ease-out forwards;
+}
+@keyframes particleFade{
+  0%{opacity:0.8;transform:scale(1)}
+  100%{opacity:0;transform:scale(0) translateY(-20px)}
+}
+
+/* reduce motion */
+@media (prefers-reduced-motion:reduce){
+  *{animation-duration:0.01ms !important;transition-duration:0.01ms !important}
+}
 </style>
 </head>
 <body>
 
-<div class="blob blob-a"></div>
-<div class="blob blob-b"></div>
-<div class="blob blob-c"></div>
-<div class="scanline"></div>
+<!-- BG -->
+<div class="bg-canvas">
+  <div class="bg-orb bg-orb-1"></div>
+  <div class="bg-orb bg-orb-2"></div>
+  <div class="bg-orb bg-orb-3"></div>
+</div>
+<div class="bg-grain"></div>
 
+<!-- TOAST -->
 <div class="toast" id="toast"></div>
 
-<!-- GUIDE -->
+<!-- GUIDE OVERLAY -->
 <div id="guide-overlay">
   <div class="guide-box">
     <div class="guide-title">Cách Vào Game</div>
     <div class="guide-step">
       <div class="guide-num">1</div>
-      <div class="guide-text">Nhấn <b>"MỞ TRÊN STORE"</b> — hệ thống chuyển sang Play Store hoặc App Store.</div>
+      <div class="guide-txt">Nhấn <b>"Mở Trên Store"</b> — hệ thống chuyển sang Play Store hoặc App Store.</div>
     </div>
     <div class="guide-step">
       <div class="guide-num">2</div>
-      <div class="guide-text">Nếu game <b>đã cài</b>: nhấn <b>"Mở"</b> ngay trên trang Store.</div>
+      <div class="guide-txt">Nếu game <b>đã cài</b>: nhấn <b>"Mở"</b> ngay trên trang Store.</div>
     </div>
     <div class="guide-step">
       <div class="guide-num">3</div>
-      <div class="guide-text">Nếu chưa cài: nhấn <b>"Cài đặt"</b> rồi mở lại sau khi xong.</div>
+      <div class="guide-txt">Nếu chưa cài: nhấn <b>"Cài đặt"</b>, rồi mở lại sau khi xong.</div>
     </div>
     <div class="guide-step">
       <div class="guide-num">✓</div>
-      <div class="guide-text" id="guide-note">Free Fire không hỗ trợ deep link từ browser — mở qua Store là cách chính thức.</div>
+      <div class="guide-txt" id="guide-note">Free Fire không hỗ trợ deep link từ browser — mở qua Store là cách chính thức.</div>
     </div>
-    <button class="guide-close" onclick="closeGuide()">Đã hiểu, đóng lại</button>
+    <button class="btn-close-guide" onclick="closeGuide()">Đã hiểu, đóng lại</button>
   </div>
 </div>
 
-<div class="app-card">
+<!-- CARD -->
+<div class="card">
 
   <!-- HERO -->
   <div class="hero">
-    <div class="hero-grid"></div>
-    <div class="hero-glow"></div>
+    <div class="hero-grad"></div>
+    <div class="hero-mesh"></div>
+    <div class="hero-beam"></div>
+    <div class="hero-rings">
+      <div class="hero-ring"></div>
+      <div class="hero-ring"></div>
+      <div class="hero-ring"></div>
+      <div class="hero-ring"></div>
+    </div>
+    <div class="hero-crosshair"></div>
     <div class="hero-content">
-      <div class="hero-label">GARENA FREE FIRE MOD</div>
-      <div class="hero-title">SUPER AIMLOCK V4</div>
-      <div class="hero-sub">ADVANCED INJECTION ENGINE — 2024</div>
+      <div class="hero-eyebrow">Garena Free Fire Mod</div>
+      <div class="hero-title">AIMLOCK V4</div>
+      <div class="hero-sub">INJECTION ENGINE 2024 · VIP</div>
     </div>
   </div>
 
-  <!-- STATUS BAR -->
+  <!-- STATUS -->
   <div class="status-bar">
-    <div style="display:flex;align-items:center;gap:8px">
+    <div class="status-left">
       <div class="status-dot"></div>
-      <span class="status-text">SERVER ONLINE</span>
+      <span class="status-text">ONLINE</span>
+      <span class="status-ping" id="ping-text">12ms</span>
     </div>
     <div class="status-badge">VIP ACCESS</div>
   </div>
 
-  <!-- ── STEP 1: LOGIN ── -->
-  <div id="login-section" class="section-pad">
-
-    <div class="key-wrap">
-      <span class="key-icon">🔑</span>
+  <!-- ── SECTION 1: LOGIN ── -->
+  <div id="sec-login">
+    <div class="input-wrap">
+      <span class="input-icon">🔑</span>
       <input type="text" id="key-input" class="key-input" placeholder="Nhập key kích hoạt..." autocomplete="off">
     </div>
 
-    <div class="vpick-label">Chọn phiên bản</div>
+    <div class="pick-label">Chọn phiên bản</div>
     <div class="vpick">
-      <div class="vbtn selected" id="btn-ff" onclick="selectVersion('ff')">🔥 Free Fire</div>
-      <div class="vbtn" id="btn-ffmax" onclick="selectVersion('ffmax')">⚡ FF MAX</div>
+      <div class="vbtn sel" id="btn-ff" onclick="selectVer('ff')">🔥 Free Fire</div>
+      <div class="vbtn" id="btn-ffmax" onclick="selectVer('ffmax')">⚡ FF MAX</div>
     </div>
 
-    <div class="error-msg" id="error-msg">⚠ KEY KHÔNG HỢP LỆ — THỬ LẠI</div>
+    <div class="err" id="err-msg">⚠ KEY KHÔNG HỢP LỆ — THỬ LẠI</div>
     <button class="btn-submit" onclick="validateKey()">Kích Hoạt Hệ Thống</button>
-
+    <div style="height:4px"></div>
   </div>
 
-  <!-- ── STEP 2: BYPASS ── -->
-  <div id="loading-section" class="section-pad">
+  <!-- ── SECTION 2: BYPASS ── -->
+  <div id="sec-bypass">
 
     <div class="bypass-terminal">
-      <div class="bypass-term-bar">
-        <div class="bypass-dot-row">
-          <div class="bypass-dot"></div>
-          <div class="bypass-dot"></div>
-          <div class="bypass-dot"></div>
+      <div class="term-titlebar">
+        <div class="term-dots">
+          <div class="tdot"></div><div class="tdot"></div><div class="tdot"></div>
         </div>
-        <div class="bypass-title-bar">root@aimlock — bypass_engine.sh</div>
+        <div class="term-title-text">root@aimlock — bypass_engine.sh</div>
       </div>
       <div class="bypass-log" id="bypass-log"></div>
     </div>
 
-    <div class="bypass-stat">
-      <div class="bypass-pct"><span id="percent-count">0</span>%</div>
-      <div class="bypass-bar-wrap">
-        <div class="bypass-bar-label">BYPASS PROGRESS</div>
-        <div class="bypass-bar-track"><div class="bypass-bar-fill" id="progress-fill"></div></div>
-        <div class="bypass-step-text" id="bypass-step-text">Initializing...</div>
+    <div class="bypass-progress-block">
+      <div class="bypass-pct"><span id="pct-num">0</span>%</div>
+      <div class="bypass-right">
+        <div class="bypass-label">BYPASS PROGRESS</div>
+        <div class="progress-track">
+          <div class="progress-fill" id="progress-fill"></div>
+        </div>
+        <div class="bypass-step-txt" id="step-txt">Initializing...</div>
       </div>
     </div>
 
   </div>
 
-  <!-- ── STEP 3: GAME SELECT ── -->
-  <div id="version-section" class="section-pad">
-    <div class="vs-label">Chọn phiên bản game</div>
-    <div class="game-cards" id="version-cards-container"></div>
+  <!-- ── SECTION 3: GAME SELECT ── -->
+  <div id="sec-games">
+    <div class="gs-label">Chọn phiên bản game</div>
+    <div class="game-grid" id="game-grid"></div>
   </div>
 
-  <!-- ── STEP 4: MAIN ── -->
-  <div id="main-section" class="section-pad">
+  <!-- ── SECTION 4: MAIN ── -->
+  <div id="sec-main">
 
     <div class="game-tag">
       <div class="game-tag-name" id="game-badge">🔥 Free Fire</div>
-      <div class="game-tag-status"><div class="status-dot"></div>VIP ACTIVE</div>
+      <div class="game-tag-right">
+        <div class="status-dot"></div>VIP ACTIVE
+      </div>
     </div>
 
-    <div class="sect-label">Aim Features</div>
+    <div class="sect-divider">Aim Features</div>
 
-    <!-- AimLock with slider -->
+    <!-- AimLock -->
     <div class="feat" id="feat-aimlock">
       <div class="feat-left">
-        <div class="feat-name">AimLock <span class="feat-badge">CORE</span></div>
-        <div class="slider-row" id="slider-aimlock">
-          <input type="range" class="feat-slider" id="range-aimlock" min="10" max="100" value="85"
-            oninput="updateSlider('aimlock',this.value)">
-          <span class="feat-slider-val" id="val-aimlock">85%</span>
+        <div class="feat-name">AimLock <span class="badge core">CORE</span></div>
+        <div class="slider-row" id="sr-aimlock">
+          <input type="range" min="10" max="100" value="85" oninput="sliderUpdate('aimlock',this.value)">
+          <span class="slider-val" id="sv-aimlock">85%</span>
         </div>
       </div>
       <label class="tog">
-        <input type="checkbox" onchange="toggleFeature(this,'AimLock','0x7FF8A12B','slider-aimlock')">
-        <span class="tog-slider"></span>
+        <input type="checkbox" onchange="toggleFeat(this,'AimLock','0x7FF8A12B','sr-aimlock','feat-aimlock')">
+        <span class="tog-track"></span>
       </label>
     </div>
 
-    <!-- Nhạy Tâm with slider -->
+    <!-- Nhạy Tâm -->
     <div class="feat" id="feat-nhay">
       <div class="feat-left">
-        <div class="feat-name">Nhạy Tâm <span class="feat-badge">AIM</span></div>
-        <div class="slider-row" id="slider-nhay">
-          <input type="range" class="feat-slider" id="range-nhay" min="5" max="100" value="70"
-            oninput="updateSlider('nhay',this.value)">
-          <span class="feat-slider-val" id="val-nhay">70%</span>
+        <div class="feat-name">Nhạy Tâm <span class="badge">AIM</span></div>
+        <div class="slider-row" id="sr-nhay">
+          <input type="range" min="5" max="100" value="70" oninput="sliderUpdate('nhay',this.value)">
+          <span class="slider-val" id="sv-nhay">70%</span>
         </div>
       </div>
       <label class="tog">
-        <input type="checkbox" onchange="toggleFeature(this,'Nhạy Tâm','0x7FF8B401','slider-nhay')">
-        <span class="tog-slider"></span>
+        <input type="checkbox" onchange="toggleFeat(this,'Nhạy Tâm','0x7FF8B401','sr-nhay','feat-nhay')">
+        <span class="tog-track"></span>
       </label>
     </div>
 
-    <div class="feat">
-      <div class="feat-left"><div class="feat-name">Tâm Ảo <span class="feat-badge">NEW</span></div></div>
+    <!-- Tâm Ảo -->
+    <div class="feat" id="feat-tamao">
+      <div class="feat-left">
+        <div class="feat-name">Tâm Ảo <span class="badge new">NEW</span></div>
+      </div>
       <label class="tog">
-        <input type="checkbox" onchange="toggleFeature(this,'Tâm Ảo','0x7FF8B9F3',null)">
-        <span class="tog-slider"></span>
+        <input type="checkbox" onchange="toggleFeat(this,'Tâm Ảo','0x7FF8B9F3',null,'feat-tamao')">
+        <span class="tog-track"></span>
       </label>
     </div>
 
-    <div class="sect-label">Performance</div>
+    <div class="sect-divider">Performance</div>
 
-    <div class="feat">
+    <div class="feat" id="feat-giat">
       <div class="feat-left"><div class="feat-name">Fix Giật</div></div>
       <label class="tog">
-        <input type="checkbox" onchange="toggleFeature(this,'Fix Giật','0x7FF8C990',null)">
-        <span class="tog-slider"></span>
+        <input type="checkbox" onchange="toggleFeat(this,'Fix Giật','0x7FF8C990',null,'feat-giat')">
+        <span class="tog-track"></span>
       </label>
     </div>
 
-    <div class="feat">
+    <div class="feat" id="feat-muot">
       <div class="feat-left"><div class="feat-name">Tăng Mượt</div></div>
       <label class="tog">
-        <input type="checkbox" onchange="toggleFeature(this,'Tăng Mượt','0x7FF9A001',null)">
-        <span class="tog-slider"></span>
+        <input type="checkbox" onchange="toggleFeat(this,'Tăng Mượt','0x7FF9A001',null,'feat-muot')">
+        <span class="tog-track"></span>
       </label>
     </div>
 
     <div class="launch-wrap">
-      <a id="launch-btn-primary" class="launch-primary" href="#" onclick="openStore(event)">🎮 Mở Trên Store</a>
-      <a class="launch-secondary" href="#" onclick="showGuide(event)">❓ Hướng dẫn vào game</a>
+      <a id="btn-launch" class="btn-launch btn-primary" href="#" onclick="openStore(event)">🎮 Mở Trên Store</a>
+      <a class="btn-launch btn-secondary" href="#" onclick="showGuide(event)">❓ Hướng dẫn vào game</a>
     </div>
 
-  </div>
-
-  <!-- CONSOLE -->
-  <div id="code-terminal" class="section-pad" style="padding-left:18px;padding-right:18px">
-    <div class="term-bar">
-      <div class="term-dots">
-        <div class="tdot" style="background:#ff5f57"></div>
-        <div class="tdot" style="background:#febc2e"></div>
-        <div class="tdot" style="background:#28c840"></div>
+    <!-- CONSOLE -->
+    <div class="console-wrap visible" id="console-wrap">
+      <div class="term-titlebar">
+        <div class="term-dots">
+          <div class="tdot"></div><div class="tdot"></div><div class="tdot"></div>
+        </div>
+        <div class="term-title-text">memory_console — libil2cpp.so</div>
       </div>
-      <div class="term-title">memory_console — libil2cpp.so</div>
+      <div class="console-body" id="console-body">// Console initialized...<br>// Waiting for input...<br></div>
     </div>
-    <div class="term-body" id="code-output">// Console initialized...<br>// Waiting for input...<br></div>
-  </div>
+
+    <div style="height:4px"></div>
+  </div><!-- end sec-main -->
 
   <div class="footer">
-    made by <span class="c1">VayneZAimm</span> · TikTok <span class="c1">@vaynezaimff</span>
+    made by <span class="fc1">VayneZAimm</span> · TikTok <span class="fc1">@vaynezaimff</span>
     &nbsp;&amp;&nbsp;
-    <span class="c2">nminh</span> · TikTok <span class="c2">@nminhios</span>
+    <span class="fc2">nminh</span> · TikTok <span class="fc2">@nminhios</span>
   </div>
 
-</div><!-- end app-card -->
+</div><!-- end card -->
 
 <script>
-// ── STATE ──────────────────────────────────────────────────────────────────
-let selectedVersion = 'ff';
-let activeGame      = 'ff';
+// ── STATE ──
+let selVer = 'ff';
+let activeGame = 'ff';
 
-// ── STORE URLS ─────────────────────────────────────────────────────────────
+// ── STORE URLS ──
 const STORE = {
   ff:{
-    android_market:'market://details?id=com.dena.a12026418',
-    android_web:'https://play.google.com/store/apps/details?id=com.dena.a12026418',
+    and_mkt:'market://details?id=com.dena.a12026418',
+    and_web:'https://play.google.com/store/apps/details?id=com.dena.a12026418',
     ios_itms:'itms-apps://itunes.apple.com/app/id1300146617',
     ios_web:'https://apps.apple.com/app/garena-free-fire/id1300146617',
   },
   ffmax:{
-    android_market:'https://ffmax.garena.com/vn/',
-    android_web:'https://ffmax.garena.com/vn/',
+    and_mkt:'https://ffmax.garena.com/vn/',
+    and_web:'https://ffmax.garena.com/vn/',
     ios_itms:'itms-apps://itunes.apple.com/app/id1480516829',
     ios_web:'https://apps.apple.com/vn/app/free-fire-max/id1480516829',
   }
 };
 
-// ── BYPASS SEQUENCE ────────────────────────────────────────────────────────
-const BYPASS_SEQ = [
-  {pct:3,  t:300,  log:'[INIT] Khởi tạo injection engine v4.0...'},
-  {pct:8,  t:600,  log:'[SCAN] Phát hiện tiến trình: com.dena.a12026418'},
-  {pct:14, t:950,  log:'[MAP]  Mapping memory regions: DONE'},
-  {pct:19, t:1200, log:'[HOOK] Locating libil2cpp.so base addr...'},
-  {pct:23, t:1500, log:'[OK]   Base addr resolved → 0x7FF40000'},
-  {pct:29, t:1850, log:'[HWID] Spoofing device fingerprint...'},
-  {pct:34, t:2100, log:'[OK]   HWID → randomized → PASS'},
-  {pct:40, t:2400, log:'[SIG]  Patching signature verification...'},
-  {pct:46, t:2700, log:'[OK]   Sig bypass → 200 OK'},
-  {pct:52, t:3000, log:'[MOD]  Injecting AimLock module...'},
-  {pct:58, t:3300, log:'[OK]   AimLock hooked @ 0x7FF8A12B'},
-  {pct:64, t:3600, log:'[MOD]  Injecting Nhạy Tâm module...'},
-  {pct:69, t:3900, log:'[OK]   Nhạy Tâm hooked @ 0x7FF8B401'},
-  {pct:74, t:4150, log:'[MOD]  Injecting Tâm Ảo module...'},
-  {pct:79, t:4400, log:'[OK]   Tâm Ảo hooked @ 0x7FF8B9F3'},
-  {pct:84, t:4650, log:'[NET]  Verifying VIP license key...'},
-  {pct:89, t:4900, log:'[OK]   License valid — session: 24h'},
-  {pct:94, t:5100, log:'[NET]  Syncing server config...'},
-  {pct:98, t:5300, log:'[OK]   Config pulled → anti-detect: ON'},
-  {pct:100,t:5600, log:'[✓✓]  BYPASS HOÀN TẤT — HỆ THỐNG SẴN SÀNG'},
-];
-
-// ── VALIDATE KEY ───────────────────────────────────────────────────────────
 const VALID_KEYS = ['VAYNEZAIMM-KEYFREEFIRE','NMINHIOS-KEYJQMVDB','VAYNEZAIMM-KEYHQKGBDV'];
 
+const BYPASS_SEQ = [
+  {p:3,  t:300,  l:'[INIT] Khởi tạo injection engine v4.0...',c:'#c4b5fd'},
+  {p:8,  t:620,  l:'[SCAN] Phát hiện tiến trình: com.dena.a12026418',c:'#c4b5fd'},
+  {p:14, t:970,  l:'[MAP]  Mapping memory regions... DONE',c:'#c4b5fd'},
+  {p:19, t:1240, l:'[HOOK] Locating libil2cpp.so base addr...',c:'#c4b5fd'},
+  {p:23, t:1520, l:'[OK]   Base addr resolved → 0x7FF40000',c:'#10b981'},
+  {p:29, t:1850, l:'[HWID] Spoofing device fingerprint...',c:'#c4b5fd'},
+  {p:34, t:2100, l:'[OK]   HWID → randomized → PASS',c:'#10b981'},
+  {p:40, t:2400, l:'[SIG]  Patching signature verification...',c:'#c4b5fd'},
+  {p:46, t:2700, l:'[OK]   Sig bypass → 200 OK',c:'#10b981'},
+  {p:52, t:3000, l:'[MOD]  Injecting AimLock module...',c:'#c4b5fd'},
+  {p:58, t:3300, l:'[OK]   AimLock hooked @ 0x7FF8A12B',c:'#10b981'},
+  {p:64, t:3600, l:'[MOD]  Injecting Nhạy Tâm module...',c:'#c4b5fd'},
+  {p:69, t:3900, l:'[OK]   Nhạy Tâm hooked @ 0x7FF8B401',c:'#10b981'},
+  {p:74, t:4150, l:'[MOD]  Injecting Tâm Ảo module...',c:'#c4b5fd'},
+  {p:79, t:4400, l:'[OK]   Tâm Ảo hooked @ 0x7FF8B9F3',c:'#10b981'},
+  {p:84, t:4650, l:'[NET]  Verifying VIP license key...',c:'#c4b5fd'},
+  {p:89, t:4900, l:'[OK]   License valid — session: 24h',c:'#10b981'},
+  {p:94, t:5100, l:'[NET]  Syncing server config...',c:'#c4b5fd'},
+  {p:98, t:5300, l:'[OK]   Config pulled → anti-detect: ON',c:'#10b981'},
+  {p:100,t:5600, l:'[✓✓]  BYPASS HOÀN TẤT — HỆ THỐNG SẴN SÀNG',c:'#fbbf24'},
+];
+
+// ── PING FAKE ANIM ──
+(function pingAnim(){
+  const el = document.getElementById('ping-text');
+  setInterval(()=>{
+    el.textContent = (8 + Math.floor(Math.random()*18)) + 'ms';
+  }, 2500);
+})();
+
+// ── VERSION SELECT ──
+function selectVer(v){
+  selVer = v;
+  document.getElementById('btn-ff').classList.toggle('sel', v==='ff');
+  document.getElementById('btn-ffmax').classList.toggle('sel', v==='ffmax');
+}
+
+// ── VALIDATE ──
 function validateKey(){
   const val = document.getElementById('key-input').value.trim().toUpperCase();
-  const err = document.getElementById('error-msg');
-  if(!VALID_KEYS.includes(val)){err.style.display='block';shake('key-input');return}
-  err.style.display='none';
-  document.getElementById('login-section').style.display='none';
+  const err = document.getElementById('err-msg');
+  if(!VALID_KEYS.includes(val)){
+    err.style.display = 'block';
+    err.style.animation = 'none';
+    requestAnimationFrame(()=>{ err.style.animation = 'errShake 0.35s ease'; });
+    spawnParticles();
+    return;
+  }
+  err.style.display = 'none';
+  document.getElementById('sec-login').style.display = 'none';
+  showSection('sec-bypass');
   startBypass();
 }
 
-function shake(id){
-  const el=document.getElementById(id);
-  el.style.animation='none';
-  el.style.transition='transform .08s';
-  let n=0;
-  const i=setInterval(()=>{el.style.transform=n%2?'translateX(6px)':'translateX(-6px)';n++;if(n>6){clearInterval(i);el.style.transform=''}},80);
-}
-
-// ── BYPASS ENGINE ──────────────────────────────────────────────────────────
+// ── BYPASS ──
 function startBypass(){
-  const sec=document.getElementById('loading-section');
-  const logEl=document.getElementById('bypass-log');
-  const fillEl=document.getElementById('progress-fill');
-  const cntEl=document.getElementById('percent-count');
-  const stepEl=document.getElementById('bypass-step-text');
-  sec.style.display='flex';
-  logEl.innerHTML='';
-  fillEl.style.width='0%';
-  cntEl.textContent='0';
+  const logEl = document.getElementById('bypass-log');
+  const fillEl = document.getElementById('progress-fill');
+  const pctEl = document.getElementById('pct-num');
+  const stepEl = document.getElementById('step-txt');
+  logEl.innerHTML = '<span class="term-cursor"></span>';
 
-  BYPASS_SEQ.forEach(({pct,t,log})=>{
+  BYPASS_SEQ.forEach(({p,t,l,c})=>{
     setTimeout(()=>{
-      // update bar + counter
-      fillEl.style.width=pct+'%';
-      cntEl.textContent=pct;
-
-      // color based on type
-      const isOk = log.startsWith('[OK]') || log.startsWith('[✓✓]');
-      const isInit= log.startsWith('[INIT]')||log.startsWith('[SCAN]')||log.startsWith('[MAP]')||log.startsWith('[HOOK]')||log.startsWith('[HWID]')||log.startsWith('[SIG]')||log.startsWith('[MOD]')||log.startsWith('[NET]');
-      let color = isOk ? '#00e5a0' : isInit ? '#c4b5fd' : '#7c6fa0';
-      logEl.innerHTML+=`<span style="color:${color}">${log}</span>\n`;
-      logEl.scrollTop=logEl.scrollHeight;
-
-      // step text
-      stepEl.textContent=log;
-
-      // done
-      if(pct===100) setTimeout(showVersionCards,500);
-    },t);
+      fillEl.style.width = p + '%';
+      pctEl.textContent = p;
+      stepEl.textContent = l;
+      // append log line before cursor
+      const span = document.createElement('span');
+      span.style.color = c;
+      span.style.display = 'block';
+      span.textContent = l;
+      logEl.insertBefore(span, logEl.lastChild);
+      logEl.scrollTop = logEl.scrollHeight;
+      if(p===100) setTimeout(toGameSelect, 500);
+    }, t);
   });
 }
 
-// ── VERSION PICKER ─────────────────────────────────────────────────────────
-function selectVersion(v){
-  selectedVersion=v;
-  document.getElementById('btn-ff').classList.toggle('selected',v==='ff');
-  document.getElementById('btn-ffmax').classList.toggle('selected',v==='ffmax');
+// ── GAME SELECT ──
+function toGameSelect(){
+  hideSection('sec-bypass');
+  showSection('sec-games');
+  const grid = document.getElementById('game-grid');
+  grid.innerHTML = '';
+  const mkCard = (v, label, src) => {
+    const d = document.createElement('div');
+    d.className = 'game-card';
+    d.onclick = ()=> enterGame(v);
+    d.innerHTML = `<img src="${src}" alt="${label}" onerror="this.style.height='70px';this.style.background='rgba(139,92,246,0.15)'"><div class="game-card-name">${label}</div>`;
+    return d;
+  };
+  if(selVer==='ff'||selVer==='both')
+    grid.appendChild(mkCard('ff','FREE FIRE','https://play-lh.googleusercontent.com/SDYv1Th3VdjfM0MwObMIvH3L2I2owroB3leEtbMrFJZYRklHroxw_AspZZmno_8DBdiar3d03kHsyjBsnvcdlg=w240-h480-rw'));
+  if(selVer==='ffmax'||selVer==='both')
+    grid.appendChild(mkCard('ffmax','FREE FIRE MAX','https://play-lh.googleusercontent.com/M1gCTSM7oUUm7P0hklqtdJxBxcBCB47Gj5UhxZdQfhOj8-yxnJm0FGzr3F3nLf5X94=w240-h480-rw'));
+  if(selVer!=='both') setTimeout(()=>enterGame(selVer), 0);
 }
 
-// ── SHOW VERSION CARDS ─────────────────────────────────────────────────────
-function showVersionCards(){
-  document.getElementById('loading-section').style.display='none';
-  const sec=document.getElementById('version-section');
-  sec.style.display='flex';
-  const c=document.getElementById('version-cards-container');
-  c.innerHTML='';
-  const mkCard=(v,label,src)=>`<div class="game-card" onclick="enterGame('${v}')"><img src="${src}" alt="${label}" onerror="this.style.height='80px';this.style.background='rgba(124,58,237,.2)'"><div class="game-card-name">${label}</div></div>`;
-  if(selectedVersion==='ff'||selectedVersion==='both'){
-    c.innerHTML+=mkCard('ff','FREE FIRE','https://play-lh.googleusercontent.com/SDYv1Th3VdjfM0MwObMIvH3L2I2owroB3leEtbMrFJZYRklHroxw_AspZZmno_8DBdiar3d03kHsyjBsnvcdlg=w240-h480-rw');
-  }
-  if(selectedVersion==='ffmax'||selectedVersion==='both'){
-    c.innerHTML+=mkCard('ffmax','FREE FIRE MAX','https://play-lh.googleusercontent.com/M1gCTSM7oUUm7P0hklqtdJxBxcBCB47Gj5UhxZdQfhOj8-yxnJm0FGzr3F3nLf5X94=w240-h480-rw');
-  }
-  // if only one card, no game choice needed auto-select
-  if(selectedVersion!=='both'){setTimeout(()=>enterGame(selectedVersion),0)}
-}
-
-// ── ENTER GAME ─────────────────────────────────────────────────────────────
 function enterGame(v){
-  activeGame=v;
-  document.getElementById('version-section').style.display='none';
-  document.getElementById('main-section').style.display='flex';
-  document.getElementById('code-terminal').style.display='block';
-  const badge=document.getElementById('game-badge');
-  const btn=document.getElementById('launch-btn-primary');
+  activeGame = v;
+  hideSection('sec-games');
+  showSection('sec-main');
+  const badge = document.getElementById('game-badge');
+  const btn = document.getElementById('btn-launch');
   if(v==='ff'){badge.textContent='🔥 Free Fire';btn.textContent='🎮 Mở Free Fire Trên Store'}
-  else{badge.textContent='⚡ Free Fire MAX';btn.textContent='🎮 Mở Free Fire MAX Trên Store'}
+  else{badge.textContent='⚡ Free Fire MAX';btn.textContent='🎮 Mở FF MAX Trên Store'}
 }
 
-// ── TOGGLE FEATURE ─────────────────────────────────────────────────────────
-function toggleFeature(cb,name,addr,sliderId){
+// ── TOGGLE ──
+function toggleFeat(cb, name, addr, sliderId, featId){
+  const feat = document.getElementById(featId);
+  if(cb.checked) feat.classList.add('on');
+  else feat.classList.remove('on');
   if(sliderId){
-    const row=document.getElementById(sliderId);
-    if(cb.checked) row.classList.add('visible');
-    else row.classList.remove('visible');
+    const row = document.getElementById(sliderId);
+    if(cb.checked) row.classList.add('open');
+    else row.classList.remove('open');
   }
-  logConsole(cb.checked,name,addr);
-  showToast(cb.checked ? `✓ ${name} bật` : `✗ ${name} tắt`);
+  logConsole(cb.checked, name, addr);
+  toast(cb.checked ? `✓ ${name} bật` : `✗ ${name} tắt`);
 }
 
-// ── SLIDER UPDATE ──────────────────────────────────────────────────────────
-function updateSlider(id,val){
-  document.getElementById('val-'+id).textContent=val+'%';
-  // optional: log to console on change
+function sliderUpdate(id, val){
+  document.getElementById('sv-'+id).textContent = val + '%';
 }
 
-// ── CONSOLE LOG ────────────────────────────────────────────────────────────
-function logConsole(on,name,addr){
-  const output=document.getElementById('code-output');
-  const terminal=document.getElementById('code-terminal').querySelector('.term-body');
-  const t=new Date().toLocaleTimeString('vi-VN');
-  let s='';
-  if(on){
-    s=`<span style="color:#00e5a0">[${t}] ENABLE :: ${name}\n  Patch(libBase + ${addr}, NOP_HOOK)\n  Status → ACTIVE</span>\n\n`;
-  } else {
-    s=`<span style="color:#ff3d71">[${t}] DISABLE :: ${name}\n  Restore(libBase + ${addr})\n  Status → REVERTED</span>\n\n`;
-  }
-  terminal.innerHTML+=s;
-  terminal.scrollTop=terminal.scrollHeight;
+// ── CONSOLE ──
+function logConsole(on, name, addr){
+  const body = document.getElementById('console-body');
+  const t = new Date().toLocaleTimeString('vi-VN');
+  const s = on
+    ? `<span style="color:#10b981">[${t}] ENABLE :: ${name}\n  Patch(libBase + ${addr}, NOP_HOOK)\n  → ACTIVE</span>\n\n`
+    : `<span style="color:#f43f5e">[${t}] DISABLE :: ${name}\n  Restore(libBase + ${addr})\n  → REVERTED</span>\n\n`;
+  body.innerHTML += s;
+  body.scrollTop = body.scrollHeight;
 }
 
-// ── OPEN STORE ─────────────────────────────────────────────────────────────
-function isIOS(){return /iphone|ipad|ipod/i.test(navigator.userAgent)}
-function isAndroid(){return /android/i.test(navigator.userAgent)}
+// ── STORE ──
+const isIOS = ()=>/iphone|ipad|ipod/i.test(navigator.userAgent);
+const isAnd = ()=>/android/i.test(navigator.userAgent);
 
 function openStore(e){
   e.preventDefault();
-  const u=STORE[activeGame];
-  if(isAndroid()){
-    const isMarket=u.android_market.startsWith('market://');
-    if(isMarket){
-      window.location.href=u.android_market;
-      setTimeout(()=>{if(!document.hidden)window.open(u.android_web,'_blank')},1500);
-    } else {window.open(u.android_market,'_blank')}
+  const u = STORE[activeGame];
+  if(isAnd()){
+    const mkt = u.and_mkt.startsWith('market://');
+    if(mkt){window.location.href=u.and_mkt;setTimeout(()=>{if(!document.hidden)window.open(u.and_web,'_blank')},1500)}
+    else window.open(u.and_mkt,'_blank');
   } else if(isIOS()){
     window.location.href=u.ios_itms;
     setTimeout(()=>{if(!document.hidden)window.open(u.ios_web,'_blank')},1500);
-  } else {window.open(u.android_web,'_blank')}
-  showToast('🎮 Đang mở Store...');
+  } else window.open(u.and_web,'_blank');
+  toast('🎮 Đang mở Store...');
 }
 
-// ── GUIDE ──────────────────────────────────────────────────────────────────
-function showGuide(e){e.preventDefault();document.getElementById('guide-overlay').classList.add('show')}
-function closeGuide(){document.getElementById('guide-overlay').classList.remove('show')}
+// ── GUIDE ──
+function showGuide(e){e.preventDefault();document.getElementById('guide-overlay').classList.add('open')}
+function closeGuide(){document.getElementById('guide-overlay').classList.remove('open')}
 
-// ── TOAST ──────────────────────────────────────────────────────────────────
-function showToast(msg){
-  const t=document.getElementById('toast');
-  t.textContent=msg;t.classList.add('show');
-  setTimeout(()=>t.classList.remove('show'),2500);
+// ── TOAST ──
+let toastTimer;
+function toast(msg){
+  const el = document.getElementById('toast');
+  el.textContent = msg;
+  el.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(()=>el.classList.remove('show'), 2400);
 }
 
-// ── KEY ENTER ─────────────────────────────────────────────────────────────
-document.getElementById('key-input').addEventListener('keydown',e=>{if(e.key==='Enter')validateKey()});
+// ── SECTION UTILS ──
+function showSection(id){
+  const el = document.getElementById(id);
+  el.style.display = 'flex';
+  requestAnimationFrame(()=>{
+    el.style.animation = 'none';
+    requestAnimationFrame(()=>{ el.style.animation = 'sectionIn 0.4s cubic-bezier(0.16,1,0.3,1) both'; });
+  });
+}
+function hideSection(id){
+  document.getElementById(id).style.display = 'none';
+}
+
+// ── PARTICLE EFFECT on error ──
+function spawnParticles(){
+  const btn = document.querySelector('.btn-submit');
+  const rect = btn.getBoundingClientRect();
+  for(let i=0;i<8;i++){
+    const p = document.createElement('div');
+    p.className = 'particle';
+    const colors = ['#8b5cf6','#d946ef','#f43f5e','#fbbf24'];
+    p.style.cssText = `
+      left:${rect.left + Math.random()*rect.width}px;
+      top:${rect.top + Math.random()*20}px;
+      background:${colors[Math.floor(Math.random()*colors.length)]};
+      animation-delay:${Math.random()*0.3}s;
+      width:${3+Math.random()*4}px;height:${3+Math.random()*4}px;
+    `;
+    document.body.appendChild(p);
+    setTimeout(()=>p.remove(), 800);
+  }
+}
+
+// ── KEYBOARD ──
+document.getElementById('key-input').addEventListener('keydown', e=>{
+  if(e.key==='Enter') validateKey();
+});
 </script>
 </body>
 </html>
-
